@@ -1,5 +1,5 @@
 from db import *
-from video import *
+from core import *
 from networking import *
 from data_base_handler import *
 import warnings
@@ -15,12 +15,12 @@ def prepare_for_processing(link):
         shutil.rmtree("./media")
         warnings.warn(message="media already exists", category=UserWarning, stacklevel=1)
     os.mkdir('media')
-    os.mkdir("./media/video")
+    os.mkdir("./media/core")
     os.makedirs("./media/new_video")
     os.makedirs("./media/audio")
     video_name = get_name(link)
     print(video_name)
-    video_path = download_video(link, "./media/video")
+    video_path = download_video(link, "./media/core")
     print(video_path)
     audio_path = download_audio(link, "./media/audio")
     print(video_path)
@@ -35,7 +35,7 @@ def prepare_for_processing(link):
 
 def process_link(link):
     video_name, video_path, audio_path = prepare_for_processing(link)
-    new_path = "./media/new_video/video.mp4"
+    new_path = "./media/new_video/core.mp4"
     processing_video(video_path, new_path, audio_path)
     print("processing_done")
     send_to_google_drive(new_path, video_name + ".mp4")
