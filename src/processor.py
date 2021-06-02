@@ -1,7 +1,7 @@
 from db import *
 from core import *
 from networking import *
-from data_base_handler import *
+from data_base_manager import *
 import warnings
 import os
 import shutil
