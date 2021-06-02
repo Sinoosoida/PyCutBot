@@ -4,56 +4,57 @@ from .utils import sql_execute
 
 class SQLParser:
     def __init__(self):
-        self.db_name = 'lecture_bot.db'
-        self.tables = ['users_table', 'videolinks_table', 'playlistlinks_table']
+        self.db_name = 'data.db'
+        self.tables = ['video', 'playlist', 'channel']
 
-    def get(self, num_of_table, link):
-        with sql_execute(self.db_name) as cursor:
-            answer = list(cursor.execute("""SELECT * FROM {} WHERE link = '{}'"""
-                                         .format(self.tables[num_of_table], link)))
-        return answer
+    # def get(self, name_of_table, link):#
+    #     with sql_execute(self.db_name) as cursor:
+    #         answer = list(cursor.execute("""SELECT * FROM {} WHERE link = '{}'"""
+    #                                      .format(name_of_table, link)))
+    #     return answer
+    #
+    # def get_all(self, name_of_table):#
+    #     with sql_execute(self.db_name) as cursor:
+    #         answer = list(cursor.execute("""SELECT * FROM {} """.format(name_of_table)))
+    #     return answer
 
-    def get_all(self, num_of_table):
+    def get_video_with_status(self, link):
         with sql_execute(self.db_name) as cursor:
-            answer = list(cursor.execute("""SELECT * FROM {} """.format(self.tables[num_of_table])))
-        return answer
-
-    def get_status(self, num_of_table, link):
-        with sql_execute(self.db_name) as cursor:
-            answer = list(cursor.execute("""SELECT * FROM {} WHERE link = '{}'""".format(self.tables[num_of_table], link)))
+            answer = list(cursor.execute("""SELECT * FROM {} WHERE link = '{}'""".format(self.tables, link)))
         if len(answer) == 0:
             return ''
         else:
             return answer[0][1]
 
-    def set_status(self, num_of_table, link, status):
+    def set_status(self, link, status):  #
         with sql_execute(self.db_name) as cursor:
             if (len(list(cursor.execute(
-                    """SELECT * FROM {} WHERE link = '{}'""".format(self.tables[num_of_table], link)))) == 0):
-                cursor.execute("""INSERT INTO {} VALUES ('{}', '{}')""".format(self.tables[num_of_table], link, status))
+                    """SELECT * FROM {} WHERE link = '{}'""".format(self.tables[0], link)))) == 0):
+                cursor.execute("""INSERT INTO {} VALUES ('{}', '{}')""".format(self.tables[0], link, status))
             else:
                 cursor.execute(
-                    """UPDATE {} SET status = '{}' WHERE link = '{}'""".format(self.tables[num_of_table], status, link))
+                    """UPDATE {} SET status = '{}' WHERE link = '{}'""".format(self.tables[0], status, link))
 
-    def save(self, num_of_table, link, status):
-        with sql_execute(self.db_name) as cursor:
-            if (len(list(cursor.execute(
-                    """SELECT * FROM {} WHERE link = '{}'""".format(self.tables[num_of_table], link)))) == 0):
-                cursor.execute(f"INSERT INTO '{self.tables[num_of_table]}' VALUES ('{link}', '{status}')")
-            else:
-                answer = list(
-                    cursor.execute("""SELECT * FROM {} WHERE link = '{}'""".format(self.tables[num_of_table], link)))
-                status = answer[0][1]
-        return status
+    def save(self, name_of_table, link, status=None):
+        if not name_of_table == self.tables[0]:
+            with sql_execute(self.db_name) as cursor:
+                if (len(list(cursor.execute(
+                        """SELECT * FROM {} WHERE link = '{}'""".format(name_of_table, link)))) == 0):
+                    cursor.execute(f"INSERT INTO '{name_of_table}' VALUES ('{link}')")
+        else:
+            with sql_execute(self.db_name) as cursor:
+                if (len(list(cursor.execute(
+                        """SELECT * FROM {} WHERE link = '{}'""".format(name_of_table, link)))) == 0):
+                    cursor.execute(f"INSERT INTO '{name_of_table}' VALUES ('{link}', '{status}')")
 
-    def clear_db(self, num_of_table=None):
+    def clear_db(self, name_of_table=None):
         with sql_execute(self.db_name) as cursor:
-            if num_of_table is not None:
+            if name_of_table is not None:
                 # TODO: try unary quotes!
                 try:
-                    cursor.execute("""DELETE FROM {}""".format(self.tables[num_of_table]))
+                    cursor.execute("""DELETE FROM {}""".format(name_of_table))
                 except:
-                    warnings.warn(message=self.tables[num_of_table] + " was already deleted",
+                    warnings.warn(message=name_of_table + " was already deleted",
                                   category=UserWarning, stacklevel=1)
             else:
                 for i in self.tables:
@@ -64,16 +65,21 @@ class SQLParser:
 
     def create_db(self):
         with sql_execute(self.db_name) as cursor:
-            for i in self.tables:
-                try:
-                    cursor.execute(f"""CREATE TABLE {i} (link, status)""")
-                except:
-                    warnings.warn(message=i+" was already created", category=UserWarning , stacklevel=1)
+            try:
+                cursor.execute(f"""CREATE TABLE {self.tables[0]} (link, status)""")
+            except:
+                warnings.warn(message=self.tables[0] + " was already created", category=UserWarning, stacklevel=1)
+            try:
+                cursor.execute(f"""CREATE TABLE {self.tables[0]} (link)""")
+            except:
+                warnings.warn(message=self.tables[0] + " was already created", category=UserWarning, stacklevel=1)
+            try:
+                cursor.execute(f"""CREATE TABLE {self.tables[0]} (link)""")
+            except:
+                warnings.warn(message=self.tables[0] + " was already created", category=UserWarning, stacklevel=1)
 
-        self.save(0, 423216896, 'admin')
-
-    def get_with_status(self, num_of_table, status):
+    def get_videos_with_status(self, status):
         with sql_execute(self.db_name) as cursor:
             answer = list(
-                cursor.execute("""SELECT * FROM {} WHERE status = '{}'""".format(self.tables[num_of_table], status)))
+                cursor.execute("""SELECT * FROM {} WHERE status = '{}'""".format(self.tables[0], status)))
         return answer
