@@ -34,7 +34,7 @@ response_upload = service.videos().insert(
     media_body=mediaFile
 ).execute()
 
-# service.thumbnails().set(
-#     videoId=response_upload.get('id'),
-#     # media_body=MediaFileUpload('test_tumbnail.png')
-# ).execute()
+service.thumbnails().set(
+    videoId=response_upload.get('id'),
+    media_body=MediaFileUpload('test_tumbnail.png')
+).execute()
