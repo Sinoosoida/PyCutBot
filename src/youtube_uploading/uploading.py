@@ -1,8 +1,8 @@
 import datetime
-from google_api_utils import Create_Service
+from src.youtube_uploading.google_api_utils import Create_Service
 from googleapiclient.http import MediaFileUpload
 
-CLIENT_SECRET_FILE = r"client_secret.json"
+CLIENT_SECRET_FILE = r"youtube_uploading/client_secret.json"
 API_NAME = 'youtube'
 API_VERSION = 'v3'
 SCOPES = ['https://www.googleapis.com/auth/youtube.upload']
