@@ -14,12 +14,12 @@ def prepare_for_processing(yt_object):
     if os.path.exists('./media'):
         shutil.rmtree("./media")
         warnings.warn(message="media already exists", category=UserWarning, stacklevel=1)
-        os.mkdir('media')
-        os.mkdir("./media/core")
-        os.makedirs("./media/new_video")
-        os.makedirs("./media/audio")
-        os.makedirs("./media/thumbnail")
-        return download(yt_object, "./media/core", "./media/audio", "./media/thumbnail")
+    os.mkdir('media')
+    os.mkdir("./media/core")
+    os.makedirs("./media/new_video")
+    os.makedirs("./media/audio")
+    os.makedirs("./media/thumbnail")
+    return download(yt_object, "./media/core", "./media/audio", "./media/thumbnail")
 
 
 def add_credits_to_description(text, link, author):
