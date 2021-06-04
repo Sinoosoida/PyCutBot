@@ -90,3 +90,10 @@ def download_audio(link, path="./"):
                 stream = i
     audio_path = stream.download(output_path=path)
     return audio_path
+
+
+def get_videos_from_playlist(playlist):
+    return Playlist(playlist).video_urls
+
+def get_videos_from_channel(channel): #TODO дописать эо место, я хз как видео из канала добывать
+    pass

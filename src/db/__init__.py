@@ -12,11 +12,11 @@ class SQLParser:
     #         answer = list(cursor.execute("""SELECT * FROM {} WHERE link = '{}'"""
     #                                      .format(name_of_table, link)))
     #     return answer
-    #
-    # def get_all(self, name_of_table):#
-    #     with sql_execute(self.db_name) as cursor:
-    #         answer = list(cursor.execute("""SELECT * FROM {} """.format(name_of_table)))
-    #     return answer
+
+    def get_all(self, name_of_table):
+        with sql_execute(self.db_name) as cursor:
+            answer = list(cursor.execute("""SELECT * FROM {} """.format(name_of_table)))
+        return answer
 
     def get_video_with_status(self, link):
         with sql_execute(self.db_name) as cursor:
