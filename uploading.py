@@ -1,5 +1,5 @@
 import datetime
-from Google import Create_Service
+from google_api_utils import Create_Service
 from googleapiclient.http import MediaFileUpload
 
 CLIENT_SECRET_FILE = r"client_secret.json"
@@ -9,32 +9,34 @@ SCOPES = ['https://www.googleapis.com/auth/youtube.upload']
 
 service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
 
-upload_date_time = datetime.datetime(2020, 12, 25, 12, 30, 0).isoformat() + '.000Z'
 
-request_body = {
-    'snippet': {
-        'categoryI': 19,
-        'title': 'Upload Testing',
-        'description': 'Hello World Description',
-        'tags': ['Travel', 'video test', 'Travel Tips']
-    },
-    'status': {
-        'privacyStatus': 'private',
-        'publishAt': upload_date_time,
-        'selfDeclaredMadeForKids': False,
-    },
-    'notifySubscribers': False
-}
+def upload_video_to_youtube(video_path, thumbnail_path, title, description, tags):
+    upload_date_time = datetime.datetime(2020, 12, 25, 12, 30, 0).isoformat() + '.000Z'
 
-mediaFile = MediaFileUpload('test_video.mp4')
+    request_body = {
+        'snippet': {
+            'categoryI': 27,  # education
+            'title': title,
+            'description': description,
+            'tags': tags
+        },
+        'status': {
+            'privacyStatus': 'private',
+            'publishAt': upload_date_time,
+            'selfDeclaredMadeForKids': False,
+        },
+        'notifySubscribers': False
+    }
 
-response_upload = service.videos().insert(
-    part='snippet,status',
-    body=request_body,
-    media_body=mediaFile
-).execute()
+    mediaFile = MediaFileUpload(video_path)
 
-service.thumbnails().set(
-    videoId=response_upload.get('id'),
-    media_body=MediaFileUpload('test_tumbnail.png')
-).execute()
+    response_upload = service.videos().insert(
+        part='snippet,status',
+        body=request_body,
+        media_body=mediaFile
+    ).execute()
+
+    service.thumbnails().set(
+        videoId=response_upload.get('id'),
+        media_body=MediaFileUpload(thumbnail_path)
+    ).execute()
