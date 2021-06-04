@@ -2,7 +2,6 @@ from db import *
 from core import *
 from networking import download, send_to_google_drive, good_link, get_yt_object
 from uploading import upload_video_to_youtube
-from data_base_manager import *
 import warnings
 import os
 import shutil
@@ -15,12 +14,12 @@ def prepare_for_processing(yt_object):
     if os.path.exists('./media'):
         shutil.rmtree("./media")
         warnings.warn(message="media already exists", category=UserWarning, stacklevel=1)
-        os.mkdir('media')
-        os.mkdir("./media/core")
-        os.makedirs("./media/new_video")
-        os.makedirs("./media/audio")
-        os.makedirs("./media/thumbnail")
-        return download(yt_object, "./media/core", "./media/audio", "./media/thumbnail")
+    os.mkdir('media')
+    os.mkdir("./media/core")
+    os.makedirs("./media/new_video")
+    os.makedirs("./media/audio")
+    os.makedirs("./media/thumbnail")
+    return download(yt_object, "./media/core", "./media/audio", "./media/thumbnail")
 
 
 def add_credits_to_description(text, link, author):
@@ -46,9 +45,7 @@ def process_link(link):
 
 
 while True:
-    for video_link_object in data_base.get_video_with_status('in queue'):
-        if not video_link_object:
-            continue
+    for video_link_object in data_base.get_videos_with_status('in queue'):
         video_link = video_link_object[0]
         data_base.set_status(video_link, 'in process')
         print(video_link + ' : in process')
