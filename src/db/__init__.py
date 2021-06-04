@@ -2,6 +2,7 @@ import warnings
 from .utils import sql_execute
 
 
+
 class SQLParser:
     def __init__(self):
         self.db_name = 'data.db'
