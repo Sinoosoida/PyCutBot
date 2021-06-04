@@ -18,13 +18,13 @@ class SQLParser:
             answer = list(cursor.execute("""SELECT * FROM {} """.format(name_of_table)))
         return answer
 
-    def get_video_with_status(self, link):
+    def get_video_with_status(self, status):
         with sql_execute(self.db_name) as cursor:
-            answer = list(cursor.execute("""SELECT * FROM {} WHERE link = '{}'""".format(self.tables, link)))
+            answer = list(cursor.execute("""SELECT * FROM {} WHERE status = '{}'""".format(self.tables[0], status)))
         if len(answer) == 0:
             return ''
         else:
-            return answer[0][1]
+            return answer[0][0]
 
     def set_status(self, link, status):  #
         with sql_execute(self.db_name) as cursor:
@@ -68,15 +68,15 @@ class SQLParser:
             try:
                 cursor.execute(f"""CREATE TABLE {self.tables[0]} (link, status)""")
             except:
-                warnings.warn(message=self.tables[0] + " was already created", category=UserWarning, stacklevel=1)
+                warnings.warn(message="0 table was already created", category=UserWarning, stacklevel=1)
             try:
-                cursor.execute(f"""CREATE TABLE {self.tables[0]} (link)""")
+                cursor.execute(f"""CREATE TABLE {self.tables[1]} (link)""")
             except:
-                warnings.warn(message=self.tables[0] + " was already created", category=UserWarning, stacklevel=1)
+                warnings.warn(message="1 table was already created", category=UserWarning, stacklevel=1)
             try:
-                cursor.execute(f"""CREATE TABLE {self.tables[0]} (link)""")
+                cursor.execute(f"""CREATE TABLE {self.tables[2]} (link)""")
             except:
-                warnings.warn(message=self.tables[0] + " was already created", category=UserWarning, stacklevel=1)
+                warnings.warn(message="2 table was already created", category=UserWarning, stacklevel=1)
 
     def get_videos_with_status(self, status):
         with sql_execute(self.db_name) as cursor:
