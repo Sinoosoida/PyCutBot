@@ -82,6 +82,13 @@ def get_yt_object(link):
     return YouTube(link)
 
 
+def get_videos_from_playlist(playlist):
+    return Playlist(playlist).video_urls
+
+def get_videos_from_channel(channel): #TODO дописать эо место, я хз как видео из канала добывать
+    pass
+
+
 def download(yt_object, video_dir, audio_dir):
     video_name = yt_object.title
     print(video_name)
