@@ -54,8 +54,39 @@ def good_link(link):
     return True
 
 
+<<<<<<< HEAD
+def download_video(link, path="./"):
+    yt = YouTube(link)
+    res = 0
+    for i in yt.streams:
+        if not (i.resolution is None):
+            if int(i.resolution[0:-1]) > res:
+                res = int(i.resolution[0:-1])
+                stream = i
+    video_path = stream.download(output_path=path)
+    return video_path
+
+
+def download_audio(link, path="./"):
+    yt = YouTube(link)
+    abr = 0
+    for i in yt.streams:
+        if not (i.abr is None) and (i.type == "audio"):
+            if int(i.abr[0:-4]) > abr:
+                abr = int(i.abr[0:-4])
+                stream = i
+    audio_path = stream.download(output_path=path)
+    return audio_path
+
 def get_yt_object(link):
     return YouTube(link)
+
+
+def get_videos_from_playlist(playlist):
+    return Playlist(playlist).video_urls
+
+def get_videos_from_channel(channel): #TODO дописать эо место, я хз как видео из канала добывать
+    pass
 
 
 def download(yt_object, video_dir, audio_dir):
@@ -72,3 +103,4 @@ def download(yt_object, video_dir, audio_dir):
     print(str(video_path) + " " + str(audio_path))
     print("downloading done")
     return video_name, video_path, audio_path
+>>>>>>> b27c84a158174f1a174d7fe3f0cb47dcb71f4de0
