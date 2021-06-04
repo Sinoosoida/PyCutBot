@@ -46,9 +46,7 @@ def process_link(link):
 
 
 while True:
-    for video_link_object in data_base.get_video_with_status('in queue'):
-        if not video_link_object:
-            continue
+    for video_link_object in data_base.get_videos_with_status('in queue'):
         video_link = video_link_object[0]
         data_base.set_status(video_link, 'in process')
         print(video_link + ' : in process')
