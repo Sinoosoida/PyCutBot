@@ -1,0 +1,7 @@
+moviepy
+numpy
+librosa
+pytube
+google_auth_oauthlib
+google_api_python_client
+protobuf
