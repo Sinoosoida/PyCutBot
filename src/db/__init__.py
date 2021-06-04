@@ -1,4 +1,5 @@
 import warnings
+from data_base_manager import *
 from .utils import sql_execute
 
 
@@ -20,6 +21,7 @@ class SQLParser:
         return answer
 
     def get_video_with_status(self, status):
+        update_videos(self)
         with sql_execute(self.db_name) as cursor:
             answer = list(cursor.execute("""SELECT * FROM {} WHERE status = '{}'""".format(self.tables[0], status)))
         if len(answer) == 0:
@@ -80,6 +82,7 @@ class SQLParser:
                 warnings.warn(message="2 table was already created", category=UserWarning, stacklevel=1)
 
     def get_videos_with_status(self, status):
+        update_videos(self)
         with sql_execute(self.db_name) as cursor:
             answer = list(
                 cursor.execute("""SELECT * FROM {} WHERE status = '{}'""".format(self.tables[0], status)))
