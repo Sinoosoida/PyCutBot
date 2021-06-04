@@ -1,7 +1,7 @@
 from db import *
 from core import *
 from networking import download, send_to_google_drive, good_link, get_yt_object
-from uploading import upload_video_to_youtube
+from src.youtube_uploading.uploading import upload_video_to_youtube
 import warnings
 import os
 import shutil
