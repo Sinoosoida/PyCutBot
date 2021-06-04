@@ -1,5 +1,3 @@
-from networking import *
-from db import SQLParser
 from pytube import *
 
 
