@@ -97,5 +97,3 @@ def processing_video(video_path, new_path, audio_path):
     clip.reader.__del__()
     clip.audio.reader.__del__()
     print("done")
-    # audioclip.reader.__del__()
-    # audioclip.audio.reader.__del__

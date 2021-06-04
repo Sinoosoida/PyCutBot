@@ -1,5 +1,4 @@
 from pytube import YouTube
-import os
 from google.oauth2 import service_account
 from googleapiclient.http import MediaFileUpload
 from googleapiclient.discovery import build
@@ -41,16 +40,12 @@ def send_to_google_drive(file_path, name):
     service.files().create(body=file_metadata, media_body=media, fields='id').execute()
 
 
-#
-#
-# def download_from_youtube(link):
-#     all_streams = YouTube(link).streams
-#     if len(all_streams.filter(only_audio=True)) == 0:
-#         video_path = all_streams.get_highest_resolution().download()
-#         return os.path.basename(video_path), None
-#     video_path = find_best_resolution_stream(link).download()
-#     audio_path = find_best_abr_stream(link).download()
-#     return os.path.basename(video_path), os.path.basename(audio_path)
+def download_video(yt_obj, path="./"):
+    return find_best_resolution_stream(yt_obj).download(output_path=path)
+
+
+def download_audio(yt_obj, path="./"):
+    return find_best_abr_stream(yt_obj).download(output_path=path)
 
 
 def good_link(link):
@@ -63,29 +58,12 @@ def get_yt_object(link):
     return YouTube(link)
 
 
-# def get_info(yt_obj: YouTube):
-#     return {'title': yt_obj.title,
-#             'description': yt_obj.description,
-#             ''
-#             'thumbnail_url': yt_obj.thumbnail_url
-#             }
-
-
-def download_video(yt_obj, path="./"):
-    return find_best_resolution_stream(yt_obj).download(output_path=path)
-
-
-def download_audio(yt_obj, path="./"):
-    return find_best_abr_stream(yt_obj).download(output_path=path)
-
-
-def download(link, video_dir, audio_dir):
-    yt_object = YouTube(link)
+def download(yt_object, video_dir, audio_dir):
     video_name = yt_object.title
     print(video_name)
-    video_path = download_video(link, video_dir)
+    video_path = download_video(yt_object, video_dir)
     print(video_path)
-    audio_path = download_audio(link, audio_dir)
+    audio_path = download_audio(yt_object, audio_dir)
     print(video_path)
     if not audio_path:
         warnings.warn(message="have not audio", category=UserWarning, stacklevel=1)
@@ -93,4 +71,4 @@ def download(link, video_dir, audio_dir):
         warnings.warn(message="have not audio", category=UserWarning, stacklevel=1)
     print(str(video_path) + " " + str(audio_path))
     print("downloading done")
-    return video_name, video_path, audio_path, yt_object
+    return video_name, video_path, audio_path
