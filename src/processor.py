@@ -21,6 +21,10 @@ def prepare_for_processing(yt_object):
         return download(yt_object, "./media/core", "./media/audio")
 
 
+def upload_to_youtube(yt_object):
+    pass
+
+
 def process_link(link):
     yt_object = get_yt_object(link)
     video_name, video_path, audio_path = prepare_for_processing(yt_object)
@@ -32,8 +36,9 @@ def process_link(link):
 
 
 while True:
-    links_from_lists(data_base)
-    for video_link_object in data_base.get_videos_with_status('in queue'):
+    for video_link_object in data_base.get_video_with_status('in queue'):
+        if not video_link_object:
+            continue
         video_link = video_link_object[0]
         data_base.set_status(video_link, 'in process')
         print(video_link + ' : in process')
