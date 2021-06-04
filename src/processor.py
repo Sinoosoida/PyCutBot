@@ -1,6 +1,7 @@
 from db import *
 from core import *
 from networking import download, send_to_google_drive, good_link, get_yt_object
+from uploading import upload_video_to_youtube
 from data_base_manager import *
 import warnings
 import os
@@ -18,21 +19,30 @@ def prepare_for_processing(yt_object):
         os.mkdir("./media/core")
         os.makedirs("./media/new_video")
         os.makedirs("./media/audio")
-        return download(yt_object, "./media/core", "./media/audio")
+        os.makedirs("./media/thumbnail")
+        return download(yt_object, "./media/core", "./media/audio", "./media/thumbnail")
 
 
-def upload_to_youtube(yt_object):
-    pass
+def add_credits_to_description(text, link, author):
+    video_credits = f"Оригинал видео: {link} с канала {author}"
+    return text + f"\n{video_credits}"
 
 
 def process_link(link):
     yt_object = get_yt_object(link)
-    video_name, video_path, audio_path = prepare_for_processing(yt_object)
-    new_path = "./media/new_video/core.mp4"
-    processing_video(video_path, new_path, audio_path)
+    video_name, video_path, audio_path, thumbnail_path = prepare_for_processing(yt_object)
+    new_video_path = "./media/new_video/core.mp4"
+    processing_video(video_path, new_video_path, audio_path)
     print("processing_done")
-    send_to_google_drive(new_path, video_name + ".mp4")
+    send_to_google_drive(new_video_path, video_name + ".mp4")
     print("saving to google drive done")
+    upload_video_to_youtube(video_path=new_video_path,
+                            thumbnail_path=thumbnail_path,
+                            title=yt_object.title,
+                            description=add_credits_to_description(yt_object.description,
+                                                                   link,
+                                                                   yt_object.author),
+                            tags=yt_object.keywords)
 
 
 while True:
