@@ -76,11 +76,11 @@ def processing_audio(number_of_frames, name="audio.wav", limit_coefficient=1, pr
     return cuts
 
 
-def processing_video(video_path, new_path, audio_path):
-    print(video_path)
-    print(new_path)
+def processing_video(input_video_path, output_video_path, audio_path):
+    print(input_video_path)
+    print(output_video_path)
     print(audio_path)
-    clip = VideoFileClip(video_path)
+    clip = VideoFileClip(input_video_path)
     print("video_d_done")
     audioclip = AudioFileClip(audio_path)
     print("audio_d_done")
@@ -93,7 +93,7 @@ def processing_video(video_path, new_path, audio_path):
     clips = []
     for i in cuts:
         clips.append(clip.subclip(i[0] * duration / number_of_frames, i[1] * duration / number_of_frames))
-    final = concatenate_videoclips(clips).write_videofile(new_path)
+    final = concatenate_videoclips(clips).write_videofile(output_video_path)
     clip.reader.__del__()
     clip.audio.reader.__del__()
     print("done")
