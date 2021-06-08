@@ -1,24 +1,7 @@
-from pytube import YouTube
-from google.oauth2 import service_account
-from googleapiclient.http import MediaFileUpload
-from googleapiclient.discovery import build
 import warnings
-import requests
 import os
-
-
-def download_thumbnail(yt_object: YouTube, image_dir):
-    url = yt_object.thumbnail_url
-    full_path = os.path.join(image_dir, 'thumbnail.png')
-    with open(full_path, 'wb') as handle:
-        response = requests.get(url, stream=True)
-        if not response.ok:
-            return None
-        for block in response.iter_content(1024):
-            if not block:
-                break
-            handle.write(block)
-    return full_path
+from pytube import YouTube
+import requests
 
 
 def find_best_resolution_stream(yt_obj):
@@ -41,27 +24,26 @@ def find_best_abr_stream(yt_obj):
     return best_abr_stream
 
 
-def send_to_google_drive(file_path, name):
-    SCOPES = ['https://www.googleapis.com/auth/drive']
-    SERVICE_ACCOUNT_FILE = './drive-keys.json'
-    credentials = service_account.Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-    service = build('drive', 'v3', credentials=credentials)
-    folder_id = '1n1Zi4KbOKQgOaoKyYuo4Vs0vARAhXsBr'
-    file_metadata = {
-        'name': name,
-        'parents': [folder_id]
-    }
-    media = MediaFileUpload(file_path, resumable=True)
-    service.files().create(body=file_metadata, media_body=media, fields='id').execute()
-
-
 def download_video(yt_obj, path="./"):
     return find_best_resolution_stream(yt_obj).download(output_path=path)
 
 
 def download_audio(yt_obj, path="./"):
     return find_best_abr_stream(yt_obj).download(output_path=path)
+
+
+def download_thumbnail(yt_object: YouTube, path="./"):
+    url = yt_object.thumbnail_url
+    full_path = os.path.abspath(os.path.join(path, 'thumbnail.png'))
+    with open(full_path, 'wb') as handle:
+        response = requests.get(url, stream=True)
+        if not response.ok:
+            return None
+        for block in response.iter_content(1024):
+            if not block:
+                break
+            handle.write(block)
+    return full_path
 
 
 def good_link(link):
@@ -74,13 +56,13 @@ def get_yt_object(link):
     return YouTube(link)
 
 
-def download(yt_object: YouTube, video_dir, audio_dir, thumbnail_dir):
+def download_video_from_youtube(yt_object: YouTube, video_dir, audio_dir, thumbnail_dir):
     video_name = yt_object.title
     print(video_name)
     video_path = download_video(yt_object, video_dir)
-    print(video_path)
+    print(os.path.abspath(video_path))
     audio_path = download_audio(yt_object, audio_dir)
-    print(video_path)
+    print(os.path.abspath(audio_path))
     thumbnail_path = download_thumbnail(yt_object, thumbnail_dir)
     print(thumbnail_path)
     if not audio_path:

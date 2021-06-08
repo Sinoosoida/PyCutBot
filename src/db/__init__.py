@@ -1,7 +1,6 @@
 import warnings
-from data_base_manager import *
-from .utils import sql_execute
-
+from src.db.data_base_manager import *
+from src.db.utils import sql_execute
 
 
 class SQLParser:
