@@ -5,8 +5,12 @@ from src.processing.yt_upload.google_api_utils import Create_Service
 from googleapiclient.http import MediaFileUpload
 
 
+def get_abs_path(relative_path):
+    dir_name = os.path.dirname(__file__)
+    return os.path.join(dir_name, relative_path)
+
 def upload_video_to_youtube(video_path, title, description, tags, thumbnail_path=None, app_version=4):
-    CLIENT_SECRET_FILE = os.path.abspath(fr"yt_upload/client_secrets/client_secret_{app_version}.json")
+    CLIENT_SECRET_FILE = get_abs_path('client_secrets/client_secret_{app_version}.json')
     API_NAME = 'youtube'
     API_VERSION = 'v3'
     SCOPES = ['https://www.googleapis.com/auth/youtube.upload']

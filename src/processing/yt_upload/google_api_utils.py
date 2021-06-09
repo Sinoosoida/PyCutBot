@@ -6,6 +6,11 @@ from google.auth.transport.requests import Request
 import datetime
 
 
+def get_abs_path(relative_path):
+    dir_name = os.path.dirname(__file__)
+    return os.path.join(dir_name, relative_path)
+
+
 def Create_Service(client_secret_file, api_name, api_version, app_version, *scopes):
     print(client_secret_file, api_name, api_version, scopes, sep='-')
     CLIENT_SECRET_FILE = client_secret_file
@@ -15,9 +20,7 @@ def Create_Service(client_secret_file, api_name, api_version, app_version, *scop
     print(SCOPES)
 
     cred = None
-
-    pickle_file = os.path.abspath(f'yt_upload/pickles/token_{app_version}.pickle')
-    # print(pickle_file)
+    pickle_file = get_abs_path(f'pickles/token_{app_version}.pickle')
 
     if os.path.exists(pickle_file):
         with open(pickle_file, 'rb') as token:
