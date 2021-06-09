@@ -1,8 +1,9 @@
-moviepy
 numpy
-librosa
-pytube
+moviepy
 google_auth_oauthlib
-google_api_python_client
-protobuf
+pytube
+librosa
 requests
+google_api_python_client
+Pillow
+protobuf
