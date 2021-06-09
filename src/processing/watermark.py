@@ -1,7 +1,7 @@
 from PIL import Image
 
 
-def add_watermark(pil_img, watermark_img, position=(0, 0)):
+def add_watermark(pil_img, watermark_img, position_type='default', position=None):
     width, height = pil_img.size
 
     w2h = watermark_img.size[0] / watermark_img.size[1]
@@ -12,6 +12,9 @@ def add_watermark(pil_img, watermark_img, position=(0, 0)):
     transparent.paste(pil_img, (0, 0))
 
     watermark_img = watermark_img.resize((wm_width, wm_height))
+
+    if position_type == 'default':
+        position = (0, height - wm_height)
     transparent.paste(watermark_img, position, mask=watermark_img)
     return transparent.convert('RGB')
 
@@ -22,6 +25,6 @@ def gen_thumbnail_with_watermark(input_thumbnail_path, watermark_path, output_th
 
 
 if __name__ == "__main__":
-    gen_thumbnail_with_watermark(fr'C:\Users\79161\PycharmProjects\PyCutBot\useful_scripts\thumbnail_nf.png',
+    gen_thumbnail_with_watermark(fr'C:\Users\79161\PycharmProjects\PyCutBot\useful_scripts\thumbnail_prik.png',
                                  fr'C:\Users\79161\PycharmProjects\PyCutBot\src\img\watermark.png',
-                                 fr'C:\Users\79161\PycharmProjects\PyCutBot\useful_scripts\thumbnail_nf2_MARKED.png')
+                                 fr'C:\Users\79161\PycharmProjects\PyCutBot\useful_scripts\thumbnail_prik1.png')
