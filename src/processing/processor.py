@@ -45,7 +45,6 @@ def process_link(link):
     )
 
 
-# process_link('https://youtu.be/wLWgQnmqTvY')
 if __name__ == '__main__':
     while True:
         for video_link_object in data_base.get_videos_with_status("in queue"):
