@@ -36,8 +36,6 @@ def process_link(link):
     processing_video(input_video_path, output_video_path, audio_path)
     gen_thumbnail_with_watermark(input_thumbnail_path, dirs.WATERMARK_PATH, output_thumbnail_path)
     print("processing_done")
-    # send_to_google_drive(new_video_path, video_name + ".mp4")
-    # print("saving to google drive done")
     upload_video_to_youtube(
         video_path=output_video_path,
         thumbnail_path=output_thumbnail_path,
