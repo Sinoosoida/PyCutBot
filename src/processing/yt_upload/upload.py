@@ -2,6 +2,7 @@ import datetime
 import os.path
 from googleapiclient.http import MediaFileUpload
 from src.processing.yt_upload.google_api_utils import Create_Service
+from src.requests_utils import with_retries
 
 
 def get_abs_path(relative_path):
@@ -9,6 +10,7 @@ def get_abs_path(relative_path):
     return os.path.join(dir_name, relative_path)
 
 
+@with_retries(3)
 def upload_video_to_youtube(video_path, title, description, tags,
                             thumbnail_path=None, app_version=4):
     CLIENT_SECRET_FILE = get_abs_path('client_secrets/client_secret_{app_version}.json')
