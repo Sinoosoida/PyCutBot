@@ -1,7 +1,3 @@
-from utils import timeit
-
-
-@timeit
 def get_new_frame_codes(cuts, frame_codes):
     new_frame_codes = []
 

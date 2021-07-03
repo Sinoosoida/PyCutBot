@@ -42,7 +42,7 @@ def delete_short_cuts(cuts, number_of_frames_limit=0):  # готово
     for i in range(len(cuts)):
         if (cuts[i][1] - cuts[i][0]) >= number_of_frames_limit:
             tmp_cuts.append(cuts[i])
-    return tmp_cuts
+    return np.array(tmp_cuts)
 
 
 def make_cuts(frames):
@@ -70,13 +70,13 @@ def make_cuts(frames):
 def processing_audio(number_of_frames, name="audio.wav", limit_coefficient=1, prev_frames=0, post_frames=0,
                      number_of_frames_limit=0):
     audio_array, sample_rate = librosa.load(name)
-    time_of_audio = len(audio_array) / sample_rate
     volume_limit = np.median(audio_array ** 2) * limit_coefficient
     frames = detect_loud_frames(audio_array, number_of_frames, volume_limit)
     frames = add_frames(frames, prev_frames, post_frames)
     cuts = make_cuts(frames)
     cuts = delete_short_cuts(cuts, number_of_frames_limit)
     return cuts
+
 
 def processing_video(input_video_path, output_video_path, audio_path, time_codes=None) -> list:
     print(input_video_path)
@@ -96,7 +96,7 @@ def processing_video(input_video_path, output_video_path, audio_path, time_codes
     clips = []
     for i in cuts:
         clips.append(clip.subclip(i[0] * duration / number_of_frames, i[1] * duration / number_of_frames))
-    final = concatenate_videoclips(clips).write_videofile(output_video_path)
+    concatenate_videoclips(clips).write_videofile(output_video_path)
     clip.reader.__del__()
     clip.audio.reader.__del__()
     print("done")
