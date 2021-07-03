@@ -1,7 +1,8 @@
-from moviepy.editor import *
-from moviepy.editor import VideoFileClip, concatenate_videoclips
 import librosa
 import numpy as np
+from moviepy.editor import *
+from moviepy.editor import VideoFileClip, concatenate_videoclips
+from src.processing.core.time_codes import get_new_time_codes
 
 
 def decouple_audio(video_name, audio_name):
@@ -48,19 +49,21 @@ def make_cuts(frames):
     cuts = []
     place = 0
     expect = None
-    for i in range(0, len(frames)):
+
+    for frame_idx in range(0, len(frames)):
         if expect is None:
-            expect = frames[i]
-            place = i
+            expect = frames[frame_idx]
+            place = frame_idx
         else:
-            if (not expect) and frames[i]:
-                expect = frames[i]
-                place = i
-            if expect and (not frames[i]):
-                cuts.append([place, i - 1])
-                expect = frames[i]
+            if (not expect) and frames[frame_idx]:
+                expect = frames[frame_idx]
+                place = frame_idx
+            if expect and (not frames[frame_idx]):
+                cuts.append([place, frame_idx - 1])
+                expect = frames[frame_idx]
     if expect:
         cuts.append([place, len(frames) - 1])
+    print('CUTS:', cuts)
     return cuts
 
 
@@ -75,12 +78,12 @@ def processing_audio(number_of_frames, name="audio.wav", limit_coefficient=1, pr
     cuts = delete_short_cuts(cuts, number_of_frames_limit)
     return cuts
 
-
-def processing_video(input_video_path, output_video_path, audio_path):
+def processing_video(input_video_path, output_video_path, audio_path, time_codes=None) -> list:
     print(input_video_path)
     print(output_video_path)
     print(audio_path)
     clip = VideoFileClip(input_video_path)
+    fps = clip.fps
     print("video_d_done")
     audioclip = AudioFileClip(audio_path)
     print("audio_d_done")
@@ -97,3 +100,7 @@ def processing_video(input_video_path, output_video_path, audio_path):
     clip.reader.__del__()
     clip.audio.reader.__del__()
     print("done")
+
+    if time_codes:
+        new_time_codes = get_new_time_codes(cuts, time_codes, fps)
+        return new_time_codes

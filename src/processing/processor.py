@@ -10,6 +10,7 @@ from src.processing.yt_download import (
 )
 from src.processing.watermark import gen_thumbnail_with_watermark
 from src.processing.yt_upload import upload_video_to_youtube
+from src.processing.core.time_codes import get_time_codes
 
 data_base = SQLParser()
 data_base.create_db()
@@ -23,9 +24,12 @@ def prepare_for_processing(yt_object):
     return downloading_res
 
 
-def gen_description(link, author):
-    video_credits = f"Оригинал видео: {link} с канала {author}"
-    return f"\n{video_credits}"
+def gen_description(yt_object, time_codes=None):
+    video_credits = f"Оригинал видео: {yt_object.watch_url} с канала {yt_object.author}."
+    time_codes_fmtd = '\n'.join(f'{k}{v}' for k, v in time_codes.items())
+    time_codes_str = f"Таймкоды (экспериментальная версия, возможны погрешности):\n{time_codes_fmtd}"
+
+    return f"\n{video_credits}\n{time_codes_str}"
 
 
 def process_link(link):
@@ -42,14 +46,18 @@ def process_link(link):
     output_thumbnail_path = os.path.join(dirs.OUTPUT_THUMBNAIL_DIR, "thumbnail.png")
     print('output_video_path'.upper(), output_video_path)
 
-    processing_video(input_video_path, output_video_path, audio_path)
+    description = yt_object.description
+
+    time_codes = get_time_codes(description)
+    new_time_codes_v = processing_video(input_video_path, output_video_path, audio_path, list(time_codes.keys()))
+
     gen_thumbnail_with_watermark(input_thumbnail_path, dirs.WATERMARK_PATH, output_thumbnail_path)
     print("processing_done")
     upload_video_to_youtube(
         video_path=output_video_path,
         thumbnail_path=output_thumbnail_path,
         title=yt_object.title,
-        description=gen_description(link, yt_object.author),
+        description=gen_description(yt_object, dict(zip(new_time_codes_v, time_codes.values()))),
         tags=yt_object.keywords,
     )
     return True

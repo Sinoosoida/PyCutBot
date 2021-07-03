@@ -60,7 +60,7 @@ def good_link(link):
 
 
 @with_retries()
-def get_yt_object(link):
+def get_yt_object(link) -> YouTube:
     return YouTube(link)
 
 
