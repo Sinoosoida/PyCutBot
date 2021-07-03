@@ -24,7 +24,7 @@ def get_new_frame_codes(cuts, frame_codes):
                                     _deleted_frames_num + (cuts[_pos_in_cuts + 1][0] -
                                                            cuts[_pos_in_cuts][1] + 1))
         # лежит за последним катом
-        return frame_codes - _deleted_frames_num, _pos_in_cuts, _deleted_frames_num
+        return frame_code - _deleted_frames_num, _pos_in_cuts, _deleted_frames_num
 
     for frame_code in frame_codes:
         print(f'frame code:{frame_code}')
