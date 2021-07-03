@@ -1,27 +1,30 @@
+from utils import timeit
+
+
+@timeit
 def get_new_frame_codes(cuts, frame_codes):
     new_frame_codes = []
 
-    pos_in_cuts = -1
+    pos_in_cuts = 0
     deleted_frames_num = 0
 
     def serve_frame_code(_frame_code, _pos_in_cuts, _deleted_frames_num):
         if _frame_code < cuts[0][0]:
-            return _frame_code, _pos_in_cuts, _deleted_frames_num
+            return 0, 0, cuts[0][0]
         if cuts[_pos_in_cuts][0] <= _frame_code <= cuts[_pos_in_cuts][1]:
             print('IN CUT')
-            print(f'_pos_in_cuts: {_pos_in_cuts, cuts[_pos_in_cuts][0] - 1}')
-            return max(0, cuts[_pos_in_cuts][0] - 1 - _deleted_frames_num), _pos_in_cuts, _deleted_frames_num
-        if _frame_code > cuts[-1][1]:
-            print('FINAL')
             return _frame_code - _deleted_frames_num, _pos_in_cuts, _deleted_frames_num
-        if not (cuts[_pos_in_cuts][1] < _frame_code < cuts[_pos_in_cuts + 1][0]):
+        if _pos_in_cuts + 1 < len(cuts):
+            if cuts[_pos_in_cuts][1] < _frame_code < cuts[_pos_in_cuts + 1][-1]:
+                print('BETWEEN')
+                return cuts[_pos_in_cuts][1] - _deleted_frames_num, _pos_in_cuts, _deleted_frames_num
             print('REC')
-            return serve_frame_code(_frame_code, _pos_in_cuts + 1,
-                                    _deleted_frames_num + cuts[_pos_in_cuts][1] - cuts[_pos_in_cuts][0] + 1)
-        # _deleted_frames_num += cuts[_pos_in_cuts][1] - cuts[_pos_in_cuts][0] + 1
-        # print(cuts[_pos_in_cuts][1], cuts[_pos_in_cuts + 1][0])
-        return _frame_code - _deleted_frames_num - (
-                cuts[_pos_in_cuts][1] - cuts[_pos_in_cuts][0] + 1), _pos_in_cuts, _deleted_frames_num
+            return serve_frame_code(_frame_code,
+                                    _pos_in_cuts + 1,
+                                    _deleted_frames_num + (cuts[_pos_in_cuts + 1][0] -
+                                                           cuts[_pos_in_cuts][1] + 1))
+        # лежит за последним катом
+        return frame_codes - _deleted_frames_num, _pos_in_cuts, _deleted_frames_num
 
     for frame_code in frame_codes:
         print(f'frame code:{frame_code}')
