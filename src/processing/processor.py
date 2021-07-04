@@ -26,10 +26,13 @@ def prepare_for_processing(yt_object):
 
 def gen_description(yt_object, time_codes=None):
     video_credits = f"Оригинал видео: {yt_object.watch_url} с канала {yt_object.author}."
-    time_codes_fmtd = '\n'.join(f'{k}{v}' for k, v in time_codes.items())
-    time_codes_str = f"Таймкоды (экспериментальная версия, возможны погрешности):\n{time_codes_fmtd}"
+    result = f"\n{video_credits}\n"
+    if time_codes:
+        time_codes_fmtd = '\n'.join(f'{k}{v}' for k, v in time_codes.items())
+        time_codes_str = f"Таймкоды (экспериментальная версия, возможны погрешности):\n{time_codes_fmtd}"
+        result += time_codes_str
 
-    return f"\n{video_credits}\n{time_codes_str}"
+    return result
 
 
 def process_link(link):
@@ -49,7 +52,8 @@ def process_link(link):
     description = yt_object.description
 
     time_codes = get_time_codes(description)
-    new_time_codes_v = processing_video(input_video_path, output_video_path, audio_path, list(time_codes.keys()))
+    new_time_codes_k = processing_video(input_video_path, output_video_path, audio_path, list(time_codes.keys()))
+    new_time_codes = dict(zip(new_time_codes_k, time_codes.values())) if new_time_codes_k else None
 
     gen_thumbnail_with_watermark(input_thumbnail_path, dirs.WATERMARK_PATH, output_thumbnail_path)
     print("processing_done")
@@ -57,7 +61,7 @@ def process_link(link):
         video_path=output_video_path,
         thumbnail_path=output_thumbnail_path,
         title=yt_object.title,
-        description=gen_description(yt_object, dict(zip(new_time_codes_v, time_codes.values()))),
+        description=gen_description(yt_object, new_time_codes),
         tags=yt_object.keywords,
     )
     return True
