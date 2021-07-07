@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2021-06-09T14:20:09.221Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36" etag="2-mqgBJ5OHcLPrVDr3Ww" version="14.7.6" type="github">
+<mxfile host="app.diagrams.net" modified="2021-07-07T21:11:46.696Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" etag="iKJRXZcYa6ZcFHgcpXFn" version="14.8.0" type="github">
   <diagram id="ya2vrZNUnKUOM5koukpj" name="Page-1">
-    <mxGraphModel dx="1718" dy="962" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+    <mxGraphModel dx="1038" dy="547" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -10,13 +10,13 @@
         <mxCell id="Id35spG8NxemwtM4EPeo-6" value="&lt;h1 style=&quot;font-size: 16px&quot;&gt;DB&lt;/h1&gt;" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;align=left;verticalAlign=top;horizontal=1;fontSize=16;spacingLeft=5;" parent="1" vertex="1">
           <mxGeometry x="500" y="610" width="680" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="Id35spG8NxemwtM4EPeo-1" value="Videos&lt;br&gt;&lt;b&gt;url; [playlist_url, ]&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="Id35spG8NxemwtM4EPeo-1" value="video&lt;br&gt;&lt;b&gt;url; [playlist_url, ]&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="540" y="650" width="120" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="Id35spG8NxemwtM4EPeo-2" value="Playlists&lt;br&gt;&lt;b&gt;url&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="Id35spG8NxemwtM4EPeo-2" value="playlist&lt;br&gt;&lt;b&gt;url&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="780" y="650" width="120" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="Id35spG8NxemwtM4EPeo-3" value="Channels&lt;br&gt;&lt;b&gt;url; last_request_datetime&lt;br&gt;&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="Id35spG8NxemwtM4EPeo-3" value="channel&lt;br&gt;&lt;b&gt;url; last_request_datetime&lt;br&gt;&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1000" y="650" width="160" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Id35spG8NxemwtM4EPeo-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=16;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="Id35spG8NxemwtM4EPeo-7" target="Id35spG8NxemwtM4EPeo-1" edge="1">
@@ -32,7 +32,7 @@
         <mxCell id="Id35spG8NxemwtM4EPeo-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=16;" parent="1" source="Id35spG8NxemwtM4EPeo-7" target="Id35spG8NxemwtM4EPeo-3" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Y5aYFyg4fXFjkKODYGsn-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=1 2;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="Id35spG8NxemwtM4EPeo-7" target="Y5aYFyg4fXFjkKODYGsn-1">
+        <mxCell id="Y5aYFyg4fXFjkKODYGsn-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=1 2;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="Id35spG8NxemwtM4EPeo-7" target="Y5aYFyg4fXFjkKODYGsn-1" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Id35spG8NxemwtM4EPeo-7" value="DB_manager" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -50,7 +50,7 @@
         <mxCell id="Id35spG8NxemwtM4EPeo-13" value="core" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="320" y="400" width="120" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="Y5aYFyg4fXFjkKODYGsn-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;dashed=1;dashPattern=1 2;" edge="1" parent="1" source="Id35spG8NxemwtM4EPeo-14" target="Y5aYFyg4fXFjkKODYGsn-1">
+        <mxCell id="Y5aYFyg4fXFjkKODYGsn-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;dashed=1;dashPattern=1 2;" parent="1" source="Id35spG8NxemwtM4EPeo-14" target="Y5aYFyg4fXFjkKODYGsn-1" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Id35spG8NxemwtM4EPeo-14" value="uploader" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -70,8 +70,20 @@
         <mxCell id="Id35spG8NxemwtM4EPeo-15" value="downloader" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="320" y="480" width="120" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="Y5aYFyg4fXFjkKODYGsn-1" value="Google API" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="Y5aYFyg4fXFjkKODYGsn-1" value="Google API" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="660" y="40" width="110" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="69pxOH8V8-4XPzo-Qrgk-2" value="&lt;h1 style=&quot;font-size: 16px&quot;&gt;Mongo DB&lt;/h1&gt;" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;align=left;verticalAlign=top;horizontal=1;fontSize=16;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="450" y="1010" width="780" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="69pxOH8V8-4XPzo-Qrgk-3" value="video&lt;br&gt;&lt;b&gt;{&#39;url&#39;: str,&lt;br&gt;&#39;status&#39;: str,&lt;br&gt;&#39;playlists_urls&#39;: list[str]}&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="1070" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="69pxOH8V8-4XPzo-Qrgk-4" value="playlist&lt;br&gt;&lt;b&gt;[url]&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="780" y="1090" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="69pxOH8V8-4XPzo-Qrgk-5" value="channel&lt;br&gt;&lt;b&gt;{&#39;url&#39;: str,&lt;br&gt;&#39;&lt;/b&gt;&lt;b&gt;last_request_datetime&#39;: datetime}&lt;/b&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="1070" width="200" height="80" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
