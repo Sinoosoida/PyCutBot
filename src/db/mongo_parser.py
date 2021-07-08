@@ -127,9 +127,7 @@ class MongoParser(metaclass=Singleton):
         if not mongo_doc_type:
             return
         obj: mongo.Document = mongo_doc_type(**kwargs)
-        s = time.time()
         desired_objects = mongo_doc_type.objects(url=kwargs["url"])
-        print('QQQ:', time.time() - s)
         if desired_objects.count() == 0:
             obj.save()
 
@@ -159,7 +157,7 @@ if __name__ == '__main__':
                          password=mongo_password)
     # parser = MongoParser()
     print('connected')
-    # parser._save('video', url='http://base', status='done')
+    parser._save('video', url='http://base', status=Status.DONE)
     # print([obj.url for obj in parser.get_all('video')])
     print(parser.get_all('video'))
 #     mongo.connect('data0')
