@@ -1,56 +1,22 @@
-import mongoengine as mongo
-from abc import abstractmethod, ABCMeta
-from utils import Singleton, timeit
-from enum import Enum, auto
-import time
-
 from datetime import datetime
+from enum import Enum
+import mongoengine as mongo
+from utils import Singleton, timeit
 
 
-class Parser(ABCMeta, Singleton):
-
-    # def get(self, name_of_table, link):#
-    #     with sql_execute(self.db_name) as cursor:
-    #         answer = list(cursor.execute("""SELECT * FROM {} WHERE link = '{}'"""
-    #                                      .format(name_of_table, link)))
-    #     return answer
-
-    @abstractmethod
-    def get_all(self, name_of_table):
-        pass
-
-    @abstractmethod
-    def get_video_with_status(self, status):
-        pass
-
-    @abstractmethod
-    def set_status(self, link, status):  #
-        pass
-
-    @abstractmethod
-    def get_videos_with_status(self, status):
-        pass
-
-    @abstractmethod
-    def save(self, name_of_table, link, status=None):
-        pass
-
-    @abstractmethod
-    def clear_db(self, name_of_table=None):
-        pass
-
-    @abstractmethod
-    def create_db(self):
-        pass
+class Collection(Enum):
+    VIDEO = 'video'
+    PLAYLIST = 'playlist'
+    CHANNEL = 'channel'
 
 
 class Status(Enum):
-    IN_QUEUE = "in queue"
-    DONE = "done"
-    ERROR = "error"
+    IN_QUEUE = 'in queue'
+    DONE = 'done'
+    ERROR = 'error'
 
     # extras:
-    PROCESSING = "processing"
+    PROCESSING = 'processing'
 
 
 class Video(mongo.Document):
@@ -61,7 +27,7 @@ class Video(mongo.Document):
     def __str__(self):
         return str({'url': self.url,
                     'status': self.status,
-                    'playlists_url': self.playlists_urls})
+                    'playlists_urls': self.playlists_urls})
 
 
 class Playlist(mongo.Document):
@@ -82,7 +48,7 @@ class Channel(mongo.Document):
 
 class MongoParser(metaclass=Singleton):
     @timeit
-    def __init__(self, db_name="data0", atlas=False, username=None, password=None):
+    def __init__(self, db_name='data0', atlas=False, username=None, password=None):
         if atlas:
             host = (
                 f"mongodb+srv://{username}:{password}"
@@ -92,77 +58,66 @@ class MongoParser(metaclass=Singleton):
             mongo.connect(host=host, db=db_name)
         else:
             mongo.connect(db=db_name)
-        self.collections = {"video": Video, "playlist": Playlist, "channel": Channel}
+        self.collections = {
+            Collection.VIDEO: Video,
+            Collection.PLAYLIST: Playlist,
+            Collection.CHANNEL: Channel,
+        }
 
-    def clear_db(self, name_of_table=None):
-        if not name_of_table:
-            print("no name_of_table specified, exiting")
-            return
-        print(self.get_all(name_of_table))
-        if input("Are you sure? y/n") == "y":
-            mongo_doc_type = self.collections.get(name_of_table)
-            if not mongo_doc_type:
-                return
-            mongo_doc_type.objects.delete()
+    def _get_doc_type(self, collection_name):
+        return self.collections.get(Collection(collection_name))
 
-    @timeit
-    def get_all(self, name_of_table):
-        mongo_doc_type = self.collections.get(name_of_table)
+    def get_all(self, collection_name) -> list:
+        mongo_doc_type = self._get_doc_type(collection_name)
         if not mongo_doc_type:
-            return
+            return []
         return list(mongo_doc_type.objects)
 
-    def save(self, name_of_table, link, status=None):
-        mongo_doc_type = self.collections.get(name_of_table)
-        if not mongo_doc_type:
-            return
-        obj: mongo.Document = mongo_doc_type(url=link, status=status)
-        if mongo_doc_type.objects(url=link).count() == 0:
-            obj.save()
-
-    def _save(self, collection_name, **kwargs):
+    def save(self, collection_name, **kwargs):
         if not kwargs.get("url"):
             return
-        mongo_doc_type = self.collections.get(collection_name)
+        mongo_doc_type = self._get_doc_type(collection_name)
         if not mongo_doc_type:
             return
-        obj: mongo.Document = mongo_doc_type(**kwargs)
-        desired_objects = mongo_doc_type.objects(url=kwargs["url"])
-        if desired_objects.count() == 0:
-            obj.save()
+        new_doc: mongo.Document = mongo_doc_type(**kwargs)
+        same_docs = mongo_doc_type.objects(url=kwargs["url"])
+        if same_docs.count() == 0:
+            new_doc.save()
 
-    def create_db(self):
-        pass
+    def set(self, collection_name, **kwargs):
+        if not kwargs.get("url"):
+            return
+        mongo_doc_type = self._get_doc_type(collection_name)
+        if not mongo_doc_type:
+            return
+        docs_to_change = mongo_doc_type.objects(url=kwargs["url"])
+        for doc in docs_to_change:
+            for attr in kwargs:
+                setattr(doc, attr, kwargs[attr])
+            doc.save()
 
-    def get_video_with_status(self, status):
-        res = list(Video.objects(status=status))
-        if not res:
-            return ""
-        else:
-            return res[0].url
+    @staticmethod
+    def add_playlist_to_video(url, playlist_urls):
+        video = Video.objects.get(url=url)
+        if playlist_urls not in video.playlists_urls:
+            video.playlists_urls.append(playlist_urls)
+            video.save()
 
-    def set_status(self, link, status):
-        for video in Video.objects(link=link):
-            video.status = status
+    @staticmethod
+    def get_videos_with_status(status) -> list:
+        return list(Video.objects(status=Status(status)))
 
-    def get_videos_with_status(self, status):
-        return list(Video.objects(status=status))
+    @staticmethod
+    def get_video_with_status(status) -> Video:
+        res = MongoParser.get_videos_with_status(status)
+        if res:
+            return res[0]
 
 
-#
-if __name__ == '__main__':
-    from src.config import mongo_password, mongo_username
-    parser = MongoParser(atlas=True,
-                         username=mongo_username,
-                         password=mongo_password)
-    # parser = MongoParser()
-    print('connected')
-    parser._save('video', url='http://base', status=Status.DONE)
-    # print([obj.url for obj in parser.get_all('video')])
-    print(parser.get_all('video'))
-#     mongo.connect('data0')
-#     for ob in Video.objects:
-#         print(ob)
-#         print(type(ob))
-#         print(ob.__init_subclas__())
-#         break
+if __name__ == "__main__":
+    from pprint import pprint
+
+    parser = MongoParser()
+    # parser.add_playlist_to_video('http:qwe', 'http:pl1')
+    # parser.set('video', url='http:qwe', playlists_urls=dict())
+    pprint(parser.get_all('video'))
