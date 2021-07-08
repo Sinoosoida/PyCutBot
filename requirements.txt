@@ -8,3 +8,4 @@ google_api_python_client
 Pillow
 protobuf
 mongoengine
+dnspython
