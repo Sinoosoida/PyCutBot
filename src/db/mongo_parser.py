@@ -1,6 +1,8 @@
 import mongoengine as mongo
 from abc import abstractmethod, ABCMeta
 from utils import Singleton
+from enum import Enum, auto
+from datetime import datetime
 
 
 class Parser(ABCMeta, Singleton):
@@ -40,16 +42,36 @@ class Parser(ABCMeta, Singleton):
         pass
 
 
+class Status(Enum):
+    IN_QUEUE = 'in queue'
+    DONE = 'done'
+    ERROR = 'error'
+
+    # extras:
+    PROCESSING = 'processing'
+
+
 class Video(mongo.Document):
     url = mongo.StringField(required=True)
-    status = mongo.DynamicField()
+    status = mongo.EnumField(Status, default=Status.IN_QUEUE)
     playlists_urls = mongo.ListField(mongo.StringField())
+
+
+class Playlist(mongo.Document):
+    url = mongo.StringField(required=True)
+
+
+class Channel(mongo.Document):
+    url = mongo.StringField(required=True)
+    last_request_datetime = mongo.DateTimeField(default=datetime.min)
 
 
 class MongoParser(metaclass=Singleton):
     def __init__(self, db_name='data0'):
         mongo.connect(db_name)
-        self.collections = {'video': Video, }
+        self.collections = {'video': Video,
+                            'playlist': Playlist,
+                            'channel': Channel}
 
     def clear_db(self, name_of_table=None):
         if not name_of_table:
@@ -112,4 +134,3 @@ class MongoParser(metaclass=Singleton):
 #         print(type(ob))
 #         print(ob.__init_subclas__())
 #         break
-m = MongoParser()
