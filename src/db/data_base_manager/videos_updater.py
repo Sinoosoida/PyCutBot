@@ -76,7 +76,7 @@ def videos_from_playlists(parser):#done
 
 def playlists_from_channel(parser):
     for channel in parser.get_all("channel"):
-        for video_url in get_all_playlists(channel.url)
+        for video_url in get_all_playlists(channel.url):
             parser.save(collection_name="playlist", url=video_url)
 
 
