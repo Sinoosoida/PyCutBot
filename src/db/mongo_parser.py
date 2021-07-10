@@ -112,12 +112,3 @@ class MongoParser(metaclass=Singleton):
         res = MongoParser.get_videos_with_status(status)
         if res:
             return res[0]
-
-
-if __name__ == "__main__":
-    from pprint import pprint
-
-    parser = MongoParser()
-    # parser.add_playlist_to_video('http:qwe', 'http:pl1')
-    # parser.set('video', url='http:qwe', playlists_urls=dict())
-    pprint(parser.get_all('video'))
