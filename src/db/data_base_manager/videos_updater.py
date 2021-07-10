@@ -6,6 +6,7 @@ import src.config as config
 from src.db.mongo_parser import Status, MongoParser, Collection
 from datetime import datetime
 from src.config import mongo_password, mongo_username
+from tqdm import tqdm
 
 
 def get_videos_urls_since_date(channel_url, date=datetime.min):
@@ -17,9 +18,9 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
     """
     channel = Channel(channel_url)
     res = []
-    for url in channel.video_urls:
+    for url in tqdm(channel.video_urls):
         video = YouTube(url)
-        print(type(video.publish_date))
+        #print(type(video.publish_date))
         if video.publish_date >= date:
             res.append(url)
         else:
@@ -40,7 +41,7 @@ def get_all_playlists(channel_url: str, key=config.api_key):
         playlists_list.append('https://www.youtube.com/playlist?list=' + dct['id'])
 
     while res_dict.get('nextPageToken'):
-        print(res_dict.get('nextPageToken'))
+        #print(res_dict.get('nextPageToken'))
         res = get_request_with_retries(
             f"https://www.googleapis.com/youtube/v3/playlists?channelId={channel_id}"
             f"&key={key}&maxResults=50&pageToken={res_dict.get('nextPageToken')}")
@@ -64,7 +65,7 @@ def videos_from_channel(parser):  # done
     for channel in parser.get_all("channel"):
         last_request_time = channel.last_request_datetime
         parser.set(collection_name="channel", url=channel.url, last_request_datetime=datetime.now())
-        for video_url in get_videos_urls_since_date(channel.url, last_request_time):
+        for video_url in tqdm(get_videos_urls_since_date(channel.url, last_request_time)):
             parser.save(collection_name="video", url=video_url, status="in queue")
 
 
@@ -77,7 +78,7 @@ def videos_from_playlists(parser):  # done
 
 def playlists_from_channel(parser):
     for channel in parser.get_all("channel"):
-        for playlist_url in get_all_playlists(channel.url):
+        for playlist_url in tqdm(get_all_playlists(channel.url)):
             for video_url in get_videos_url_from_playlist(playlist_url):
                 parser.add_playlist_to_video(video_url, playlist_url)
 
