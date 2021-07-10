@@ -60,7 +60,7 @@ class MongoParser(metaclass=Singleton):
             return
         video = videos_list[0]
         if playlist_url not in video.playlists_urls:
-            video.playlists_urls.append(playlist_url)
+            video.playlists_urls[playlist_url] = False
             video.save()
 
     @staticmethod
@@ -72,6 +72,15 @@ class MongoParser(metaclass=Singleton):
         res = MongoParser.get_videos_with_status(status)
         if res:
             return res[0]
+
+    @staticmethod
+    def mark_playlist_as_upload(url, playlist_url):
+        videos_list = schema.Video.objects(url__iexact=url)
+        if not videos_list:
+            return
+        video = videos_list[0]
+        video.playlists_urls[playlist_url] = True
+        video.save()
 
     def contains(self, collection_name, url, attribute_name) -> bool:
         mongo_doc_type = self._get_doc_type(collection_name)
