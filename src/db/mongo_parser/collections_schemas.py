@@ -18,11 +18,20 @@ class Status(Enum):
     PROCESSING = 'processing'
 
 
+class PlaylistDict(mongo.Document):
+    playlist_url = mongo.StringField()
+    uploaded = mongo.BooleanField()
+
+    def __str__(self):
+        return str({'playlist_url': self.playlist_url,
+                    'uploaded': self.uploaded})
+
+
 class Video(mongo.Document):
     url = mongo.StringField(required=True)
     new_video_id = mongo.StringField()
     status = mongo.EnumField(Status, default=Status.IN_QUEUE)
-    playlists_urls = mongo.ListField(mongo.StringField())
+    playlists_urls = PlaylistDict()
 
     def __str__(self):
         return str({'url': self.url,
