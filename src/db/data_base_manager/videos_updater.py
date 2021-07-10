@@ -32,6 +32,12 @@ def update_videos(parser):  # playlists_from_channel(parser)
     playlists_from_channel(parser)
 
 
+def update_playlists(parser):
+    for channel in parser.get_all("channel"):
+        for playlist_url in get_all_playlists(channel.url):
+            parser.save('playlist', url=playlist_url, load_all=False)
+
+
 parser = MongoParser(atlas=True,
                      username=mongo_username,
                      password=mongo_password)
