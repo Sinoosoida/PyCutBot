@@ -97,10 +97,13 @@ class MongoParser(metaclass=Singleton):
             doc.save()
 
     @staticmethod
-    def add_playlist_to_video(url, playlist_urls):
-        video = Video.objects.get(url=url)
-        if playlist_urls not in video.playlists_urls:
-            video.playlists_urls.append(playlist_urls)
+    def add_playlist_to_video(url, playlist_url):
+        videos_list = Video.objects(url__iexact=url)
+        if not videos_list:
+            return
+        video = videos_list[0]
+        if playlist_url not in video.playlists_urls:
+            video.playlists_urls.append(playlist_url)
             video.save()
 
     @staticmethod
