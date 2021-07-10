@@ -84,8 +84,8 @@ def playlists_from_channel(parser):
 
 
 def update_videos(parser):  # playlists_from_channel(parser)
-    videos_from_channel(parser)
-    videos_from_playlists(parser)
+    #videos_from_channel(parser)
+    #videos_from_playlists(parser)
     playlists_from_channel(parser)
 
 
