@@ -4,6 +4,7 @@ import src.config as config
 from pytube import Channel, Playlist, YouTube
 from tqdm import tqdm
 import datetime
+from datetime import datetime
 
 
 def get_videos_url_from_channel(channel):

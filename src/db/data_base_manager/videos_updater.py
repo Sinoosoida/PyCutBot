@@ -1,8 +1,8 @@
 from src.db.mongo_parser import MongoParser
 from src.db.mongo_parser.collections_schemas import Status, Collection
-from datetime import datetime
 from src.config import mongo_password, mongo_username
 from src.db.data_base_manager.uploader_utils import *
+from datetime import datetime
 
 
 def videos_from_channel(parser):  # adding all new videos from the channel
@@ -43,10 +43,16 @@ def playlist_to_video(parser):  # adding playlist links to video parameters
 
 
 def update_videos(parser):  # playlists_from_channel(parser)
+    print(1)
     videos_from_channel(parser)
-    videos_from_playlists(parser)
+    print(2)
     playlists_from_channel(parser)
+    print(3)
+    videos_from_playlists(parser)
+    print(4)
     playlist_to_video(parser)
+    print(5)
+    #load_videos_to_playlist(parser)
 
 
 parser = MongoParser(atlas=True,
