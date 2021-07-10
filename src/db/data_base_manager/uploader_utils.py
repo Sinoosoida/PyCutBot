@@ -58,11 +58,8 @@ def get_all_playlists(channel_url: str, key=config.api_key):
     return playlists_list
 
 
-def get_all_playlists(channel_url):
-    pass
-
-
 def update_playlists(parser):
     for channel in parser.get_all("channel"):
         for playlist_url in get_all_playlists(channel.url):
             parser.save('playlist', url=playlist_url, load_all=False)
+
