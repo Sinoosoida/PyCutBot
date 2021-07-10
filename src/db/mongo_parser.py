@@ -121,3 +121,23 @@ class MongoParser(metaclass=Singleton):
         res = MongoParser.get_videos_with_status(status)
         if res:
             return res[0]
+
+    def contains(self, collection_name, url, attribute_name) -> bool:
+        mongo_doc_type = self._get_doc_type(collection_name)
+        if not mongo_doc_type:
+            return False
+        docs_list = mongo_doc_type.objects(url__iexact=url)
+        if not docs_list:
+            return False
+        doc = docs_list[0]
+        return hasattr(doc, attribute_name)
+
+    def get_attr(self, collection_name, url, attribute_name):
+        mongo_doc_type = self._get_doc_type(collection_name)
+        if not mongo_doc_type:
+            return False
+        docs_list = mongo_doc_type.objects(url__iexact=url)
+        if not docs_list:
+            return False
+        doc = docs_list[0]
+        return getattr(doc, attribute_name)
