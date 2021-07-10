@@ -1,0 +1,1 @@
+from src.db.mongo_parser.mongo_parser import MongoParser

@@ -1,55 +1,6 @@
-from datetime import datetime
-from enum import Enum
 import mongoengine as mongo
 from utils import Singleton, timeit
-
-
-class Collection(Enum):
-    VIDEO = 'video'
-    PLAYLIST = 'playlist'
-    CHANNEL = 'channel'
-
-
-class Status(Enum):
-    IN_QUEUE = 'in queue'
-    DONE = 'done'
-    ERROR = 'error'
-
-    # extras:
-    PROCESSING = 'processing'
-
-
-class Video(mongo.Document):
-    url = mongo.StringField(required=True)
-    new_video_id = mongo.StringField()
-    status = mongo.EnumField(Status, default=Status.IN_QUEUE)
-    playlists_urls = mongo.ListField(mongo.StringField())
-
-    def __str__(self):
-        return str({'url': self.url,
-                    'new_video_id': self.new_video_id,
-                    'status': self.status,
-                    'playlists_urls': self.playlists_urls})
-
-
-class Playlist(mongo.Document):
-    url = mongo.StringField(required=True)
-    new_url = mongo.StringField()
-    load_all = mongo.BooleanField()
-
-    def __str__(self):
-        return str({'url': self.url,
-                    'new_url': self.new_url,
-                    'load_all': self.load_all})
-
-
-class Channel(mongo.Document):
-    url = mongo.StringField(required=True)
-    last_request_datetime = mongo.DateTimeField(default=datetime.min)
-
-    def __str__(self):
-        return str({'url': self.url,
-                    'last_request_datetime': self.last_request_datetime})
+import src.db.mongo_parser.collections_schemas as schema
 
 
 class MongoParser(metaclass=Singleton):
@@ -65,13 +16,13 @@ class MongoParser(metaclass=Singleton):
         else:
             mongo.connect(db=db_name)
         self.collections = {
-            Collection.VIDEO: Video,
-            Collection.PLAYLIST: Playlist,
-            Collection.CHANNEL: Channel,
+            schema.Collection.VIDEO: schema.Video,
+            schema.Collection.PLAYLIST: schema.Playlist,
+            schema.Collection.CHANNEL: schema.Channel,
         }
 
     def _get_doc_type(self, collection_name):
-        return self.collections.get(Collection(collection_name))
+        return self.collections.get(schema.Collection(collection_name))
 
     def get_all(self, collection_name) -> list:
         mongo_doc_type = self._get_doc_type(collection_name)
@@ -104,7 +55,7 @@ class MongoParser(metaclass=Singleton):
 
     @staticmethod
     def add_playlist_to_video(url, playlist_url):
-        videos_list = Video.objects(url__iexact=url)
+        videos_list = schema.Video.objects(url__iexact=url)
         if not videos_list:
             return
         video = videos_list[0]
@@ -114,10 +65,10 @@ class MongoParser(metaclass=Singleton):
 
     @staticmethod
     def get_videos_with_status(status) -> list:
-        return list(Video.objects(status=Status(status)))
+        return list(schema.Video.objects(status=schema.Status(status)))
 
     @staticmethod
-    def get_video_with_status(status) -> Video:
+    def get_video_with_status(status) -> schema.Video:
         res = MongoParser.get_videos_with_status(status)
         if res:
             return res[0]
