@@ -1,7 +1,9 @@
 import os
 import time
+from typing import Union
+
 import dirs
-from src.db import *
+from src.db import MongoParser
 from src.processing.core import processing_video
 from src.processing.yt_download import (
     download_video_from_youtube,
@@ -12,8 +14,7 @@ from src.processing.watermark import gen_thumbnail_with_watermark
 from src.processing.yt_upload import upload_video_to_youtube
 from src.processing.core.time_codes import get_time_codes
 
-data_base = SQLParser()
-data_base.create_db()
+parser = MongoParser()  # аргументы конструктора зависят
 
 
 def prepare_for_processing(yt_object):
@@ -35,14 +36,14 @@ def gen_description(yt_object, time_codes=None):
     return result
 
 
-def process_link(link):
+def process_link(link) -> Union[str, None]:
     yt_object = get_yt_object(link)
     if not yt_object:
-        return False
+        return None
 
     downloaded_pack = prepare_for_processing(yt_object)
     if not downloaded_pack:
-        return False
+        return None
     video_name, input_video_path, audio_path, input_thumbnail_path = downloaded_pack
 
     output_video_path = os.path.join(dirs.OUTPUT_VIDEO_DIR, video_name + ".mp4")
@@ -57,35 +58,36 @@ def process_link(link):
 
     gen_thumbnail_with_watermark(input_thumbnail_path, dirs.WATERMARK_PATH, output_thumbnail_path)
     print("processing_done")
-    upload_video_to_youtube(
+    new_video_id = upload_video_to_youtube(
         video_path=output_video_path,
         thumbnail_path=output_thumbnail_path,
         title=yt_object.title,
         description=gen_description(yt_object, new_time_codes),
         tags=yt_object.keywords,
     )
-    return True
+    return new_video_id
 
 
 if __name__ == '__main__':
     while True:
-        for video_link_object in data_base.get_videos_with_status("in queue"):
+        for video_link_object in parser.get_videos_with_status("in queue"):
             video_link = video_link_object[0]
-            data_base.set_status(video_link, "in process")
+            parser.set('video', url=video_link, status="in process")
             print(video_link + " : in process")
             try:
                 if good_link(video_link):
-                    res = process_link(video_link)
-                    if res:
+                    result_video_id = process_link(video_link)
+                    if result_video_id:
                         print('done')
+                        parser.set('video', url=video_link, new_video_id=result_video_id)
                     else:
                         print('error')
-                        data_base.set_status(video_link, "error")
+                        parser.set('video', url=video_link, status="error")
                 else:
                     print("error")
-                    data_base.set_status(video_link, "error")
+                    parser.set('video', url=video_link, status="error")
             except Exception as ex:
                 print("error:", ex)
-                data_base.set_status(video_link, "error")
+                parser.set('video', url=video_link, status="error")
 
         time.sleep(60 * 5)

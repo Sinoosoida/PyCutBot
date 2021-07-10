@@ -12,7 +12,7 @@ def get_abs_path(relative_path):
 
 @with_retries(3)
 def upload_video_to_youtube(video_path, title, description, tags,
-                            thumbnail_path=None, app_version=4):
+                            thumbnail_path=None, app_version=4) -> str:
     CLIENT_SECRET_FILE = get_abs_path('client_secrets/client_secret_{app_version}.json')
     API_NAME = 'youtube'
     API_VERSION = 'v3'
@@ -47,7 +47,10 @@ def upload_video_to_youtube(video_path, title, description, tags,
     if not thumbnail_path:
         return
 
+    new_video_id = response_upload.get('id')
     service.thumbnails().set(
-        videoId=response_upload.get('id'),
+        videoId=new_video_id,
         media_body=MediaFileUpload(thumbnail_path)
     ).execute()
+
+    return new_video_id
