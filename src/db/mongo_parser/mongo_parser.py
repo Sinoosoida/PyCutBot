@@ -60,7 +60,10 @@ class MongoParser(metaclass=Singleton):
             return
         video = videos_list[0]
         if playlist_url not in video.playlists_urls:
-            video.playlists_urls[playlist_url] = False
+            video.playlists_urls.append(
+                schema.PlaylistDict(playlist_url=playlist_url,
+                                    uploaded=False)
+            )
             video.save()
 
     @staticmethod
@@ -75,12 +78,17 @@ class MongoParser(metaclass=Singleton):
 
     @staticmethod
     def mark_playlist_as_upload(url, playlist_url):
+        # videos_list = schema.Video.objects(url__iexact=url)
         videos_list = schema.Video.objects(url__iexact=url)
         if not videos_list:
             return
         video = videos_list[0]
-        video.playlists_urls[playlist_url] = True
-        video.save()
+
+        for idx, pl_url in enumerate(video.playlists_urls):
+            if pl_url.playlist_url == playlist_url:
+                video.playlists_urls[idx].uploaded = True
+                video.save()
+                break
 
     def contains(self, collection_name, url, attribute_name) -> bool:
         mongo_doc_type = self._get_doc_type(collection_name)
@@ -101,3 +109,14 @@ class MongoParser(metaclass=Singleton):
             return False
         doc = docs_list[0]
         return getattr(doc, attribute_name)
+
+
+if __name__ == '__main__':
+    from pprint import pprint
+    p = MongoParser('data1')
+    # p.save('video', url='url2', status='in queue')
+    # p.add_playlist_to_video(url='url2', playlist_url='playlist3')
+    p.mark_playlist_as_upload(url='url1', playlist_url='playlist2')
+    playlists = (p.get_attr('video', url='url1', attribute_name='playlists_urls'))
+    for pl in playlists:
+        print(pl.playlist_url, pl.uploaded)
