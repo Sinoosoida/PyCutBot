@@ -12,8 +12,8 @@ def get_abs_path(relative_path):
 
 @with_retries(3)
 def upload_video_to_youtube(video_path, title, description, tags,
-                            thumbnail_path=None, app_version=4) -> str:
-    CLIENT_SECRET_FILE = get_abs_path('client_secrets/client_secret_{app_version}.json')
+                            thumbnail_path=None, app_version=5) -> str:
+    CLIENT_SECRET_FILE = get_abs_path('..\..\google_api\client_secrets\client_secret_{app_version}.json')
     API_NAME = 'youtube'
     API_VERSION = 'v3'
     SCOPES = ['https://www.googleapis.com/auth/youtube.upload']
@@ -54,3 +54,9 @@ def upload_video_to_youtube(video_path, title, description, tags,
     ).execute()
 
     return new_video_id
+
+upload_video_to_youtube(r'..\..\..\test_media\algo_sound_3m.mp4',
+                        'tittle',
+                        'des',
+                        ['music'],
+                        )
