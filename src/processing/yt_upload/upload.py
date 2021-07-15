@@ -54,9 +54,3 @@ def upload_video_to_youtube(video_path, title, description, tags,
     ).execute()
 
     return new_video_id
-
-upload_video_to_youtube(r'..\..\..\test_media\algo_sound_3m.mp4',
-                        'tittle',
-                        'des',
-                        ['music'],
-                        )
