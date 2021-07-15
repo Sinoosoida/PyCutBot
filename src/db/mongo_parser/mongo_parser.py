@@ -4,7 +4,6 @@ import src.db.mongo_parser.collections_schemas as schema
 
 
 class MongoParser(metaclass=Singleton):
-    @timeit
     def __init__(self, db_name='data0', atlas=False, username=None, password=None):
         if atlas:
             host = (

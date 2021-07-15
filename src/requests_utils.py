@@ -1,4 +1,5 @@
 import requests
+import warnings
 from time import sleep
 
 
@@ -21,7 +22,7 @@ def with_retries(max_retries=5, sleep_time=2):
                 except Exception as ex:
                     print(f'Error executing {func.__name__}: {ex}', end='')
                     if retry < max_retries - 1:
-                        print(', retrying')
+                        warnings.warn(', retrying', category=UserWarning, stacklevel=1)
                         sleep(sleep_time)
                     else:
                         return None

@@ -4,6 +4,7 @@ from google_auth_oauthlib.flow import Flow, InstalledAppFlow
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 import datetime
+from log import *
 
 
 def get_abs_path(relative_path):
@@ -12,12 +13,12 @@ def get_abs_path(relative_path):
 
 
 def Create_Service(client_secret_file, api_name, api_version, app_version, *scopes):
-    print(client_secret_file, api_name, api_version, scopes, sep='-')
+    # print(client_secret_file, api_name, api_version, scopes, sep='-')
     CLIENT_SECRET_FILE = client_secret_file
     API_SERVICE_NAME = api_name
     API_VERSION = api_version
     SCOPES = [scope for scope in scopes[0]]
-    print('scopes:', SCOPES)
+    # print('scopes:', SCOPES)
 
     cred = None
     pickle_file = get_abs_path(f'../../google_api/pickles/token_{app_version}.pickle')
@@ -38,12 +39,11 @@ def Create_Service(client_secret_file, api_name, api_version, app_version, *scop
 
     try:
         service = build(API_SERVICE_NAME, API_VERSION, credentials=cred)
-        print(API_SERVICE_NAME, 'service created successfully')
-        print(type(service))
+        print_info(API_SERVICE_NAME, 'service created successfully')
         return service
     except Exception as e:
-        print('Unable to connect.')
-        print(e)
+        print_error('Unable to connect.')
+        print_error(e)
         return None
 
 

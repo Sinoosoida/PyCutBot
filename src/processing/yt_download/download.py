@@ -7,7 +7,6 @@ from src.requests_utils import with_retries
 
 def find_best_resolution_stream(yt_obj):
     res = 0
-    print(yt_obj.streams)
     best_resolution_stream = yt_obj.streams[0]
     for stream in yt_obj.streams[1:]:
         if stream.resolution and int(stream.resolution[0:-1]) > res:
@@ -70,31 +69,24 @@ def get_name(yt_object):
 
 
 def download_video_from_youtube(yt_object: YouTube, video_dir, audio_dir, thumbnail_dir):
-    print(yt_object)
     video_name = 'unknown'
     real_name = get_name(yt_object)
     if real_name:
         video_name = real_name
-    print(video_name)
     video_path = download_video(yt_object, video_dir)
     if not video_path:
         return False
-    print(os.path.abspath(video_path))
     audio_path = download_audio(yt_object, audio_dir)
     if not audio_path:
         return False
-    print(os.path.abspath(audio_path))
     thumbnail_path = download_thumbnail(yt_object, thumbnail_dir)
     if not thumbnail_path:
         return False
-    print(thumbnail_path)
     if not audio_path:
         warnings.warn(message="have not audio", category=UserWarning, stacklevel=1)
     if not video_path:
         warnings.warn(message="have not audio", category=UserWarning, stacklevel=1)
     if not thumbnail_path:
         warnings.warn(message="have not thumbnail", category=UserWarning, stacklevel=1)
-    print(str(video_path) + " " + str(audio_path))
-    print("downloading done")
 
     return video_name, video_path, audio_path, thumbnail_path

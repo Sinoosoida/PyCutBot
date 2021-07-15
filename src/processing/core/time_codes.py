@@ -1,5 +1,6 @@
 import time
 from src.processing.core.frame_codes import get_new_frame_codes
+from log import *
 
 
 def time2frame(time_code: str, fps: int):
@@ -45,7 +46,7 @@ def get_time_codes(text: str):
         if tc2:
             return tc2
     except Exception as ex:
-        print('find_timecodes exception', ex)
+        print_error('find_timecodes exception', ex)
 
 
 def get_new_time_codes(cuts, time_codes, fps):
