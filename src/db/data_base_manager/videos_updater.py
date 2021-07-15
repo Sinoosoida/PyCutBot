@@ -1,4 +1,4 @@
-from src.db.mongo_parser import MongoParser
+from src.db.mongo_parser.mongo_parser import MongoParser
 from src.db.mongo_parser.collections_schemas import Status, Collection
 from src.config import mongo_password, mongo_username
 from src.db.data_base_manager.uploader_utils import *

@@ -3,7 +3,7 @@ import time
 from typing import Union
 
 import dirs
-from src.db import MongoParser
+from src.db.mongo_parser.mongo_parser import MongoParser
 from src.processing.core import processing_video
 from src.processing.yt_download import (
     download_video_from_youtube,
