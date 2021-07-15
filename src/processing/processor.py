@@ -11,7 +11,7 @@ from src.processing.yt_download import (
     get_yt_object,
 )
 from src.processing.watermark import gen_thumbnail_with_watermark
-from src.processing.yt_upload import upload_video_to_youtube
+from src.processing.yt_upload.upload import upload_video_to_youtube
 from src.processing.core.time_codes import get_time_codes
 
 parser = MongoParser()  # аргументы конструктора зависят
