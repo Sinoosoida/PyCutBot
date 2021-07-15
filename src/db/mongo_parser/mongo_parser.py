@@ -56,6 +56,7 @@ class MongoParser(metaclass=Singleton):
     @staticmethod
     def add_playlist_to_video(url, playlist_url):
         videos_list = schema.Video.objects(url__iexact=url)
+        print(videos_list)
         if not videos_list:
             return
         video = videos_list[0]
@@ -111,12 +112,12 @@ class MongoParser(metaclass=Singleton):
         return getattr(doc, attribute_name)
 
 
-if __name__ == '__main__':
-    from pprint import pprint
-    p = MongoParser('data1')
-    # p.save('video', url='url2', status='in queue')
-    # p.add_playlist_to_video(url='url2', playlist_url='playlist3')
-    p.mark_playlist_as_upload(url='url1', playlist_url='playlist2')
-    playlists = (p.get_attr('video', url='url1', attribute_name='playlists_urls'))
-    for pl in playlists:
-        print(pl.playlist_url, pl.uploaded)
+# if __name__ == '__main__':
+#     from pprint import pprint
+#     p = MongoParser('data1')
+#     # p.save('video', url='url2', status='in queue')
+#     # p.add_playlist_to_video(url='url2', playlist_url='playlist3')
+#     p.mark_playlist_as_upload(url='url1', playlist_url='playlist2')
+#     playlists = (p.get_attr('video', url='url1', attribute_name='playlists_urls'))
+#     for pl in playlists:
+#         print(pl.playlist_url, pl.uploaded)
