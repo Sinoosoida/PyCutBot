@@ -17,10 +17,10 @@ def Create_Service(client_secret_file, api_name, api_version, app_version, *scop
     API_SERVICE_NAME = api_name
     API_VERSION = api_version
     SCOPES = [scope for scope in scopes[0]]
-    print(SCOPES)
+    print('scopes:', SCOPES)
 
     cred = None
-    pickle_file = get_abs_path(f'pickles/token_{app_version}.pickle')
+    pickle_file = get_abs_path(f'../../google_api/pickles/token_{app_version}.pickle')
 
     if os.path.exists(pickle_file):
         with open(pickle_file, 'rb') as token:
@@ -39,6 +39,7 @@ def Create_Service(client_secret_file, api_name, api_version, app_version, *scop
     try:
         service = build(API_SERVICE_NAME, API_VERSION, credentials=cred)
         print(API_SERVICE_NAME, 'service created successfully')
+        print(type(service))
         return service
     except Exception as e:
         print('Unable to connect.')
