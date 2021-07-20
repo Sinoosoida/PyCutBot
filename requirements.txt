@@ -1,4 +1,4 @@
-numpy==1.21.0
+numpy==1.21.1
 moviepy==1.0.3
 google_auth_oauthlib==0.4.4
 pytube==10.9.2
