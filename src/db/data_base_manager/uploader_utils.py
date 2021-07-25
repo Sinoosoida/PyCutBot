@@ -22,15 +22,22 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
     :param date:
     :return:
     """
-    channel = Channel(channel_url)
-    res = []
-    for url in tqdm(channel.video_urls):
-        video = YouTube(url)
-        # print(type(video.publish_date))
-        if video.publish_date >= date:
-            res.append(url)
-        else:
-            return res
+    a = True
+    while (a):
+        try:
+            res = []
+            channel = Channel(channel_url)
+            for url in tqdm(channel.video_urls):
+                video = YouTube(url)
+                if video.publish_date >= date:
+                    res.append(url)
+                else:
+                    return res
+            a = False
+        except:
+            print("wrong")
+            a = True
+
     return res
 
 
@@ -63,4 +70,3 @@ def update_playlists(parser):
     for channel in parser.get_all("channel"):
         for playlist_url in get_all_playlists(channel.url):
             parser.save('playlist', url=playlist_url, load_all=False)
-

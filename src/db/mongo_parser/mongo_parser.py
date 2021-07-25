@@ -55,11 +55,13 @@ class MongoParser(metaclass=Singleton):
     @staticmethod
     def add_playlist_to_video(url, playlist_url):
         videos_list = schema.Video.objects(url__iexact=url)
-        print(videos_list)
         if not videos_list:
             return
         video = videos_list[0]
-        if playlist_url not in video.playlists_urls:
+        playlists_urls = []
+        for playlist in video.playlists_urls:
+            playlists_urls.append(playlist['playlist_url'])
+        if playlist_url not in playlists_urls:
             video.playlists_urls.append(
                 schema.PlaylistDict(playlist_url=playlist_url,
                                     uploaded=False)
