@@ -31,14 +31,16 @@ class MongoParser(metaclass=Singleton):
 
     def save(self, collection_name, **kwargs):
         if not kwargs.get("url"):
-            return
+            return False
         mongo_doc_type = self._get_doc_type(collection_name)
         if not mongo_doc_type:
-            return
+            return False
         new_doc: mongo.Document = mongo_doc_type(**kwargs)
         same_docs = mongo_doc_type.objects(url=kwargs["url"])
         if same_docs.count() == 0:
             new_doc.save()
+            return True
+        return False
 
     def set(self, collection_name, **kwargs):
         if not kwargs.get("url"):
@@ -56,7 +58,7 @@ class MongoParser(metaclass=Singleton):
     def add_playlist_to_video(url, playlist_url):
         videos_list = schema.Video.objects(url__iexact=url)
         if not videos_list:
-            return
+            return False
         video = videos_list[0]
         playlists_urls = []
         for playlist in video.playlists_urls:
@@ -67,6 +69,8 @@ class MongoParser(metaclass=Singleton):
                                     uploaded=False)
             )
             video.save()
+            return True
+        return False
 
     @staticmethod
     def get_videos_with_status(status) -> list:

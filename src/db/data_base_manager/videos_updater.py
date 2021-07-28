@@ -5,54 +5,91 @@ from src.db.data_base_manager.uploader_utils import *
 from datetime import datetime
 from src.processing.yt_upload.add_to_playlist import add_video_to_playlist
 from src.processing.yt_upload.create_playlist import create_playlist
+from log import *
 
 
 def videos_from_channel(parser):  # adding all new videos from the channel
-    for channel in parser.get_all("channel"):
-        last_request_time = channel.last_request_datetime
-        parser.set(collection_name="channel", url=channel.url, last_request_datetime=datetime.now())
-        videos_url = get_videos_urls_since_date(channel.url, last_request_time)
-        for video_url in videos_url:
-            parser.save(collection_name="video", url=video_url, status="in queue")
+    print_header1_info("Processing videos_from_channel")
+    try:
+        for channel in parser.get_all("channel"):
+            print_info(f"Processing {channel.url} channel")
+            try:
+                last_request_time = channel.last_request_datetime
+                start_processing_time = datetime.now()
+                videos_url = get_videos_urls_since_date(channel.url, last_request_time)
+                for video_url in videos_url:
+                    if parser.save(collection_name="video", url=video_url, status="in queue"):
+                        print_info(f"Adding video {video_url} to database")
+                parser.set(collection_name="channel", url=channel.url, last_request_datetime=start_processing_time)
+                print_success(f"Processing {channel.url} channel done")
+            except:
+                print_error("Impossible to process this channel")
+        print_success("Making videos from channels done")
+    except:
+        print_error("Fatal error. Impossible to make videos from channel.")
 
 
 def videos_from_playlists(parser):  # all videos from the right playlists
-    for playlist in parser.get_all("playlist"):
-        if (playlist.load_all):
-            for video_url in get_videos_url_from_playlist(playlist.url):
-                parser.save(collection_name="video", url=video_url, status="in queue")
-                parser.add_playlist_to_video(video_url, playlist.url)
+    print_header1_info("Processing videos from playlists")
+    try:
+        for playlist in parser.get_all("playlist"):
+            if (playlist.load_all):
+                for video_url in get_videos_url_from_playlist(playlist.url):
+                    if parser.save(collection_name="video", url=video_url, status="in queue"):
+                        print_info(f"Adding video {video_url} to database")
+                    parser.add_playlist_to_video(video_url, playlist.url)
+        print_success("Processing videos from playlists done")
+    except:
+        print_error("Fatal error. Impossible to make videos from playlists.")
 
 
 def playlists_from_channel(parser):
-    for channel in parser.get_all("channel"):
-        for playlist_url in get_all_playlists(channel.url):
-            parser.save('playlist', url=playlist_url, load_all=False)
+    print_header1_info("Processing playlists channel")
+    try:
+        for channel in parser.get_all("channel"):
+            for playlist_url in get_all_playlists(channel.url):
+                if parser.save('playlist', url=playlist_url, load_all=False):
+                    print_info(f"Adding playlist {playlist_url} to database")
+        print_success("Processing playlists from channel done")
+    except:
+        print_error("Fatal error. Impossible to get playlists from channel.")
 
 
 def playlist_to_video(parser):  # adding playlist links to video parameters
-    for playlist in parser.get_all("playlist"):
-        # print(playlist)
-        try:
+    print_header1_info("Adding playlists to video list")
+    try:
+        for playlist in parser.get_all("playlist"):
             for video_url in get_videos_url_from_playlist(playlist.url):
-                try:
-                    parser.add_playlist_to_video(video_url, playlist.url)
-                except:
-                    print("error")
-        except:
-            print("error")
+                if parser.add_playlist_to_video(video_url, playlist.url):
+                    print_info(f"Adding playlist {playlist.url} to {video_url} list")
+        print_success("Adding playlists to video list done")
+    except:
+        print_error("Fatal error. Impossible to add playlists to video list.")
 
 
 def load_videos_to_playlist(parser):
-    for video in parser.get_all("video"):
-        if (video.status == Status.DONE):
-            for playlist in parser.get_attr('video', video.url, attribute_name='playlists_urls'):
-                if (not playlist['uploaded']):
-                    if (not parser.get_attr('playlist', playlist["playlist_url"], 'new_url')):
-                        create_playlist(playlist["playlist_url"])
-                    add_video_to_playlist(video.new_video_id,
-                                          parser.get_attr('playlist', playlist["playlist_url"], 'new_url'))
-                    parser.mark_playlist_as_upload(video.url, playlist["playlist_url"])
+    print_header1_info("Loading videos with 'done' status to playlist")
+    try:
+        for video in parser.get_all("video"):
+            if (video.status == Status.DONE):
+                for playlist in parser.get_attr('video', video.url, attribute_name='playlists_urls'):
+                    if (not playlist['uploaded']):
+                        playlist_url = playlist["playlist_url"]
+                        print_info(f"Adding video {video.url} to playlist {playlist_url} playlist")
+                        try:
+                            if (not parser.get_attr('playlist', playlist["playlist_url"], 'new_url')):
+                                print_info(f"Creating new playlist for {playlist_url}")
+                                create_playlist(playlist["playlist_url"])
+                            add_video_to_playlist(video.new_video_id,
+                                                  parser.get_attr('playlist', playlist["playlist_url"], 'new_url'))
+                            parser.mark_playlist_as_upload(video.url, playlist["playlist_url"])
+                            print_success(f"Adding video {video.url} to playlist {playlist_url} done")
+                        except:
+                            print_error(f"Adding video {video.url} to playlist {playlist_url} error")
+
+        print_success("Loading videos to playlists done")
+    except:
+        print_error("Fatal error. Impossible to load videos to playlists.")
 
 
 def update_videos(parser):

@@ -22,21 +22,15 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
     :param date:
     :return:
     """
-    a = True
-    while (a):
-        try:
-            res = []
-            channel = Channel(channel_url)
-            for url in tqdm(channel.video_urls):
-                video = YouTube(url)
-                if video.publish_date >= date:
-                    res.append(url)
-                else:
-                    return res
-            a = False
-        except:
-            print("wrong")
-            a = True
+
+    res = []
+    channel = Channel(channel_url)
+    for url in channel.video_urls:
+        video = YouTube(url)
+        if video.publish_date >= date:
+            res.append(url)
+        else:
+            return res
 
     return res
 
