@@ -1,7 +1,7 @@
 import os
 import time
 from typing import Union
-
+from src.config import mongo_password, mongo_username
 import dirs
 from src.db.mongo_parser.mongo_parser import MongoParser
 from src.processing.core import processing_video
@@ -15,7 +15,9 @@ from src.processing.yt_upload.upload import upload_video_to_youtube
 from src.processing.core.time_codes import get_time_codes
 from log import *
 
-parser = MongoParser()  # аргументы конструктора зависят
+parser = MongoParser(atlas=True,
+                     username=mongo_username,
+                     password=mongo_password)
 
 
 def prepare_for_processing(yt_object):
@@ -102,4 +104,4 @@ if __name__ == '__main__':
                 parser.set('video', url=video_link, status="error")
             print_sep()
 
-        time.sleep(60 * 5)
+        time.sleep(5)
