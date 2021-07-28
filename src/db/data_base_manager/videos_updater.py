@@ -67,4 +67,5 @@ parser = MongoParser(atlas=True,
                      username=mongo_username,
                      password=mongo_password)
 
-update_videos(parser)
+while (True):
+    update_videos(parser)
