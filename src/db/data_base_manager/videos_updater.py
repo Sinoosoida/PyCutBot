@@ -2,7 +2,7 @@ from src.db.mongo_parser.mongo_parser import MongoParser
 from src.db.mongo_parser.collections_schemas import Status, Collection
 from src.config import mongo_password, mongo_username
 from src.db.data_base_manager.uploader_utils import *
-from datetime import datetime
+from datetime import datetime, timedelta
 from src.processing.yt_upload.add_to_playlist import add_video_to_playlist
 from src.processing.yt_upload.create_playlist import create_playlist
 from log import *
@@ -16,11 +16,12 @@ def videos_from_channel(parser):  # adding all new videos from the channel
             try:
                 last_request_time = channel.last_request_datetime
                 start_processing_time = datetime.now()
-                videos_url = get_videos_urls_since_date(channel.url, last_request_time)
+                videos_url = get_videos_urls_since_date(channel.url, last_request_time - timedelta(minutes=10))
                 for video_url in videos_url:
                     if parser.save(collection_name="video", url=video_url, status="in queue"):
                         print_info(f"Adding video {video_url} to database")
                 parser.set(collection_name="channel", url=channel.url, last_request_datetime=start_processing_time)
+                print_info(f"Last request time was updated {start_processing_time.time()} t")
                 print_success(f"Processing {channel.url} channel done")
             except:
                 print_error("Impossible to process this channel")
