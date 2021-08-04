@@ -25,8 +25,8 @@ def videos_from_channel(parser):  # adding all new videos from the channel
                 parser.set(collection_name="channel", url=channel.url, last_request_datetime=start_processing_time)
                 print_info(f"Last request time was updated {start_processing_time.time()} t")
                 print_success(f"Processing {channel.url} channel done")
-            except:
-                print_error("Impossible to process this channel")
+            except Exception as ex:
+                print_error("Impossible to process this channel", ex)
         print_success("Making videos from channels done")
     except:
         print_error("Fatal error. Impossible to make videos from channel.")
