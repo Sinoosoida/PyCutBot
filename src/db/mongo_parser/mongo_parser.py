@@ -1,6 +1,7 @@
 import mongoengine as mongo
 from utils import Singleton, timeit
 import src.db.mongo_parser.collections_schemas as schema
+from log import print_success
 
 
 class MongoParser(metaclass=Singleton):
@@ -12,6 +13,7 @@ class MongoParser(metaclass=Singleton):
                 f"Database?retryWrites=true&w=majority"
             )
             mongo.connect(host=host, db=db_name)
+            print_success("connected to mongo atlas")
         else:
             mongo.connect(db=db_name)
         self.collections = {
@@ -73,6 +75,7 @@ class MongoParser(metaclass=Singleton):
         return False
 
     @staticmethod
+    @timeit
     def get_videos_with_status(status) -> list:
         return list(schema.Video.objects(status=schema.Status(status)))
 

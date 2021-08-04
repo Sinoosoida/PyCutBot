@@ -1,6 +1,5 @@
 import os
 import time
-from typing import Union
 from src.config import mongo_password, mongo_username
 import dirs
 from src.db.mongo_parser.mongo_parser import MongoParser
@@ -39,18 +38,18 @@ def gen_description(yt_object, time_codes=None):
     return result
 
 
-def process_link(link) -> Union[str, None]:
+def process_link(link):
     start_time = time.time()
     yt_object = get_yt_object(link)
     if not yt_object:
         print_error("Cannot create YouTube object")
-        return None
+        return None, "pytube error"
 
     print_info("Downloading...")
     downloaded_pack = prepare_for_processing(yt_object)
     if not downloaded_pack:
         print_error("Cannot download")
-        return None
+        return None, "download error"
     video_name, input_video_path, audio_path, input_thumbnail_path = downloaded_pack
     print_success("Downloading done")
 
@@ -69,15 +68,19 @@ def process_link(link) -> Union[str, None]:
     print_info("Generating watermark...")
     gen_thumbnail_with_watermark(input_thumbnail_path, dirs.WATERMARK_PATH, output_thumbnail_path)
     print_success("Generating watermark done")
-    new_video_id = upload_video_to_youtube(
-        video_path=output_video_path,
-        thumbnail_path=output_thumbnail_path,
-        title=yt_object.title,
-        description=gen_description(yt_object, new_time_codes),
-        tags=yt_object.keywords,
-    )
+    try:
+        new_video_id = upload_video_to_youtube(
+            video_path=output_video_path,
+            thumbnail_path=output_thumbnail_path,
+            title=yt_object.title,
+            description=gen_description(yt_object, new_time_codes),
+            tags=yt_object.keywords,
+        )
+    except Exception as exc:
+        print_error(exc)
+        return None, "upload error"
     print_info(f"Full processing done in {round(time.time() - start_time, 2)}s (video len={yt_object.length}s)")
-    return new_video_id
+    return new_video_id, None
 
 
 if __name__ == '__main__':
@@ -88,20 +91,20 @@ if __name__ == '__main__':
             print_header1_info(f"Processing {video_link}")
             try:
                 if good_link(video_link):
-                    result_video_id = process_link(video_link)
+                    result_video_id, error_str = process_link(video_link)
                     if result_video_id:
                         print_success("Uploading done")
                         print_success(f"Processing {video_link} done")
                         parser.set('video', url=video_link, new_video_id=result_video_id)
                     else:
-                        print_error(f"Uploading {video_link} error")
-                        parser.set('video', url=video_link, status="error")
+                        print_error(f"Uploading {video_link} error: {error_str}")
+                        parser.set('video', url=video_link, status="error", error_type=error_str)
                 else:
                     print_error(f"Bad link: {video_link}")
-                    parser.set('video', url=video_link, status="error")
+                    parser.set('video', url=video_link, status="error", error_type="bad link")
             except Exception as ex:
                 print_error(f"Supreme error on {video_link}: {ex}")
-                parser.set('video', url=video_link, status="error")
+                parser.set('video', url=video_link, status="error", error_type="unknown")
             print_sep()
 
         time.sleep(5)

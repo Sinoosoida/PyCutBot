@@ -52,10 +52,7 @@ def download_thumbnail(yt_object: YouTube, path="./"):
 
 @with_retries()
 def good_link(link):
-    length = YouTube(link).length
-    if length > (3600 * 3):
-        return False
-    return True
+    return YouTube(link).length <= (3600 * 3)
 
 
 @with_retries()
