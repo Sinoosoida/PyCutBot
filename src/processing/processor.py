@@ -82,9 +82,9 @@ def process_link(link) -> Union[str, None]:
 
 if __name__ == '__main__':
     while True:
-        for video_link_object in parser.get_videos_with_status("in queue"):
-            video_link = video_link_object[0]
-            parser.set('video', url=video_link, status="in process")
+        for video_obj in parser.get_videos_with_status("in queue"):
+            video_link = video_obj.url
+            parser.set('video', url=video_link, status="processing")
             print_header1_info(f"Processing {video_link}")
             try:
                 if good_link(video_link):
