@@ -1,3 +1,5 @@
+import time
+
 from src.db.mongo_parser.mongo_parser import MongoParser
 from src.db.mongo_parser.collections_schemas import Status, Collection
 from src.config import mongo_password, mongo_username
@@ -107,3 +109,4 @@ parser = MongoParser(atlas=True,
 
 while (True):
     update_videos(parser)
+    time.sleep(60 * 5)
