@@ -109,4 +109,3 @@ parser = MongoParser(atlas=True,
 
 while (True):
     update_videos(parser)
-    time.sleep(60 * 5)
