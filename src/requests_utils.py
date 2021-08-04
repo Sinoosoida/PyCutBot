@@ -22,9 +22,10 @@ def with_retries(max_retries=5, sleep_time=2):
                 except Exception as ex:
                     print(f'Error executing {func.__name__}: {ex}', end='')
                     if retry < max_retries - 1:
-                        warnings.warn(', retrying', category=UserWarning, stacklevel=1)
+                        print(', retrying')
                         sleep(sleep_time)
                     else:
+                        print()
                         return None
 
         return wrap2
