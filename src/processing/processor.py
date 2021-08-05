@@ -98,7 +98,7 @@ if __name__ == '__main__':
                     if result_video_id:
                         print_success("Uploading done")
                         print_success(f"Processing {video_link} done")
-                        parser.set('video', url=video_link, new_video_id=result_video_id)
+                        parser.set('video', url=video_link, new_video_id=result_video_id, status="done")
                     else:
                         print_error(f"Uploading {video_link} error: {error_str}")
                         parser.set('video', url=video_link, status="error", error_type=error_str)
