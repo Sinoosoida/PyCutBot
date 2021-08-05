@@ -18,6 +18,8 @@ def videos_from_channel(parser):  # adding all new videos from the channel
             try:
                 last_request_time = channel.last_request_datetime
                 start_processing_time = datetime.now()
+                print('LRT', last_request_time)
+                print('SPT', start_processing_time)
                 videos_url = get_videos_urls_since_date(channel.url, last_request_time - timedelta(minutes=10))
                 for video_url in videos_url:
                     if parser.save(collection_name="video", url=video_url, status="in queue"):
