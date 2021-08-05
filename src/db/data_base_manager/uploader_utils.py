@@ -6,6 +6,8 @@ from tqdm import tqdm
 import datetime
 from datetime import datetime
 
+from utils import timeit
+
 
 def get_videos_url_from_channel(channel):
     return Channel(channel).video_urls
@@ -13,6 +15,11 @@ def get_videos_url_from_channel(channel):
 
 def get_videos_url_from_playlist(playlist):
     return Playlist(playlist).video_urls
+
+
+@timeit
+def sort_videos(video_urls):
+    return sorted(video_urls, key=lambda x: x.publish_date)
 
 
 def get_videos_urls_since_date(channel_url, date=datetime.min):
@@ -25,11 +32,12 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
 
     res = []
     channel = Channel(channel_url)
-    print('ALL VIDEO:', channel.video_urls)
-    for url in channel.video_urls:
+    sorted_videos = sort_videos(channel.video_urls)
+    reversed_sorted_videos = sorted_videos[::-1]
+    for url in reversed_sorted_videos:
         video = YouTube(url)
         print('VP:', video.publish_date, 'D:', date)
-        if video.publish_date <= date:
+        if video.publish_date >= date:
             res.append(url)
         else:
             return res
