@@ -34,11 +34,10 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
     channel = Channel(channel_url)
     sorted_videos = sort_videos(channel.video_urls)
     reversed_sorted_videos = sorted_videos[::-1]
-    for url in reversed_sorted_videos:
-        video = YouTube(url)
+    for video in reversed_sorted_videos:
         print('VP:', video.publish_date, 'D:', date)
         if video.publish_date >= date:
-            res.append(url)
+            res.append(video.watch_url)
         else:
             return res
 
