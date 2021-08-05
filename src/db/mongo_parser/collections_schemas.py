@@ -32,7 +32,7 @@ class Video(mongo.Document):
     new_video_id = mongo.StringField()
     status = mongo.EnumField(Status, default=Status.IN_QUEUE)
     playlists_urls = mongo.ListField(mongo.EmbeddedDocumentField(PlaylistDict))
-    error_type = mongo.StringField(default=None)
+    status_info = mongo.StringField(default=None)
 
     def __str__(self):
         return str({'url': self.url,
