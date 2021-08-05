@@ -25,6 +25,7 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
 
     res = []
     channel = Channel(channel_url)
+    print('ALL VIDEO:', channel.video_urls)
     for url in channel.video_urls:
         video = YouTube(url)
         print('VP:', video.publish_date, 'D:', date)
