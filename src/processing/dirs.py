@@ -2,7 +2,7 @@ import os
 import shutil
 import warnings
 
-MEDIA_DIR = '../../media'
+MEDIA_DIR = 'media'
 
 join = os.path.join
 INPUT_VIDEO_DIR = join(MEDIA_DIR, "input_video")
@@ -10,7 +10,7 @@ INPUT_AUDIO_DIR = join(MEDIA_DIR, "input_audio")
 INPUT_THUMBNAIL_DIR = join(MEDIA_DIR, "input_thumbnail")
 OUTPUT_VIDEO_DIR = join(MEDIA_DIR, "output_video")
 OUTPUT_THUMBNAIL_DIR = join(MEDIA_DIR, "output_thumbnail")
-WATERMARK_PATH = "../../img/watermark.png"
+WATERMARK_PATH = "img/watermark.png"
 
 
 def create_dirs():
