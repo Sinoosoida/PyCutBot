@@ -20,7 +20,10 @@ parser = MongoParser(atlas=True,
 
 
 def prepare_for_processing(yt_object):
-    dirs.create_dirs()
+    try:
+        dirs.create_dirs()
+    except Exception as exc:
+        print("creating dirs ex: ", exc)
     downloading_res = download_video_from_youtube(
         yt_object, dirs.INPUT_VIDEO_DIR, dirs.INPUT_AUDIO_DIR, dirs.INPUT_THUMBNAIL_DIR
     )
