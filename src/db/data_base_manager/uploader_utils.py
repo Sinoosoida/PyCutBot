@@ -19,7 +19,7 @@ def get_videos_url_from_playlist(playlist):
 
 @timeit
 def sort_videos(video_urls):
-    return sorted(video_urls, key=lambda x: x.publish_date)
+    return sorted([YouTube(url) for url in video_urls], key=lambda x: x.publish_date)
 
 
 def get_videos_urls_since_date(channel_url, date=datetime.min):
