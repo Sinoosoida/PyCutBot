@@ -27,6 +27,7 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
     channel = Channel(channel_url)
     for url in channel.video_urls:
         video = YouTube(url)
+        print('VP:', video.publish_date, 'D:', date)
         if video.publish_date >= date:
             res.append(url)
         else:
