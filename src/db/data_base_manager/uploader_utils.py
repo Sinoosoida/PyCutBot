@@ -82,6 +82,7 @@ def update_playlists(parser):
         for playlist_url in get_all_playlists(channel.url):
             parser.save('playlist', url=playlist_url, load_all=False)
 
+
 #
 # from pprint import pprint
 #
@@ -94,3 +95,5 @@ def update_playlists(parser):
 # utc_dt = local_dt.astimezone(pytz.utc)
 #
 # print(utc.localize(dt, is_dst=None))
+
+get_videos_urls_since_date('https://www.youtube.com/c/telesport', datetime.now() - timedelta(hours=6))
