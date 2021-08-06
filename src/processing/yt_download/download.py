@@ -89,3 +89,7 @@ def download_video_from_youtube(yt_object: YouTube, video_dir, audio_dir, thumbn
         warnings.warn(message="have not thumbnail", category=UserWarning, stacklevel=1)
 
     return video_name, video_path, audio_path, thumbnail_path
+
+
+if __name__ == '__main__':
+    download_video(YouTube('https://youtube.com/watch?v=SmDCX5Z7uJE'))
