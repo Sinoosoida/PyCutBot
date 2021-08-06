@@ -5,6 +5,7 @@ from pytube import Channel, Playlist, YouTube
 from tqdm import tqdm
 import datetime
 from datetime import datetime
+from video_info import VideoInfoGetter
 
 from utils import timeit
 
@@ -16,10 +17,14 @@ def get_videos_url_from_channel(channel):
 def get_videos_url_from_playlist(playlist):
     return Playlist(playlist).video_urls
 
+
 # THIS FUNCTION WILL DDOS YOUTUBE:
 # @timeit
 # def get_sorted_videos(video_urls):
 #     return sorted([YouTube(url) for url in video_urls], key=lambda x: x.publish_date)
+
+
+video_info_getter = VideoInfoGetter(app_version=5)
 
 
 def get_videos_urls_since_date(channel_url, date=datetime.min):
@@ -38,8 +43,9 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
     for url in reversed_sorted_urls:
         video = YouTube(url)
         print(video.watch_url)
-        print('published:', video.publish_date)
-        if video.publish_date >= date:
+        publish_dt = video_info_getter.get_publish_time(video.video_id)
+        print('published:', publish_dt)
+        if publish_dt >= date:
             res.append(video.watch_url)
         else:
             return res
