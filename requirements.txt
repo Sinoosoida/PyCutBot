@@ -13,3 +13,4 @@ tqdm==4.62.0
 pychalk==2.0.1
 beautifulsoup4~=4.9.3
 setuptools~=57.4.0
+lxml==4.6.3
