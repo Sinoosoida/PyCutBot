@@ -37,4 +37,4 @@ class VideoInfoGetter:
 v = VideoInfoGetter(5)
 from pprint import pprint
 
-pprint(v.last_50_videos('UCppkxNOs8rEuhEyk0GtrfRg'))
+pprint(v.last_50_videos(input()))
