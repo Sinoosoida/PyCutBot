@@ -4,7 +4,7 @@ import src.config as config
 from pytube import Channel, Playlist, YouTube
 from tqdm import tqdm
 import datetime
-from datetime import datetime
+from datetime import datetime, timedelta
 from video_info import VideoInfoGetter
 
 from utils import timeit
@@ -18,10 +18,9 @@ def get_videos_url_from_playlist(playlist):
     return Playlist(playlist).video_urls
 
 
-# THIS FUNCTION WILL DDOS YOUTUBE:
-# @timeit
-# def get_sorted_videos(video_urls):
-#     return sorted([YouTube(url) for url in video_urls], key=lambda x: x.publish_date)
+@timeit
+def get_channel_video_urls(channel):
+    return list(channel.video_urls)
 
 
 video_info_getter = VideoInfoGetter(app_version=5)
@@ -36,11 +35,11 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
     """
 
     res = []
-    print("Channel(channel_url")
     channel = Channel(channel_url)
-    reversed_sorted_urls = list(channel.video_urls)
-    print("CYcle:")
-    for url in reversed_sorted_urls:
+    urls = get_channel_video_urls(channel)
+    print(urls)
+    print("cycle:")
+    for url in urls:
         video = YouTube(url)
         print(video.watch_url)
         publish_dt = video_info_getter.get_publish_time(video.video_id)
@@ -82,3 +81,16 @@ def update_playlists(parser):
     for channel in parser.get_all("channel"):
         for playlist_url in get_all_playlists(channel.url):
             parser.save('playlist', url=playlist_url, load_all=False)
+
+#
+# from pprint import pprint
+#
+# r = get_videos_urls_since_date('https://www.youtube.com/c/telesport', datetime.now() - timedelta(hours=1))
+# pprint(r)
+
+# v = VideoInfoGetter(5)
+# print(v.get_publish_time('3p-IXhsFfnM'))
+
+# utc_dt = local_dt.astimezone(pytz.utc)
+#
+# print(utc.localize(dt, is_dst=None))
