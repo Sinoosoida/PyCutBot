@@ -37,7 +37,7 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
     res = []
     channel = Channel(channel_url)
     urls = get_channel_video_urls(channel)
-    for u in urls:
+    for u in channel:
         print(u)
     print("cycle:")
     for url in urls:
