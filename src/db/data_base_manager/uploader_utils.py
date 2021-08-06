@@ -18,7 +18,7 @@ def get_videos_url_from_playlist(playlist):
 
 
 @timeit
-def sort_videos(video_urls):
+def get_sorted_videos(video_urls):
     return sorted([YouTube(url) for url in video_urls], key=lambda x: x.publish_date)
 
 
@@ -32,7 +32,7 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
 
     res = []
     channel = Channel(channel_url)
-    sorted_videos = sort_videos(channel.video_urls)
+    sorted_videos = get_sorted_videos(channel.video_urls)
     reversed_sorted_videos = sorted_videos[::-1]
     for video in reversed_sorted_videos:
         print('VP:', video.publish_date, 'D:', date)
