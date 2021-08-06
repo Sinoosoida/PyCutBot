@@ -31,9 +31,12 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
     """
 
     res = []
+    print("Channel(channel_url")
     channel = Channel(channel_url)
+    print("sorted_videos = get_sorted_videos(channel.video_urls):")
     sorted_videos = get_sorted_videos(channel.video_urls)
     reversed_sorted_videos = sorted_videos[::-1]
+    print("CYcle:")
     for video in reversed_sorted_videos:
         print('VP:', video.publish_date, 'D:', date)
         if video.publish_date >= date:
