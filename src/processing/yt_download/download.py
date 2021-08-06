@@ -27,6 +27,8 @@ def find_best_abr_stream(yt_obj):
 
 @with_retries(3)
 def download_video(yt_obj, path="./"):
+    print(yt_obj)
+    print(yt_obj.watch_url)
     return find_best_resolution_stream(yt_obj).download(output_path=path)
 
 
