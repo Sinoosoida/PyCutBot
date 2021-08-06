@@ -33,7 +33,7 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
     res = []
     print("Channel(channel_url")
     channel = Channel(channel_url)
-    reversed_sorted_urls = channel.video_urls[::-1]
+    reversed_sorted_urls = list(channel.video_urls)[::-1]
     print("CYcle:")
     for url in reversed_sorted_urls:
         video = YouTube(url)
