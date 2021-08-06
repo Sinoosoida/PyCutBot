@@ -25,7 +25,7 @@ def find_best_abr_stream(yt_obj):
     return best_abr_stream
 
 
-@with_retries(3)
+# @with_retries(3)
 def download_video(yt_obj, path="./"):
     print(yt_obj)
     print(yt_obj.watch_url)
