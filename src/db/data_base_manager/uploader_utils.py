@@ -16,10 +16,10 @@ def get_videos_url_from_channel(channel):
 def get_videos_url_from_playlist(playlist):
     return Playlist(playlist).video_urls
 
-
-@timeit
-def get_sorted_videos(video_urls):
-    return sorted([YouTube(url) for url in video_urls], key=lambda x: x.publish_date)
+# THIS FUNCTION WILL DDOS YOUTUBE:
+# @timeit
+# def get_sorted_videos(video_urls):
+#     return sorted([YouTube(url) for url in video_urls], key=lambda x: x.publish_date)
 
 
 def get_videos_urls_since_date(channel_url, date=datetime.min):
@@ -34,11 +34,13 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
     print("Channel(channel_url")
     channel = Channel(channel_url)
     print("sorted_videos = get_sorted_videos(channel.video_urls):")
-    sorted_videos = get_sorted_videos(channel.video_urls)
-    reversed_sorted_videos = sorted_videos[::-1]
+    # sorted_videos = get_sorted_videos(channel.video_urls)
+    # reversed_sorted_videos = sorted_videos[::-1]
     print("CYcle:")
-    for video in reversed_sorted_videos:
-        print('VP:', video.publish_date, 'D:', date)
+    for url in channel.video_urls:
+        video = YouTube(url)
+        print(video.watch_url)
+        print('published:', video.publish_date)
         if video.publish_date >= date:
             res.append(video.watch_url)
         else:
