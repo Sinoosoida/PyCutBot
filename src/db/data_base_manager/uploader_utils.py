@@ -37,7 +37,8 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
     res = []
     channel = Channel(channel_url)
     urls = get_channel_video_urls(channel)
-    print(urls)
+    for u in urls:
+        print(u)
     print("cycle:")
     for url in urls:
         video = YouTube(url)
@@ -97,3 +98,4 @@ def update_playlists(parser):
 # print(utc.localize(dt, is_dst=None))
 
 get_videos_urls_since_date('https://www.youtube.com/c/telesport', datetime.now() - timedelta(hours=6))
+
