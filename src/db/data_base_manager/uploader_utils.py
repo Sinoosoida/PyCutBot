@@ -5,6 +5,7 @@ from pytube import Channel, Playlist, YouTube
 from tqdm import tqdm
 import datetime
 from datetime import datetime, timedelta
+from channel_video import get_last_video_urls
 from video_info import VideoInfoGetter
 
 from utils import timeit
@@ -36,10 +37,7 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
 
     res = []
     channel = Channel(channel_url)
-    urls = get_channel_video_urls(channel)
-    for u in channel:
-        print(u)
-    print("cycle:")
+    urls = get_last_video_urls(channel.channel_id)
     for url in urls:
         video = YouTube(url)
         print(video.watch_url)
