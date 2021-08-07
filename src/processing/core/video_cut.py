@@ -6,6 +6,7 @@ from src.processing.core.time_codes import get_new_time_codes
 from log import *
 import time
 from tqdm import tqdm
+from utils import timeit
 
 
 def decouple_audio(video_name, audio_name):
@@ -70,6 +71,7 @@ def make_cuts(frames):
     return cuts
 
 
+@timeit
 def processing_audio(number_of_frames, name="audio.wav", limit_coefficient=1, prev_frames=0, post_frames=0,
                      number_of_frames_limit=0):
     print_info("Audio processing...")
@@ -83,7 +85,7 @@ def processing_audio(number_of_frames, name="audio.wav", limit_coefficient=1, pr
 
 
 def processing_video(input_video_path, output_video_path, audio_path, time_codes=None) -> list:
-    print_header2_info("Core processing...")
+    print_header2_info("Core processing:")
     start_time = time.time()
     clip = VideoFileClip(input_video_path)
     fps = clip.fps
