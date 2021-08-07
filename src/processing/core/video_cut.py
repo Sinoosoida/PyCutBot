@@ -19,33 +19,39 @@ def decouple_audio(video_name, audio_name):
 
 def detect_loud_frames(audio_array, number_of_frames, limit):
     frames = []
-    for i in range(0, number_of_frames):
+    print_info("detecting loud frames...")
+    for i in tqdm(range(0, number_of_frames)):
         a = (audio_array[int(len(audio_array) * i / number_of_frames):int(
             len(audio_array) * (i + 1) / number_of_frames)] ** 2).mean()
         if a > limit:
             frames.append(True)
         else:
             frames.append(False)
+    print_success("detecting loud frames done")
     return frames
 
 
 def add_frames(frames, prev_frames=0, post_frames=0):
-    for i in range(0, len(frames)):
+    print_info("adding frames...")
+    for i in tqdm(range(0, len(frames))):
         if frames[i] and (i - prev_frames >= 0):
             frames[i - prev_frames] = True
     frames = frames[::-1]
-    for i in range(0, len(frames)):
+    for i in tqdm(range(0, len(frames))):
         if frames[i] and (i - post_frames >= 0):
             frames[i - post_frames] = True
     frames = frames[::-1]
+    print_success("adding frames done")
     return frames
 
 
 def delete_short_cuts(cuts, number_of_frames_limit=0):  # готово
     tmp_cuts = []
-    for i in range(len(cuts)):
+    print_info("deleting short frames...")
+    for i in tqdm(range(len(cuts))):
         if (cuts[i][1] - cuts[i][0]) >= number_of_frames_limit:
             tmp_cuts.append(cuts[i])
+    print_success("deleting short frames done")
     return np.array(tmp_cuts)
 
 
@@ -53,8 +59,8 @@ def make_cuts(frames):
     cuts = []
     place = 0
     expect = None
-
-    for frame_idx in range(0, len(frames)):
+    print_info("making cuts...")
+    for frame_idx in tqdm(range(0, len(frames))):
         if expect is None:
             expect = frames[frame_idx]
             place = frame_idx
@@ -67,6 +73,7 @@ def make_cuts(frames):
                 expect = frames[frame_idx]
     if expect:
         cuts.append([place, len(frames) - 1])
+    print_success("making cuts done")
     print_info('cuts[:10]:', cuts[:10])
     return cuts
 
