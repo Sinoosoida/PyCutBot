@@ -51,9 +51,13 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
     return res
 
 
+def channel_url_to_id(url):
+    return Channel(url).channel_id
+
+
 def get_all_playlists(channel_url: str, key=config.api_key):
     playlists_list = []
-    channel_id = channel_url.rsplit('/channel/')[1]
+    channel_id = channel_url_to_id(channel_url)
     res = get_request_with_retries(
         f'https://www.googleapis.com/youtube/v3/playlists?channelId={channel_id}&key={key}&maxResults=50')
     if not res:
@@ -81,7 +85,6 @@ def update_playlists(parser):
         for playlist_url in get_all_playlists(channel.url):
             parser.save('playlist', url=playlist_url, load_all=False)
 
-
 #
 # from pprint import pprint
 #
@@ -94,6 +97,3 @@ def update_playlists(parser):
 # utc_dt = local_dt.astimezone(pytz.utc)
 #
 # print(utc.localize(dt, is_dst=None))
-
-get_videos_urls_since_date('https://www.youtube.com/c/telesport', datetime.now() - timedelta(hours=6))
-
