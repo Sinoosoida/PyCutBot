@@ -56,7 +56,7 @@ def channel_url_to_id(url):
 
 
 @timeit
-def get_all_playlists(channel_url: str, key=config.api_key):
+def get_all_playlists(channel_url: str, key=config.api_key, max_res=None):
     playlists_list = []
     channel_id = channel_url_to_id(channel_url)
     res = get_request_with_retries(
@@ -68,28 +68,29 @@ def get_all_playlists(channel_url: str, key=config.api_key):
     for dct in res_dict['items']:
         playlists_list.append('https://www.youtube.com/playlist?list=' + dct['id'])
 
-    print(playlists_list)
-    exit()
+    num_res = 50
+
+    def under_limit(num_res):
+        return True if not max_res or max_res < num_res else False
+
+    while res_dict.get('nextPageToken') and under_limit(num_res):
+        # print(res_dict.get('nextPageToken'))
+        res = get_request_with_retries(
+            f"https://www.googleapis.com/youtube/v3/playlists?channelId={channel_id}"
+            f"&key={key}&maxResults=50&pageToken={res_dict.get('nextPageToken')}")
+        if not res:
+            return playlists_list
+        res_dict = json.loads(res.content)
+        for dct in res_dict['items']:
+            print('https://www.youtube.com/playlist?list=' + dct['id'])
+            playlists_list.append('https://www.youtube.com/playlist?list=' + dct['id'])
     return playlists_list
 
-    # while res_dict.get('nextPageToken'):
-    #     # print(res_dict.get('nextPageToken'))
-    #     res = get_request_with_retries(
-    #         f"https://www.googleapis.com/youtube/v3/playlists?channelId={channel_id}"
-    #         f"&key={key}&maxResults=50&pageToken={res_dict.get('nextPageToken')}")
-    #     if not res:
-    #         return playlists_list
-    #     res_dict = json.loads(res.content)
-    #     for dct in res_dict['items']:
-    #         print('https://www.youtube.com/playlist?list=' + dct['id'])
-    #         playlists_list.append('https://www.youtube.com/playlist?list=' + dct['id'])
-    # return playlists_list
 
-
-def update_playlists(parser):
-    for channel in parser.get_all("channel"):
-        for playlist_url in get_all_playlists(channel.url):
-            parser.save('playlist', url=playlist_url, load_all=False)
+# def update_playlists(parser):
+#     for channel in parser.get_all("channel"):
+#         for playlist_url in get_all_playlists(channel.url):
+#             parser.save('playlist', url=playlist_url, load_all=False)
 
 #
 # from pprint import pprint

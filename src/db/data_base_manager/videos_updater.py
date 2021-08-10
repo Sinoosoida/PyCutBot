@@ -8,6 +8,9 @@ from datetime import datetime, timedelta
 from src.processing.yt_upload.add_to_playlist import add_video_to_playlist
 from src.processing.yt_upload.create_playlist import create_playlist
 from log import *
+import sys
+
+MAX_PLAYLISTS = None if len(sys.argv) == 1 else sys.argv[1]
 
 
 def videos_from_channel(parser):  # adding all new videos from the channel
@@ -30,8 +33,8 @@ def videos_from_channel(parser):  # adding all new videos from the channel
             except Exception as ex:
                 print_error("Impossible to process this channel", ex)
         print_success("Making videos from channels done")
-    except:
-        print_error("Fatal error. Impossible to make videos from channel.")
+    except Exception as exc:
+        print_error("Fatal error. Impossible to make videos from channel.", exc)
 
 
 def videos_from_playlists(parser):  # all videos from the right playlists
@@ -52,7 +55,7 @@ def playlists_from_channel(parser):
     print_header1_info("Processing playlists channel")
     # try:
     for channel in parser.get_all("channel"):
-        for playlist_url in get_all_playlists(channel.url):
+        for playlist_url in get_all_playlists(channel.url, max_res=MAX_PLAYLISTS):
             if parser.save('playlist', url=playlist_url, load_all=False):
                 print_info(f"Adding playlist {playlist_url} to database")
     print_success("Processing playlists from channel done")
@@ -111,4 +114,4 @@ parser = MongoParser(atlas=True,
 
 while (True):
     update_videos(parser)
-    time.sleep(5*60)
+    time.sleep(5 * 60)
