@@ -10,7 +10,7 @@ from src.processing.yt_upload.create_playlist import create_playlist
 from log import *
 import sys
 
-MAX_PLAYLISTS = None if len(sys.argv) == 1 else sys.argv[1]
+MAX_PLAYLISTS = None if len(sys.argv) == 1 else int(sys.argv[1])
 
 
 def videos_from_channel(parser):  # adding all new videos from the channel
