@@ -44,8 +44,8 @@ def videos_from_playlists(parser):  # all videos from the right playlists
                         print_info(f"Adding video {video_url} to database")
                     parser.add_playlist_to_video(video_url, playlist.url)
         print_success("Processing videos from playlists done")
-    except:
-        print_error("Fatal error. Impossible to make videos from playlists.")
+    except Exception as ex:
+        print_error("Fatal error. Impossible to make videos from playlists", ex)
 
 
 def playlists_from_channel(parser):
@@ -56,8 +56,8 @@ def playlists_from_channel(parser):
                 if parser.save('playlist', url=playlist_url, load_all=False):
                     print_info(f"Adding playlist {playlist_url} to database")
         print_success("Processing playlists from channel done")
-    except:
-        print_error("Fatal error. Impossible to get playlists from channel.")
+    except Exception as ex:
+        print_error("Fatal error. Impossible to get playlists from channel.", ex)
 
 
 def playlist_to_video(parser):  # adding playlist links to video parameters
