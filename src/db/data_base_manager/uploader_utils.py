@@ -55,6 +55,7 @@ def channel_url_to_id(url):
     return Channel(url).channel_id
 
 
+@timeit
 def get_all_playlists(channel_url: str, key=config.api_key):
     playlists_list = []
     channel_id = channel_url_to_id(channel_url)
