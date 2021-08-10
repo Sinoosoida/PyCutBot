@@ -68,18 +68,20 @@ def get_all_playlists(channel_url: str, key=config.api_key):
     for dct in res_dict['items']:
         playlists_list.append('https://www.youtube.com/playlist?list=' + dct['id'])
 
-    while res_dict.get('nextPageToken'):
-        # print(res_dict.get('nextPageToken'))
-        res = get_request_with_retries(
-            f"https://www.googleapis.com/youtube/v3/playlists?channelId={channel_id}"
-            f"&key={key}&maxResults=50&pageToken={res_dict.get('nextPageToken')}")
-        if not res:
-            return playlists_list
-        res_dict = json.loads(res.content)
-        for dct in res_dict['items']:
-            print('https://www.youtube.com/playlist?list=' + dct['id'])
-            playlists_list.append('https://www.youtube.com/playlist?list=' + dct['id'])
     return playlists_list
+
+    # while res_dict.get('nextPageToken'):
+    #     # print(res_dict.get('nextPageToken'))
+    #     res = get_request_with_retries(
+    #         f"https://www.googleapis.com/youtube/v3/playlists?channelId={channel_id}"
+    #         f"&key={key}&maxResults=50&pageToken={res_dict.get('nextPageToken')}")
+    #     if not res:
+    #         return playlists_list
+    #     res_dict = json.loads(res.content)
+    #     for dct in res_dict['items']:
+    #         print('https://www.youtube.com/playlist?list=' + dct['id'])
+    #         playlists_list.append('https://www.youtube.com/playlist?list=' + dct['id'])
+    # return playlists_list
 
 
 def update_playlists(parser):
