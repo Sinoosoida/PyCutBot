@@ -68,6 +68,7 @@ def get_all_playlists(channel_url: str, key=config.api_key):
     for dct in res_dict['items']:
         playlists_list.append('https://www.youtube.com/playlist?list=' + dct['id'])
 
+    print(playlists_list)
     return playlists_list
 
     # while res_dict.get('nextPageToken'):
