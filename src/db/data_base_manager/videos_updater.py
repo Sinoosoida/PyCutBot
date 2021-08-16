@@ -53,14 +53,14 @@ def videos_from_playlists(parser):  # all videos from the right playlists
 
 def playlists_from_channel(parser):
     print_header1_info("Processing playlists channel")
-    # try:
-    for channel in parser.get_all("channel"):
-        for playlist_url in get_all_playlists(channel.url, max_res=MAX_PLAYLISTS):
-            if parser.save('playlist', url=playlist_url, load_all=False):
-                print_info(f"Adding playlist {playlist_url} to database")
-    print_success("Processing playlists from channel done")
-    # except Exception as ex:
-    #     print_error("Fatal error. Impossible to get playlists from channel.", ex)
+    try:
+        for channel in parser.get_all("channel"):
+            for playlist_url in get_all_playlists(channel.url, max_res=MAX_PLAYLISTS):
+                if parser.save('playlist', url=playlist_url, load_all=False):
+                    print_info(f"Adding playlist {playlist_url} to database")
+        print_success("Processing playlists from channel done")
+    except Exception as ex:
+        print_error("Fatal error. Impossible to get playlists from channel.", ex)
 
 
 def playlist_to_video(parser):  # adding playlist links to video parameters
