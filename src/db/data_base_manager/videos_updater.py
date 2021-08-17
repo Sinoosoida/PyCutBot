@@ -9,6 +9,7 @@ from src.processing.yt_upload.add_to_playlist import add_video_to_playlist
 from src.processing.yt_upload.create_playlist import create_playlist
 from log import *
 import sys
+import requests as req
 
 MAX_PLAYLISTS = None if len(sys.argv) == 1 else int(sys.argv[1])
 
@@ -114,4 +115,11 @@ parser = MongoParser(atlas=True,
 
 while (True):
     update_videos(parser)
-    time.sleep(5 * 60)
+    sleep_time=5 * 60
+    max_working_time = 30*60
+    try:
+        r = req.get(f'http://51.15.75.62:5000/upd?service=pycutbot_up&time_delta={sleep_time + max_working_time}')
+        print(r)
+    except Exception as ex:
+        print_error("DOWNDETECTOR EX", ex)
+    time.sleep(sleep_time)

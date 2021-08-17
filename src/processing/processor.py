@@ -13,6 +13,7 @@ from src.processing.watermark import gen_thumbnail_with_watermark
 from src.processing.yt_upload.upload import upload_video_to_youtube
 from src.processing.core.time_codes import get_time_codes
 from log import *
+import requests as req
 
 parser = MongoParser(atlas=True,
                      username=mongo_username,
@@ -114,4 +115,12 @@ if __name__ == '__main__':
                 parser.set('video', url=video_link, status="error", status_info="unknown")
             print_sep()
 
-        time.sleep(5)
+        sleep_time = 5
+        max_working_time = 180 * 60
+        try:
+            r = req.get(f'http://51.15.75.62:5000/upd?service=pycutbot_pr&time_delta={sleep_time + max_working_time}')
+            print(r)
+        except Exception as ex:
+            print_error("DOWNDETECTOR EX", ex)
+        time.sleep(sleep_time)
+
