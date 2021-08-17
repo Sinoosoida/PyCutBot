@@ -14,6 +14,7 @@ from src.processing.yt_upload.upload import upload_video_to_youtube
 from src.processing.core.time_codes import get_time_codes
 from log import *
 import requests as req
+from concurrent.futures import ThreadPoolExecutor
 
 parser = MongoParser(atlas=True,
                      username=mongo_username,
@@ -87,7 +88,10 @@ def process_link(link):
     return new_video_id, None
 
 
-if __name__ == '__main__':
+sleep_time = 5
+
+
+def main():
     while True:
         for video_obj in parser.get_videos_with_status("in queue"):
             video_link = video_obj.url
@@ -114,13 +118,19 @@ if __name__ == '__main__':
                 print_error(f"Supreme error on {video_link}: {ex}")
                 parser.set('video', url=video_link, status="error", status_info="unknown")
             print_sep()
+        time.sleep(sleep_time)
 
-        sleep_time = 5
-        max_working_time = 180 * 60
+
+def down_detector():
+    while True:
         try:
-            r = req.get(f'http://51.15.75.62:5000/upd?service=pycutbot_pr&time_delta={sleep_time + max_working_time}')
-            print(r)
+            req.get(f'http://51.15.75.62:5000/upd?service=pycutbot_processor&time_delta={sleep_time}')
         except Exception as ex:
             print_error("DOWNDETECTOR EX", ex)
         time.sleep(sleep_time)
 
+
+if __name__ == '__main__':
+    with ThreadPoolExecutor() as executor:
+        main_future = executor.submit(main)
+        down_detector_future = executor.submit(down_detector)

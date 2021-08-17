@@ -10,6 +10,7 @@ from src.processing.yt_upload.create_playlist import create_playlist
 from log import *
 import sys
 import requests as req
+from concurrent.futures import ThreadPoolExecutor
 
 MAX_PLAYLISTS = None if len(sys.argv) == 1 else int(sys.argv[1])
 
@@ -113,13 +114,25 @@ parser = MongoParser(atlas=True,
                      username=mongo_username,
                      password=mongo_password)
 
-while (True):
-    update_videos(parser)
-    sleep_time=5 * 60
-    max_working_time = 30*60
-    try:
-        r = req.get(f'http://51.15.75.62:5000/upd?service=pycutbot_up&time_delta={sleep_time + max_working_time}')
-        print(r)
-    except Exception as ex:
-        print_error("DOWNDETECTOR EX", ex)
-    time.sleep(sleep_time)
+sleep_time = 5 * 60
+
+
+def main():
+    while True:
+        update_videos(parser)
+        time.sleep(sleep_time)
+
+
+def down_detector():
+    while True:
+        try:
+            req.get(f'http://51.15.75.62:5000/upd?service=pycutbot_updater&time_delta={sleep_time}')
+        except Exception as ex:
+            print_error("DOWNDETECTOR EX", ex)
+        time.sleep(sleep_time)
+
+
+while True:
+    with ThreadPoolExecutor() as executor:
+        main_future = executor.submit(main)
+        down_detector_future = executor.submit(down_detector)
