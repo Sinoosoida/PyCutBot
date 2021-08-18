@@ -7,6 +7,7 @@ from log import *
 import time
 from tqdm import tqdm
 from utils import timeit
+from load_audio import load_audio
 from pympler import asizeof
 
 
@@ -83,7 +84,7 @@ def make_cuts(frames):
 def processing_audio(number_of_frames, name="audio.wav", limit_coefficient=1, prev_frames=0, post_frames=0,
                      number_of_frames_limit=0):
     print_info("Audio processing...")
-    audio_array, sample_rate = librosa.load(name, sr=128)
+    audio_array, sample_rate = load_audio(name)
     print_info("audio volume:", asizeof.asizeof(audio_array))
     print_success("load complete")
     volume_limit = np.median(audio_array ** 2) * limit_coefficient
