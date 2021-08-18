@@ -7,7 +7,7 @@ from log import *
 import time
 from tqdm import tqdm
 from utils import timeit
-from load_audio import load_audio
+from src.processing.core.load_audio import load_audio
 from pympler import asizeof
 
 
