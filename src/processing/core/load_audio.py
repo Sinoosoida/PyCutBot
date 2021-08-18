@@ -1,14 +1,26 @@
-import pydub
+import librosa
 import numpy as np
+from pydub import AudioSegment
 
 
-def load_audio(f, normalized=False):
-    """MP3 to numpy array"""
-    a = pydub.AudioSegment.from_file(f, "webm")
-    y = np.array(a.get_array_of_samples())
-    if a.channels == 2:
-        y = y.reshape((-1, 2))
-    if normalized:
-        return np.float32(y) / 2 ** 15, a.frame_rate
-    else:
-        return y, a.frame_rate
+def convert_audio_to_mp3(path, new_path):
+    song = AudioSegment.from_file(path, "webm")
+    song.export(new_path, format="mp3",
+                bitrate="320k")
+
+
+def load_audio(path):
+    new_path = '.'.join(path.split('.')[::-1]) + '.mp3'
+    convert_audio_to_mp3(path, new_path)
+    res = np.array([])
+    stream = librosa.stream(path,
+                            block_length=256,
+                            frame_length=4096,
+                            hop_length=1024)
+    for block in stream:
+        np.append(res, block)
+    return res
+
+
+test_path = input()
+print(load_audio(test_path))
