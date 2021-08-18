@@ -21,4 +21,4 @@ def load_audio(path):
 # y, sr = librosa.load(orig_path, sr=320)
 # librosa.
 
-load_audio(r'C:\Users\79161\PycharmProjects\PyCutBot\media\input_audio\test video.webm')
+# load_audio(r'C:\Users\79161\PycharmProjects\PyCutBot\media\input_audio\test video.webm')
