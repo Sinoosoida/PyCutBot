@@ -1,24 +1,14 @@
-from pydub import AudioSegment
-# import librosa
-from pympler import asizeof
-import audio2numpy
+import pydub
+import numpy as np
 
 
-def convert_audio_to_mp3(path, new_path):
-    song = AudioSegment.from_file(path, "webm")
-    song.export(new_path, format="mp3",
-                bitrate="320k")
-
-
-def load_audio(path):
-    new_path = '.'.join(path.split('.')[::-1]) + '.mp3'
-    convert_audio_to_mp3(path, new_path)
-    return audio2numpy.open_audio(new_path)
-
-
-# convert_audio_to_mp3(orig_path)
-
-# y, sr = librosa.load(orig_path, sr=320)
-# librosa.
-
-# load_audio(r'C:\Users\79161\PycharmProjects\PyCutBot\media\input_audio\test video.webm')
+def load_audio(f, normalized=False):
+    """MP3 to numpy array"""
+    a = pydub.AudioSegment.from_file(f, "webm")
+    y = np.array(a.get_array_of_samples())
+    if a.channels == 2:
+        y = y.reshape((-1, 2))
+    if normalized:
+        return np.float32(y) / 2 ** 15, a.frame_rate
+    else:
+        return y, a.frame_rate
