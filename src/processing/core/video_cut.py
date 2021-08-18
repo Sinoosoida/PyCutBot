@@ -7,6 +7,7 @@ from log import *
 import time
 from tqdm import tqdm
 from utils import timeit
+from pympler import asizeof
 
 
 def decouple_audio(video_name, audio_name):
@@ -82,7 +83,9 @@ def make_cuts(frames):
 def processing_audio(number_of_frames, name="audio.wav", limit_coefficient=1, prev_frames=0, post_frames=0,
                      number_of_frames_limit=0):
     print_info("Audio processing...")
-    audio_array, sample_rate = librosa.load(name)
+    audio_array, sample_rate = librosa.load(name, sr=320)
+    print_info("audio volume:", asizeof.asizeof(audio_array))
+    print_success("load complete")
     volume_limit = np.median(audio_array ** 2) * limit_coefficient
     frames = detect_loud_frames(audio_array, number_of_frames, volume_limit)
     frames = add_frames(frames, prev_frames, post_frames)
