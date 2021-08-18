@@ -14,3 +14,6 @@ pychalk==2.0.1
 beautifulsoup4~=4.9.3
 setuptools~=57.4.0
 lxml==4.6.3
+bs4==0.0.1
+pympler==0.9
+pydub==0.25.1
