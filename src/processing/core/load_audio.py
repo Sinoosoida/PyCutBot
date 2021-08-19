@@ -6,7 +6,7 @@ from utils import change_ext
 def merge(silent_video: str, webm_audio: str) -> str:
     dot_idx = silent_video.rfind('.')
     sounded_video = silent_video[:dot_idx] + '_MERGED' + silent_video[dot_idx:]
-    command = f"ffmpeg -i {silent_video} -i {webm_audio} -c:v copy -c:a aac {sounded_video}"
+    command = f"ffmpeg -i \"{silent_video}\" -i \"{webm_audio}\" -c:v copy -c:a aac \"{sounded_video}\""
     subprocess.call(command, shell=True)
     # os.remove(webm_audio)
     return sounded_video
@@ -14,7 +14,7 @@ def merge(silent_video: str, webm_audio: str) -> str:
 
 def extract_wav_from_video(sounded_video_path, wav_audio_path, sample_rate=22050):
     print(f"extracting audio from {sounded_video_path}")
-    command = f"ffmpeg -i {sounded_video_path} -ab 160k -ac 2 -ar {sample_rate} -vn {wav_audio_path}"
+    command = f"ffmpeg -i \"{sounded_video_path}\" -ab 160k -ac 2 -ar \"{sample_rate}\" -vn \"{wav_audio_path}\""
     subprocess.call(command, shell=True)
     print(f"extracting done: {wav_audio_path}")
 
