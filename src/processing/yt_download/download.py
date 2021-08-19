@@ -4,6 +4,7 @@ from pytube import YouTube
 import requests
 from src.requests_utils import with_retries
 from src.processing.core.load_audio import webm2wav
+from utils import fix_filename
 
 
 def find_best_resolution_stream(yt_obj: YouTube):
@@ -74,13 +75,16 @@ def download_video_from_youtube(yt_object: YouTube, video_dir, audio_dir, thumbn
     video_path = download_video(yt_object, video_dir)
     if not video_path:
         return False
+    video_path = fix_filename(video_path)
     webm_audio_path = download_audio(yt_object, audio_dir)
     if not webm_audio_path:
         return False
+    webm_audio_path = fix_filename(webm_audio_path)
     audio_path = webm2wav(video_path, webm_audio_path)
     thumbnail_path = download_thumbnail(yt_object, thumbnail_dir)
     if not thumbnail_path:
         return False
+    thumbnail_path = fix_filename(thumbnail_path)
 
     return video_name, video_path, audio_path, thumbnail_path
 
