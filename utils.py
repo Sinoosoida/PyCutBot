@@ -8,6 +8,7 @@ def change_ext(path, new_ext):
 
 def fix_filename(filename: str):
     fixed_filename = filename.replace(' ', '_')
+    print(f"FIXING FILENAME: {filename} to {fixed_filename}")
     os.rename(filename, fixed_filename)
     return fixed_filename
 

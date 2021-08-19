@@ -82,7 +82,7 @@ def download_video_from_youtube(yt_object: YouTube, video_dir, audio_dir, thumbn
     audio_path = webm2wav(video_path, webm_audio_path)
     thumbnail_path = download_thumbnail(yt_object, thumbnail_dir)
     if not thumbnail_path:
-        return False
+        return False  # todo
     thumbnail_path = fix_filename(thumbnail_path)
 
     return video_name, video_path, audio_path, thumbnail_path
