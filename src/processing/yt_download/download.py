@@ -1,4 +1,3 @@
-import warnings
 import os
 from pytube import YouTube
 import requests
@@ -87,9 +86,3 @@ def download_video_from_youtube(yt_object: YouTube, video_dir, audio_dir, thumbn
     thumbnail_path = fix_filename(thumbnail_path)
 
     return video_name, video_path, audio_path, thumbnail_path
-
-
-if __name__ == '__main__':
-    # download_video(YouTube('https://youtube.com/watch?v=SmDCX5Z7uJE'))
-
-    print(YouTube(input('video url')).check_availability())
