@@ -23,7 +23,9 @@ def extract_wav_from_video(sounded_video_path, wav_audio_path, sample_rate=22050
 
 def webm2wav(silent_video_path, webm_audio_path):
     sounded_video_path = merge(silent_video_path, webm_audio_path)
-    extract_wav_from_video(sounded_video_path, wav_audio_path=change_ext(webm_audio_path, '.wav'))
+    wav_audio = change_ext(webm_audio_path, '.wav')
+    extract_wav_from_video(sounded_video_path, wav_audio_path=wav_audio)
+    return wav_audio
 
 
 from scipy.io import wavfile
