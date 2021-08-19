@@ -1,8 +1,5 @@
-import librosa
-import numpy as np
-
+from scipy.io import wavfile
 import subprocess
-import os
 from utils import change_ext
 
 
@@ -27,33 +24,6 @@ def webm2wav(silent_video_path, webm_audio_path):
     return wav_audio
 
 
-from scipy.io import wavfile
-
-
 def load_audio(path):
     sample_rate, audio_data = wavfile.read(path)
     return audio_data, sample_rate
-
-# test_path = r'C:\Users\79161\PycharmProjects\PyCutBot\media\input_audio\test video.webm'
-# new_path = r'C:\Users\79161\PycharmProjects\PyCutBot\media\input_audio\test video.mp3'
-
-# convert_audio_to_mp3(test_path, new_path)
-# # print(load_audio(test_path))
-#
-# import soundfile as sf
-#
-# def read_audio_section(filename, start_time, stop_time):
-#     track = sf.SoundFile(filename)
-#
-#     can_seek = track.seekable() # True
-#     if not can_seek:
-#         raise ValueError("Not compatible with seeking")
-#
-#     sr = track.samplerate
-#     start_frame = sr * start_time
-#     frames_to_read = sr * (stop_time - start_time)
-#     track.seek(start_frame)
-#     audio_section = track.read(frames_to_read)
-#     return audio_section, sr
-#
-# read_audio_section(test_path, 0, 1)

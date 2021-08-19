@@ -1,4 +1,3 @@
-import librosa
 import numpy as np
 from moviepy.editor import *
 from moviepy.editor import VideoFileClip, concatenate_videoclips
@@ -8,7 +7,6 @@ import time
 from tqdm import tqdm
 from utils import timeit
 from src.processing.core.load_audio import load_audio
-from pympler import asizeof
 
 
 def decouple_audio(video_name, audio_name):
@@ -85,7 +83,6 @@ def processing_audio(number_of_frames, name="audio.wav", limit_coefficient=1, pr
                      number_of_frames_limit=0):
     print_info("Audio processing...")
     audio_array, _ = load_audio(name)
-    print_info("audio volume:", asizeof.asizeof(audio_array))
     print_success("load complete")
     volume_limit = np.median(audio_array ** 2) * limit_coefficient
     frames = detect_loud_frames(audio_array, number_of_frames, volume_limit)
