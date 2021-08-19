@@ -13,14 +13,17 @@ def merge(silent_video: str, webm_audio: str) -> str:
 
 
 def extract_wav_from_video(sounded_video_path, wav_audio_path, sample_rate=22050):
+    print(f"extracting audio from {sounded_video_path}")
     command = f"ffmpeg -i {sounded_video_path} -ab 160k -ac 2 -ar {sample_rate} -vn {wav_audio_path}"
     subprocess.call(command, shell=True)
+    print(f"extracting done: {wav_audio_path}")
 
 
 def webm2wav(silent_video_path, webm_audio_path):
     sounded_video_path = merge(silent_video_path, webm_audio_path)
     wav_audio = change_ext(webm_audio_path, '.wav')
     extract_wav_from_video(sounded_video_path, wav_audio_path=wav_audio)
+    print(f"wav in {wav_audio}")
     return wav_audio
 
 
