@@ -18,3 +18,4 @@ bs4==0.0.1
 pympler==0.9
 pydub==0.25.1
 audio2numpy==0.1.2
+scipy==1.5.4

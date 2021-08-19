@@ -1,4 +1,9 @@
 import time
+import os
+
+
+def change_ext(path, new_ext):
+    return os.path.splitext(path)[0] + new_ext
 
 
 def timeit(func):
