@@ -11,8 +11,7 @@ def merge(silent_video: str, webm_audio: str) -> str:
     sounded_video = silent_video[:dot_idx] + '_MERGED' + silent_video[dot_idx:]
     command = f"ffmpeg -i {silent_video} -i {webm_audio} -c:v copy -c:a aac {sounded_video}"
     subprocess.call(command, shell=True)
-    os.remove(silent_video)
-    os.remove(webm_audio)
+    # os.remove(webm_audio)
     return sounded_video
 
 
