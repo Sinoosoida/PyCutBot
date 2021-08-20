@@ -81,7 +81,7 @@ def load_videos_to_playlist(parser):
     print_header1_info("Loading videos with 'done' status to playlist")
     try:
         for video in parser.get_all("video"):
-            if (video.status == Status.DONE):
+            if video.status == "done":
                 for playlist in parser.get_attr('video', video.url, attribute_name='playlists_urls'):
                     if not playlist.uploaded:
                         playlist_url = playlist.playlist_url
@@ -91,7 +91,7 @@ def load_videos_to_playlist(parser):
                                 print_info(f"Creating new playlist for {playlist_url}")
                                 create_playlist(playlist_url)
                             add_video_to_playlist(video.new_video_id,
-                                                  parser.get_attr('playlist', playlist["playlist_url"], 'new_url'))
+                                                  parser.get_attr('playlist', playlist_url, 'new_url'))
                             parser.mark_playlist_as_upload(video.url, playlist["playlist_url"])
                             print_success(f"Adding video {video.url} to playlist {playlist_url} done")
                         except:
