@@ -120,6 +120,7 @@ sleep_time = 5 * 60
 def main():
     while True:
         update_videos(parser)
+        print_sep()
         time.sleep(sleep_time)
 
 
