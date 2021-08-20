@@ -83,13 +83,13 @@ def load_videos_to_playlist(parser):
         for video in parser.get_all("video"):
             if (video.status == Status.DONE):
                 for playlist in parser.get_attr('video', video.url, attribute_name='playlists_urls'):
-                    if (not playlist['uploaded']):
-                        playlist_url = playlist["playlist_url"]
+                    if not playlist.uploaded:
+                        playlist_url = playlist.playlist_url
                         print_info(f"Adding video {video.url} to playlist {playlist_url} playlist")
                         try:
-                            if (not parser.get_attr('playlist', playlist["playlist_url"], 'new_url')):
+                            if not parser.get_attr('playlist', playlist["playlist_url"], 'new_url'):
                                 print_info(f"Creating new playlist for {playlist_url}")
-                                create_playlist(playlist["playlist_url"])
+                                create_playlist(playlist_url)
                             add_video_to_playlist(video.new_video_id,
                                                   parser.get_attr('playlist', playlist["playlist_url"], 'new_url'))
                             parser.mark_playlist_as_upload(video.url, playlist["playlist_url"])
