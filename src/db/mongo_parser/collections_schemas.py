@@ -42,7 +42,7 @@ class Video(mongo.Document):
 
 
 class Playlist(mongo.Document):
-    url = mongo.StringField(required=True)
+    playlist_id = mongo.StringField(required=True)
     new_url = mongo.StringField()
     load_all = mongo.BooleanField()
 
@@ -53,9 +53,9 @@ class Playlist(mongo.Document):
 
 
 class Channel(mongo.Document):
-    url = mongo.StringField(required=True)
+    channel_id = mongo.StringField(required=True)
     last_request_datetime = mongo.DateTimeField(default=datetime.min)
 
     def __str__(self):
-        return str({'url': self.url,
+        return str({'url': self.channel_id,
                     'last_request_datetime': self.last_request_datetime})

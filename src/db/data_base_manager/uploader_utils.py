@@ -1,46 +1,32 @@
 from src.requests_utils import get_request_with_retries
 import json
 import src.config as config
-from pytube import Channel, Playlist, YouTube
 from tqdm import tqdm
 import datetime
 from datetime import datetime, timedelta
-from channel_video import get_last_video_urls
+from channel_video import get_last_videos
 from video_info import VideoInfoGetter
+from typing import List
+from src.db.data_base_manager.info import YtVideo, YtPlaylist
 
 from utils import timeit
-
-
-def get_videos_url_from_channel(channel):
-    return Channel(channel).video_urls
-
-
-def get_videos_url_from_playlist(playlist):
-    return Playlist(playlist).video_urls
-
-
-def get_channel_video_urls(channel):
-    return list(channel.video_urls)
-
 
 video_info_getter = VideoInfoGetter(app_version=5)
 
 
-def get_videos_urls_since_date(channel_url, date=datetime.min):
+def get_videos_since_date(channel_id, date=datetime.min):
     """
     По дефолту date - минимальная, т.е. если хочешь получить все видосы на канале, просто не указывай ее как аргумент
-    :param channel_url:
+    :param channel_id:
     :param date:
     :return:
     """
 
     res = []
-    channel = Channel(channel_url)
-    urls = get_last_video_urls(channel.channel_id)
-    for url in urls:
-        video = YouTube(url)
+    videos: List[YtVideo] = get_last_videos(channel_id)
+    for video in videos:
         print(video.watch_url)
-        publish_dt = video_info_getter.get_publish_time(video.video_id)
+        publish_dt = video.published_at
         print('published:', publish_dt)
         if publish_dt >= date:
             res.append(video.watch_url)
@@ -50,13 +36,8 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
     return res
 
 
-def channel_url_to_id(url):
-    return Channel(url).channel_id
-
-
-def get_all_playlists(channel_url: str, key=config.api_key, max_res=None):
+def get_all_playlists(channel_id: str, key=config.api_key, max_res=None):
     playlists_list = []
-    channel_id = channel_url_to_id(channel_url)
     res = get_request_with_retries(
         f'https://www.googleapis.com/youtube/v3/playlists?channelId={channel_id}&key={key}&maxResults=50')
     if not res:
@@ -64,7 +45,7 @@ def get_all_playlists(channel_url: str, key=config.api_key, max_res=None):
 
     res_dict = json.loads(res.content)
     for dct in res_dict['items']:
-        playlists_list.append('https://www.youtube.com/playlist?list=' + dct['id'])
+        playlists_list.append(dct['id'])
 
     num_res = 50
 
@@ -80,10 +61,8 @@ def get_all_playlists(channel_url: str, key=config.api_key, max_res=None):
             return playlists_list
         res_dict = json.loads(res.content)
         for dct in res_dict['items']:
-            print('https://www.youtube.com/playlist?list=' + dct['id'])
-            playlists_list.append('https://www.youtube.com/playlist?list=' + dct['id'])
+            playlists_list.append(dct['id'])
     return playlists_list
-
 
 # def update_playlists(parser):
 #     for channel in parser.get_all("channel"):

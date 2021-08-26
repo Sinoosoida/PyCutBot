@@ -25,7 +25,7 @@ def videos_from_channel(parser):  # adding all new videos from the channel
                 start_processing_time = datetime.now()
                 print('last_request_time', last_request_time)
                 print('start_processing_time', start_processing_time)
-                videos_url = get_videos_urls_since_date(channel.url, last_request_time - timedelta(minutes=10))
+                videos_url = get_videos_since_date(channel.channel_id, last_request_time - timedelta(minutes=10))
                 for video_url in videos_url:
                     if parser.save(collection_name="video", url=video_url, status="in queue"):
                         print_info(f"Adding video {video_url} to database")
@@ -44,7 +44,7 @@ def videos_from_playlists(parser):  # all videos from the right playlists
     try:
         for playlist in parser.get_all("playlist"):
             if (playlist.load_all):
-                for video_url in get_videos_url_from_playlist(playlist.url):
+                for video_url in YtPlaylist(playlist.playlist_id).videos:
                     if parser.save(collection_name="video", url=video_url, status="in queue"):
                         print_info(f"Adding video {video_url} to database")
                     parser.add_playlist_to_video(video_url, playlist.url)
@@ -57,9 +57,9 @@ def playlists_from_channel(parser):
     print_header1_info("Processing playlists channel")
     try:
         for channel in parser.get_all("channel"):
-            for playlist_url in get_all_playlists(channel.url, max_res=MAX_PLAYLISTS):
-                if parser.save('playlist', url=playlist_url, load_all=False):
-                    print_info(f"Adding playlist {playlist_url} to database")
+            for playlist_id in get_all_playlists(channel.channel_id, max_res=MAX_PLAYLISTS):
+                if parser.save('playlist', url=playlist_id, load_all=False):
+                    print_info(f"Adding playlist {playlist_id} playlist to database")
         print_success("Processing playlists from channel done")
     except Exception as ex:
         print_error("Fatal error. Impossible to get playlists from channel.", ex)
@@ -69,7 +69,7 @@ def playlist_to_video(parser):  # adding playlist links to video parameters
     print_header1_info("Adding playlists to video list")
     try:
         for playlist in tqdm(parser.get_all("playlist")):
-            for video_url in get_videos_url_from_playlist(playlist.url):
+            for video_url in YtPlaylist(playlist.playlist_id).videos:
                 if parser.add_playlist_to_video(video_url, playlist.url):
                     print_info(f"Adding playlist {playlist.url} to {video_url} list")
         print_success("Adding playlists to video list done")
