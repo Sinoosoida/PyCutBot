@@ -23,8 +23,3 @@ def gen_thumbnail_with_watermark(input_thumbnail_path, watermark_path, output_th
     add_watermark(Image.open(input_thumbnail_path),
                   Image.open(watermark_path)).save(output_thumbnail_path)
 
-
-if __name__ == "__main__":
-    gen_thumbnail_with_watermark(fr'C:\Users\79161\PycharmProjects\PyCutBot\useful_scripts\thumbnail_prik.png',
-                                 fr'C:\Users\79161\PycharmProjects\PyCutBot\src\img\watermark.png',
-                                 fr'C:\Users\79161\PycharmProjects\PyCutBot\useful_scripts\thumbnail_prik1.png')
