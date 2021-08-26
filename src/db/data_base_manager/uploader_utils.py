@@ -19,7 +19,6 @@ def get_videos_url_from_playlist(playlist):
     return Playlist(playlist).video_urls
 
 
-@timeit
 def get_channel_video_urls(channel):
     return list(channel.video_urls)
 
@@ -55,7 +54,6 @@ def channel_url_to_id(url):
     return Channel(url).channel_id
 
 
-@timeit
 def get_all_playlists(channel_url: str, key=config.api_key, max_res=None):
     playlists_list = []
     channel_id = channel_url_to_id(channel_url)

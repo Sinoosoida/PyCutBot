@@ -68,7 +68,7 @@ def playlists_from_channel(parser):
 def playlist_to_video(parser):  # adding playlist links to video parameters
     print_header1_info("Adding playlists to video list")
     try:
-        for playlist in parser.get_all("playlist"):
+        for playlist in tqdm(parser.get_all("playlist")):
             for video_url in get_videos_url_from_playlist(playlist.url):
                 if parser.add_playlist_to_video(video_url, playlist.url):
                     print_info(f"Adding playlist {playlist.url} to {video_url} list")
@@ -81,7 +81,9 @@ def load_videos_to_playlist(parser):
     print_header1_info("Loading videos with 'done' status to playlist")
     try:
         for video in parser.get_all("video"):
+            print(video)
             if video.status == "done":
+                print("gonna add")
                 for playlist in parser.get_attr('video', video.url, attribute_name='playlists_urls'):
                     if not playlist.uploaded:
                         playlist_url = playlist.playlist_url

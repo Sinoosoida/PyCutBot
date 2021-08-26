@@ -75,7 +75,6 @@ class MongoParser(metaclass=Singleton):
         return False
 
     @staticmethod
-    @timeit
     def get_videos_with_status(status) -> list:
         return list(schema.Video.objects(status=schema.Status(status)))
 
