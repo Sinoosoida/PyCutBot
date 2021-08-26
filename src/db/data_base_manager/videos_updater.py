@@ -15,7 +15,7 @@ from concurrent.futures import ThreadPoolExecutor
 MAX_PLAYLISTS = None if len(sys.argv) == 1 else int(sys.argv[1])
 
 
-def videos_from_channel(parser):  # adding all new videos from the channel
+def videos_from_channel(parser: MongoParser):  # adding all new videos from the channel
     print_header1_info("Processing videos_from_channel")
     try:
         for channel in parser.get_all("channel"):
@@ -25,10 +25,15 @@ def videos_from_channel(parser):  # adding all new videos from the channel
                 start_processing_time = datetime.now()
                 print('last_request_time', last_request_time)
                 print('start_processing_time', start_processing_time)
-                videos_url = get_videos_since_date(channel.channel_id, last_request_time - timedelta(minutes=10))
-                for video_url in videos_url:
-                    if parser.save(collection_name="video", url=video_url, status="in queue"):
-                        print_info(f"Adding video {video_url} to database")
+                videos = get_videos_since_date(channel.channel_id, last_request_time - timedelta(minutes=10))
+                for video in videos:
+                    if parser.save(collection_name="video",
+                                   url=video.watch_url,
+                                   video_id=video.video_id,
+                                   channel_id=video.channel_id,
+                                   published_at=video.published_at,
+                                   status="in queue"):
+                        print_info(f"Adding video {video.video_id} to database")
                 parser.set(collection_name="channel", url=channel.url, last_request_datetime=start_processing_time)
                 print_info(f"Last request time was updated {start_processing_time.time()} t")
                 print_success(f"Processing {channel.url} channel done")

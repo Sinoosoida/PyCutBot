@@ -10,7 +10,7 @@ from src.youtube_informer import YtVideo
 video_info_getter = VideoInfoGetter(app_version=5)
 
 
-def get_videos_since_date(channel_id, date=datetime.min):
+def get_videos_since_date(channel_id: str, date: datetime = datetime.min) -> List[YtVideo]:
     """
     По дефолту date - минимальная, т.е. если хочешь получить все видосы на канале, просто не указывай ее как аргумент
     :param channel_id:
@@ -21,11 +21,9 @@ def get_videos_since_date(channel_id, date=datetime.min):
     res = []
     videos: List[YtVideo] = get_last_videos(channel_id)
     for video in videos:
-        print(video.watch_url)
-        publish_dt = video.published_at
-        print('published:', publish_dt)
-        if publish_dt >= date:
-            res.append(video.watch_url)
+        print(video)
+        if video.published_at >= date:
+            res.append(video)
         else:
             return res
 
