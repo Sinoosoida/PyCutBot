@@ -1,7 +1,6 @@
 import requests
 import bs4
 from datetime import datetime
-from pytube import YouTube
 from typing import List
 
 
@@ -26,18 +25,14 @@ class YtVideo:
 
 class YtPlaylist:
     def __init__(self, playlist_id: str):
-        response = requests.get(
-            f"https://www.youtube.com/feeds/videos.xml?playlist_id={playlist_id}"
-        )
+        response = requests.get(f"https://www.youtube.com/feeds/videos.xml?playlist_id={playlist_id}")
         if response.status_code != 200:
             raise ValueError("YT_INFO error: Invalid playlist")
         self.playlist_id = playlist_id
 
     @property
     def __soup(self):
-        response = requests.get(
-            f"https://www.youtube.com/feeds/videos.xml?playlist_id={self.playlist_id}"
-        )
+        response = requests.get(f"https://www.youtube.com/feeds/videos.xml?playlist_id={self.playlist_id}")
         doc = response.content.decode("utf-8")
         return bs4.BeautifulSoup(doc, "lxml")
 

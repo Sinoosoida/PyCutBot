@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import requests
 from bs4 import BeautifulSoup
-from src.db.data_base_manager.info import YtVideo
+from src.youtube_informer import YtVideo
 from typing import List
 
 

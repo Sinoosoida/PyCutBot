@@ -1,15 +1,11 @@
 from src.requests_utils import get_request_with_retries
 import json
 import src.config as config
-from tqdm import tqdm
-import datetime
-from datetime import datetime, timedelta
+from datetime import datetime
 from channel_video import get_last_videos
 from video_info import VideoInfoGetter
 from typing import List
-from src.db.data_base_manager.info import YtVideo, YtPlaylist
-
-from utils import timeit
+from src.youtube_informer import YtVideo
 
 video_info_getter = VideoInfoGetter(app_version=5)
 

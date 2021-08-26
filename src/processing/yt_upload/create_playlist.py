@@ -1,4 +1,4 @@
-from pytube import Playlist
+from src.youtube_informer import YtPlaylist
 from src.processing.yt_upload.google_api_utils import Create_Service
 import os
 
@@ -9,7 +9,7 @@ def get_abs_path(relative_path):
 
 
 def create_playlist(old_playlist_url, app_version=5):
-    playlist = Playlist(old_playlist_url)
+    playlist = YtPlaylist(old_playlist_url)
 
     CLIENT_SECRET_FILE = get_abs_path(f'..\..\google_api\client_secrets\client_secret_{app_version}.json')
     API_NAME = "youtube"
