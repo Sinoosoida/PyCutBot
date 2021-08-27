@@ -1,4 +1,4 @@
-from src.youtube_informer import YtPlaylist
+from src.yt_informer import YtPlaylist
 from src.processing.yt_upload.google_api_utils import Create_Service
 import os
 

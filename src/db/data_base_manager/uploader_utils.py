@@ -5,7 +5,7 @@ from datetime import datetime
 from channel_video import get_last_videos
 from video_info import VideoInfoGetter
 from typing import List
-from src.youtube_informer import YtVideo
+from src.yt_informer import YtVideo
 
 video_info_getter = VideoInfoGetter(app_version=5)
 
@@ -30,7 +30,7 @@ def get_videos_since_date(channel_id: str, date: datetime = datetime.min) -> Lis
     return res
 
 
-def get_all_playlists(channel_id: str, key=config.api_key, max_res=None):
+def get_all_playlists_ids(channel_id: str, key=config.api_key, max_res=None) -> List[str]:
     playlists_list = []
     res = get_request_with_retries(
         f'https://www.googleapis.com/youtube/v3/playlists?channelId={channel_id}&key={key}&maxResults=50')

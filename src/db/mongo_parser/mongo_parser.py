@@ -2,6 +2,7 @@ import mongoengine as mongo
 from utils import Singleton, timeit
 import src.db.mongo_parser.collections_schemas as schema
 from log import print_success
+from typing import Union, List
 
 
 class MongoParser(metaclass=Singleton):
@@ -25,7 +26,7 @@ class MongoParser(metaclass=Singleton):
     def _get_doc_type(self, collection_name):
         return self.collections.get(schema.Collection(collection_name))
 
-    def get_all(self, collection_name) -> list:
+    def get_all(self, collection_name) -> List[Union[schema.Video, schema.Playlist, schema.Channel]]:
         mongo_doc_type = self._get_doc_type(collection_name)
         if not mongo_doc_type:
             return []

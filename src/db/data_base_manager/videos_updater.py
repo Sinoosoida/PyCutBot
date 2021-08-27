@@ -11,6 +11,8 @@ from log import *
 import sys
 import requests as req
 from concurrent.futures import ThreadPoolExecutor
+import src.db.mongo_parser.collections_schemas as schema
+from src.yt_informer import YtVideo, YtPlaylist
 
 MAX_PLAYLISTS = None if len(sys.argv) == 1 else int(sys.argv[1])
 
@@ -18,8 +20,9 @@ MAX_PLAYLISTS = None if len(sys.argv) == 1 else int(sys.argv[1])
 def videos_from_channel(parser: MongoParser):  # adding all new videos from the channel
     print_header1_info("Processing videos_from_channel")
     try:
+        channel: schema.Channel
         for channel in parser.get_all("channel"):
-            print_info(f"Processing {channel.url} channel")
+            print_info(f"Processing {channel.channel_id} channel")
             try:
                 last_request_time = channel.last_request_datetime
                 start_processing_time = datetime.now()
@@ -34,9 +37,9 @@ def videos_from_channel(parser: MongoParser):  # adding all new videos from the 
                                    published_at=video.published_at,
                                    status="in queue"):
                         print_info(f"Adding video {video.video_id} to database")
-                parser.set(collection_name="channel", url=channel.url, last_request_datetime=start_processing_time)
+                parser.set(collection_name="channel", channel_id=channel.channel_id, last_request_datetime=start_processing_time)
                 print_info(f"Last request time was updated {start_processing_time.time()} t")
-                print_success(f"Processing {channel.url} channel done")
+                print_success(f"Processing {channel.channel_id} channel done")
             except Exception as ex:
                 print_error("Impossible to process this channel", ex)
         print_success("Making videos from channels done")
@@ -47,12 +50,17 @@ def videos_from_channel(parser: MongoParser):  # adding all new videos from the 
 def videos_from_playlists(parser):  # all videos from the right playlists
     print_header1_info("Processing videos from playlists")
     try:
+        playlist: schema.Playlist
         for playlist in parser.get_all("playlist"):
-            if (playlist.load_all):
-                for video_url in YtPlaylist(playlist.playlist_id).videos:
-                    if parser.save(collection_name="video", url=video_url, status="in queue"):
-                        print_info(f"Adding video {video_url} to database")
-                    parser.add_playlist_to_video(video_url, playlist.url)
+            if playlist.load_all:
+                for video in YtPlaylist(playlist.playlist_id).videos:
+                    if parser.save(collection_name="video",
+                                   url=video.watch_url,
+                                   video_id=video.video_id,
+                                   channel_id=video.channel_id,
+                                   published_at=video.published_at,
+                                   status="in queue"):
+                        print_info(f"Adding video {video.video_id} to database")
         print_success("Processing videos from playlists done")
     except Exception as ex:
         print_error("Fatal error. Impossible to make videos from playlists", ex)
@@ -61,9 +69,10 @@ def videos_from_playlists(parser):  # all videos from the right playlists
 def playlists_from_channel(parser):
     print_header1_info("Processing playlists channel")
     try:
+        channel: schema.Channel
         for channel in parser.get_all("channel"):
-            for playlist_id in get_all_playlists(channel.channel_id, max_res=MAX_PLAYLISTS):
-                if parser.save('playlist', url=playlist_id, load_all=False):
+            for playlist_id in get_all_playlists_ids(channel.channel_id, max_res=MAX_PLAYLISTS):
+                if parser.save('playlist', playlist_id=playlist_id, load_all=False):
                     print_info(f"Adding playlist {playlist_id} playlist to database")
         print_success("Processing playlists from channel done")
     except Exception as ex:
@@ -73,9 +82,10 @@ def playlists_from_channel(parser):
 def playlist_to_video(parser):  # adding playlist links to video parameters
     print_header1_info("Adding playlists to video list")
     try:
-        for playlist in tqdm(parser.get_all("playlist")):
+        playlist: schema.Playlist
+        for playlist in parser.get_all("playlist"):
             for video_url in YtPlaylist(playlist.playlist_id).videos:
-                if parser.add_playlist_to_video(video_url, playlist.url):
+                if parser.add_playlist_to_video(url=video_url, playlist_url=playlist.playlist_id):
                     print_info(f"Adding playlist {playlist.url} to {video_url} list")
         print_success("Adding playlists to video list done")
     except:
