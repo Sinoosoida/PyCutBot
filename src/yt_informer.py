@@ -83,11 +83,3 @@ class YtPlaylist:
     @property
     def videos(self) -> List[YtVideo]:
         return [YtVideo.from_entry(entry) for entry in self.__soup.find_all("entry")]
-
-
-# playlist_id = 'PL4_hYwCyhAvZain8aQHEYJ9rj9pg7ojFf'
-# response = requests.get(f"https://www.youtube.com/feeds/videos.xml?playlist_id={playlist_id}")
-# doc = response.content.decode('utf-8')
-# soup = bs4.BeautifulSoup(doc, "lxml")
-
-YtVideo('xuCn8ux2gbs')
