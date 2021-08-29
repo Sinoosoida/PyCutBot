@@ -105,10 +105,10 @@ def load_videos_to_playlist(parser):
 
 
 def update_videos(parser):
-    videos_from_channel(parser)
-    playlists_from_channel(parser)
-    videos_from_playlists(parser)
-    playlist_to_video(parser)
+    # videos_from_channel(parser)
+    # playlists_from_channel(parser)
+    # videos_from_playlists(parser)
+    # playlist_to_video(parser)
     load_videos_to_playlist(parser)
 
 
