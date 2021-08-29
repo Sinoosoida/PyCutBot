@@ -70,6 +70,8 @@ def playlist_to_video(parser):  # adding playlist links to video parameters
     try:
         for playlist in tqdm(parser.get_all("playlist")):
             for video_url in get_videos_url_from_playlist(playlist.url):
+                if 'www' in video_url:  # super bad thing, will be replaced in youtube-dl branch later
+                    video_url = video_url.replace('www.', '')
                 if parser.add_playlist_to_video(video_url, playlist.url):
                     print_info(f"Adding playlist {playlist.url} to {video_url} list")
         print_success("Adding playlists to video list done")
@@ -82,18 +84,21 @@ def load_videos_to_playlist(parser):
     try:
         for video in parser.get_all("video"):
             print(video)
-            if video.status == "done":
+            if video.status == Status.DONE:
                 print("gonna add")
                 for playlist in parser.get_attr('video', video.url, attribute_name='playlists_urls'):
                     if not playlist.uploaded:
                         playlist_url = playlist.playlist_url
                         print_info(f"Adding video {video.url} to playlist {playlist_url} playlist")
                         try:
-                            if not parser.get_attr('playlist', playlist["playlist_url"], 'new_url'):
+                            if not parser.get_attr('playlist', playlist["playlist_url"], 'new_playlist_id'):
                                 print_info(f"Creating new playlist for {playlist_url}")
-                                create_playlist(playlist_url)
-                            add_video_to_playlist(video.new_video_id,
-                                                  parser.get_attr('playlist', playlist_url, 'new_url'))
+                                new_playlist_id = create_playlist(playlist_url)
+                                parser.set(collection_name='playlist', url=playlist_url,
+                                           new_playlist_id=new_playlist_id)
+                            add_video_to_playlist(video_id=video.new_video_id,
+                                                  playlist_id=parser.get_attr('playlist', playlist_url,
+                                                                              'new_playlist_id'))
                             parser.mark_playlist_as_upload(video.url, playlist["playlist_url"])
                             print_success(f"Adding video {video.url} to playlist {playlist_url} done")
                         except:
@@ -105,10 +110,10 @@ def load_videos_to_playlist(parser):
 
 
 def update_videos(parser):
-    # videos_from_channel(parser)
-    # playlists_from_channel(parser)
-    # videos_from_playlists(parser)
-    # playlist_to_video(parser)
+    videos_from_channel(parser)
+    playlists_from_channel(parser)
+    videos_from_playlists(parser)
+    playlist_to_video(parser)
     load_videos_to_playlist(parser)
 
 

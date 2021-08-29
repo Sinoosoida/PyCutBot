@@ -121,10 +121,15 @@ class MongoParser(metaclass=Singleton):
 
 # if __name__ == '__main__':
 #     from pprint import pprint
-#     p = MongoParser('data1')
-#     # p.save('video', url='url2', status='in queue')
-#     # p.add_playlist_to_video(url='url2', playlist_url='playlist3')
-#     p.mark_playlist_as_upload(url='url1', playlist_url='playlist2')
-#     playlists = (p.get_attr('video', url='url1', attribute_name='playlists_urls'))
-#     for pl in playlists:
-#         print(pl.playlist_url, pl.uploaded)
+#     from src.config import mongo_username, mongo_password
+#     parser = MongoParser(atlas=True,
+#                          username=mongo_username,
+#                          password=mongo_password)
+#     r = parser.add_playlist_to_video('https://youtube.com/watch?v=FsGkWHogbiA', 'https://www.youtube.com/playlist?list=PL4_hYwCyhAvbdZVMa7QWNvi-7YqGKl3KL')
+#     print(r)
+    # # p.save('video', url='url2', status='in queue')
+    # # p.add_playlist_to_video(url='url2', playlist_url='playlist3')
+    # p.mark_playlist_as_upload(url='url1', playlist_url='playlist2')
+    # playlists = (p.get_attr('video', url='url1', attribute_name='playlists_urls'))
+    # for pl in playlists:
+    #     print(pl.playlist_url, pl.uploaded)

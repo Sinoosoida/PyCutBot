@@ -43,12 +43,12 @@ class Video(mongo.Document):
 
 class Playlist(mongo.Document):
     url = mongo.StringField(required=True)
-    new_url = mongo.StringField()
+    new_playlist_id = mongo.StringField()
     load_all = mongo.BooleanField()
 
     def __str__(self):
         return str({'url': self.url,
-                    'new_url': self.new_url,
+                    'new_playlist_id': self.new_playlist_id,
                     'load_all': self.load_all})
 
 
