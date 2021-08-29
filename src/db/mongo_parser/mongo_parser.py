@@ -85,6 +85,10 @@ class MongoParser(metaclass=Singleton):
             return res[0]
 
     @staticmethod
+    def get_playlists_with_load_all() -> list:
+        return list(schema.Playlist.objects(load_all=True))
+
+    @staticmethod
     def mark_playlist_as_upload(url, playlist_url):
         # videos_list = schema.Video.objects(url__iexact=url)
         videos_list = schema.Video.objects(url__iexact=url)

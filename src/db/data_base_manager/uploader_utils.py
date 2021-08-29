@@ -39,9 +39,7 @@ def get_videos_urls_since_date(channel_url, date=datetime.min):
     urls = get_last_video_urls(channel.channel_id)
     for url in urls:
         video = YouTube(url)
-        print(video.watch_url)
         publish_dt = video_info_getter.get_publish_time(video.video_id)
-        print('published:', publish_dt)
         if publish_dt >= date:
             res.append(video.watch_url)
         else:
@@ -80,7 +78,7 @@ def get_all_playlists(channel_url: str, key=config.api_key, max_res=None):
             return playlists_list
         res_dict = json.loads(res.content)
         for dct in res_dict['items']:
-            print('https://www.youtube.com/playlist?list=' + dct['id'])
+            # print('https://www.youtube.com/playlist?list=' + dct['id'])
             playlists_list.append('https://www.youtube.com/playlist?list=' + dct['id'])
     return playlists_list
 

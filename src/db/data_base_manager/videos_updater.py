@@ -42,12 +42,11 @@ def videos_from_channel(parser):  # adding all new videos from the channel
 def videos_from_playlists(parser):  # all videos from the right playlists
     print_header1_info("Processing videos from playlists")
     try:
-        for playlist in parser.get_all("playlist"):
-            if (playlist.load_all):
-                for video_url in get_videos_url_from_playlist(playlist.url):
-                    if parser.save(collection_name="video", url=video_url, status="in queue"):
-                        print_info(f"Adding video {video_url} to database")
-                    parser.add_playlist_to_video(video_url, playlist.url)
+        for playlist in parser.get_playlists_with_load_all("playlist"):
+            for video_url in get_videos_url_from_playlist(playlist.url):
+                if parser.save(collection_name="video", url=video_url, status="in queue"):
+                    print_info(f"Adding video {video_url} to database")
+                parser.add_playlist_to_video(video_url, playlist.url)
         print_success("Processing videos from playlists done")
     except Exception as ex:
         print_error("Fatal error. Impossible to make videos from playlists", ex)
