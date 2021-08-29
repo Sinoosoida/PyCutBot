@@ -2,26 +2,26 @@ from src.requests_utils import get_request_with_retries
 import json
 import src.config as config
 from datetime import datetime
-from channel_video import get_last_videos
-from video_info import VideoInfoGetter
-from typing import List
+import requests
+from bs4 import BeautifulSoup
 from src.yt_informer import YtVideo
+from typing import List
 
-video_info_getter = VideoInfoGetter(app_version=5)
+
+def get_last_videos(channel_id: str) -> List[YtVideo]:
+    """
+    returns last 15 video urls in reversed chronological order
+    """
+    response = requests.get(f"https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}")
+    doc = response.content.decode('utf-8')
+    soup = BeautifulSoup(doc, "lxml")
+    return [YtVideo.from_entry(entry) for entry in soup.find_all("entry")]
 
 
 def get_videos_since_date(channel_id: str, date: datetime = datetime.min) -> List[YtVideo]:
-    """
-    По дефолту date - минимальная, т.е. если хочешь получить все видосы на канале, просто не указывай ее как аргумент
-    :param channel_id:
-    :param date:
-    :return:
-    """
-
     res = []
     videos: List[YtVideo] = get_last_videos(channel_id)
     for video in videos:
-        print(video)
         if video.published_at >= date:
             res.append(video)
         else:
@@ -47,7 +47,6 @@ def get_all_playlists_ids(channel_id: str, key=config.api_key, max_res=None) -> 
         return True if not max_res or max_res < num_res else False
 
     while res_dict.get('nextPageToken') and under_limit(num_res):
-        # print(res_dict.get('nextPageToken'))
         res = get_request_with_retries(
             f"https://www.googleapis.com/youtube/v3/playlists?channelId={channel_id}"
             f"&key={key}&maxResults=50&pageToken={res_dict.get('nextPageToken')}")
@@ -57,21 +56,3 @@ def get_all_playlists_ids(channel_id: str, key=config.api_key, max_res=None) -> 
         for dct in res_dict['items']:
             playlists_list.append(dct['id'])
     return playlists_list
-
-# def update_playlists(parser):
-#     for channel in parser.get_all("channel"):
-#         for playlist_url in get_all_playlists(channel.url):
-#             parser.save('playlist', url=playlist_url, load_all=False)
-
-#
-# from pprint import pprint
-#
-# r = get_videos_urls_since_date('https://www.youtube.com/c/telesport', datetime.now() - timedelta(hours=1))
-# pprint(r)
-
-# v = VideoInfoGetter(5)
-# print(v.get_publish_time('3p-IXhsFfnM'))
-
-# utc_dt = local_dt.astimezone(pytz.utc)
-#
-# print(utc.localize(dt, is_dst=None))
