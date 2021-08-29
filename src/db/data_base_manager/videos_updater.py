@@ -15,7 +15,7 @@ from concurrent.futures import ThreadPoolExecutor
 MAX_PLAYLISTS = None if len(sys.argv) == 1 else int(sys.argv[1])
 
 
-def videos_from_channel(parser):  # adding all new videos from the channel
+def videos_from_channel(parser: MongoParser):  # adding all new videos from the channel
     print_header1_info("Processing videos_from_channel")
     try:
         for channel in parser.get_all("channel"):
@@ -39,10 +39,10 @@ def videos_from_channel(parser):  # adding all new videos from the channel
         print_error("Fatal error. Impossible to make videos from channel.", exc)
 
 
-def videos_from_playlists(parser):  # all videos from the right playlists
+def videos_from_playlists(parser: MongoParser):  # all videos from the right playlists
     print_header1_info("Processing videos from playlists")
     try:
-        for playlist in parser.get_playlists_with_load_all("playlist"):
+        for playlist in parser.get_playlists_with_load_all():
             for video_url in get_videos_url_from_playlist(playlist.url):
                 if parser.save(collection_name="video", url=video_url, status="in queue"):
                     print_info(f"Adding video {video_url} to database")
@@ -52,7 +52,7 @@ def videos_from_playlists(parser):  # all videos from the right playlists
         print_error("Fatal error. Impossible to make videos from playlists", ex)
 
 
-def playlists_from_channel(parser):
+def playlists_from_channel(parser: MongoParser):
     print_header1_info("Processing playlists channel")
     try:
         for channel in parser.get_all("channel"):
@@ -64,7 +64,7 @@ def playlists_from_channel(parser):
         print_error("Fatal error. Impossible to get playlists from channel.", ex)
 
 
-def playlist_to_video(parser):  # adding playlist links to video parameters
+def playlist_to_video(parser: MongoParser):  # adding playlist links to video parameters
     print_header1_info("Adding playlists to video list")
     try:
         for playlist in tqdm(parser.get_all("playlist")):
@@ -78,7 +78,7 @@ def playlist_to_video(parser):  # adding playlist links to video parameters
         print_error("Fatal error. Impossible to add playlists to video list.")
 
 
-def load_videos_to_playlist(parser):
+def load_videos_to_playlist(parser: MongoParser):
     print_header1_info("Loading videos with 'done' status to playlist")
     try:
         for video in parser.get_all("video"):
