@@ -14,8 +14,12 @@ from concurrent.futures import ThreadPoolExecutor
 
 MAX_PLAYLISTS = None if len(sys.argv) == 1 else int(sys.argv[1])
 
+parser = MongoParser(atlas=True,
+                     username=mongo_username,
+                     password=mongo_password)
 
-def videos_from_channel(parser):  # adding all new videos from the channel
+
+def videos_from_channel():  # adding all new videos from the channel
     print_header1_info("Processing videos_from_channel")
     try:
         for channel in parser.get_all("channel"):
@@ -39,7 +43,7 @@ def videos_from_channel(parser):  # adding all new videos from the channel
         print_error("Fatal error. Impossible to make videos from channel.", exc)
 
 
-def videos_from_playlists(parser):  # all videos from the right playlists
+def videos_from_playlists():  # all videos from the right playlists
     print_header1_info("Processing videos from playlists")
     try:
         for playlist in parser.get_playlists_with_load_all("playlist"):
@@ -52,7 +56,7 @@ def videos_from_playlists(parser):  # all videos from the right playlists
         print_error("Fatal error. Impossible to make videos from playlists", ex)
 
 
-def playlists_from_channel(parser):
+def playlists_from_channel():
     print_header1_info("Processing playlists channel")
     try:
         for channel in parser.get_all("channel"):
@@ -64,7 +68,7 @@ def playlists_from_channel(parser):
         print_error("Fatal error. Impossible to get playlists from channel.", ex)
 
 
-def playlist_to_video(parser):  # adding playlist links to video parameters
+def playlist_to_video():  # adding playlist links to video parameters || long
     print_header1_info("Adding playlists to video list")
     try:
         for playlist in tqdm(parser.get_all("playlist")):
@@ -78,11 +82,10 @@ def playlist_to_video(parser):  # adding playlist links to video parameters
         print_error("Fatal error. Impossible to add playlists to video list.")
 
 
-def load_videos_to_playlist(parser):
+def load_videos_to_playlist():
     print_header1_info("Loading videos with 'done' status to playlist")
     try:
         for video in parser.get_all("video"):
-            print(video)
             if video.status == Status.DONE:
                 print("gonna add")
                 for playlist in parser.get_attr('video', video.url, attribute_name='playlists_urls'):
@@ -108,24 +111,20 @@ def load_videos_to_playlist(parser):
         print_error("Fatal error. Impossible to load videos to playlists.")
 
 
-def update_videos(parser):
-    videos_from_channel(parser)
-    playlists_from_channel(parser)
-    videos_from_playlists(parser)
-    playlist_to_video(parser)
-    load_videos_to_playlist(parser)
+def update_videos():
+    videos_from_channel()
+    playlists_from_channel()
+    videos_from_playlists()
+    playlist_to_video()
+    load_videos_to_playlist()
 
-
-parser = MongoParser(atlas=True,
-                     username=mongo_username,
-                     password=mongo_password)
 
 sleep_time = 5 * 60
 
 
 def main():
     while True:
-        update_videos(parser)
+        update_videos()
         print_sep()
         time.sleep(sleep_time)
 
