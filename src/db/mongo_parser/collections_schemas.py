@@ -34,6 +34,9 @@ class Video(mongo.Document):
     playlists_urls = mongo.ListField(mongo.EmbeddedDocumentField(PlaylistDict))
     status_info = mongo.StringField(default=None)
 
+    tech_gd_folder_id = mongo.StringField()
+    prod_gd_file_id = mongo.StringField()
+
     def __str__(self):
         return str({'url': self.url,
                     'new_video_id': self.new_video_id,
