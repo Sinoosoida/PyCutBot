@@ -2,6 +2,7 @@ import time
 
 from src.db.mongo_parser.mongo_parser import MongoParser
 from src.db.mongo_parser.collections_schemas import Status, Collection
+import src.db.mongo_parser.collections_schemas as schema
 from src.config import mongo_password, mongo_username
 from src.db.data_base_manager.uploader_utils import *
 from datetime import datetime, timedelta
@@ -11,6 +12,7 @@ from log import *
 import sys
 import requests as req
 from concurrent.futures import ThreadPoolExecutor
+from pytube import Playlist
 
 MAX_PLAYLISTS = None if len(sys.argv) == 1 else int(sys.argv[1])
 
@@ -81,27 +83,24 @@ def playlist_to_video(parser: MongoParser):  # adding playlist links to video pa
 def load_videos_to_playlist(parser: MongoParser):
     print_header1_info("Loading videos with 'done' status to playlist")
     try:
-        for video in parser.get_all("video"):
-            print(video)
-            if video.status == Status.DONE:
-                print("gonna add")
-                for playlist in parser.get_attr('video', video.url, attribute_name='playlists_urls'):
-                    if not playlist.uploaded:
-                        playlist_url = playlist.playlist_url
-                        print_info(f"Adding video {video.url} to playlist {playlist_url} playlist")
-                        try:
-                            if not parser.get_attr('playlist', playlist["playlist_url"], 'new_playlist_id'):
-                                print_info(f"Creating new playlist for {playlist_url}")
-                                new_playlist_id = create_playlist(playlist_url)
-                                parser.set(collection_name='playlist', url=playlist_url,
-                                           new_playlist_id=new_playlist_id)
-                            add_video_to_playlist(video_id=video.new_video_id,
-                                                  playlist_id=parser.get_attr('playlist', playlist_url,
-                                                                              'new_playlist_id'))
-                            parser.mark_playlist_as_upload(video.url, playlist["playlist_url"])
-                            print_success(f"Adding video {video.url} to playlist {playlist_url} done")
-                        except:
-                            print_error(f"Adding video {video.url} to playlist {playlist_url} error")
+        for video in parser.get_videos_with_status(Status.DONE):
+            for playlist in parser.get_attr('video', video.url, attribute_name='playlists_urls'):
+                if not playlist.uploaded:
+                    playlist_url = playlist.url
+                    print_info(f"Adding video {video.url} to playlist {playlist_url} playlist")
+                    try:
+                        if not parser.get_attr('playlist', playlist["playlist_url"], 'new_playlist_id'):
+                            print_info(f"Creating new playlist for {playlist_url}")
+                            new_playlist_id = create_playlist(playlist_url)
+                            parser.set(collection_name='playlist', url=playlist_url,
+                                       new_playlist_id=new_playlist_id)
+                        add_video_to_playlist(video_id=video.new_video_id,
+                                              playlist_id=parser.get_attr('playlist', playlist_url,
+                                                                          'new_playlist_id'))
+                        parser.mark_playlist_as_upload(video.url, playlist["playlist_url"])
+                        print_success(f"Adding video {video.url} to playlist {playlist_url} done")
+                    except:
+                        print_error(f"Adding video {video.url} to playlist {playlist_url} error")
 
         print_success("Loading videos to playlists done")
     except:
@@ -110,10 +109,10 @@ def load_videos_to_playlist(parser: MongoParser):
 
 def update_videos(parser):
     videos_from_channel(parser)
-    playlists_from_channel(parser)
+    # playlists_from_channel(parser)
     videos_from_playlists(parser)
     playlist_to_video(parser)
-    load_videos_to_playlist(parser)
+    # load_videos_to_playlist(parser)
 
 
 parser = MongoParser(atlas=True,
@@ -139,7 +138,8 @@ def down_detector():
         time.sleep(sleep_time)
 
 
-while True:
-    with ThreadPoolExecutor() as executor:
-        main_future = executor.submit(main)
-        down_detector_future = executor.submit(down_detector)
+# while True:
+#     with ThreadPoolExecutor() as executor:
+#         main_future = executor.submit(main)
+#         down_detector_future = executor.submit(down_detector)
+main()
