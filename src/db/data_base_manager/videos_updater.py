@@ -138,8 +138,7 @@ def down_detector():
         time.sleep(sleep_time)
 
 
-# while True:
-#     with ThreadPoolExecutor() as executor:
-#         main_future = executor.submit(main)
-#         down_detector_future = executor.submit(down_detector)
-main()
+while True:
+    with ThreadPoolExecutor() as executor:
+        main_future = executor.submit(main)
+        down_detector_future = executor.submit(down_detector)
