@@ -56,16 +56,14 @@ def upload_to_pub_google_drive(video_path, title, main_folder_id="1PGHW4Crd2PYZd
     return (r)
 
 
-def download_from_prod_google_drive(file_id):
-    # request = service.files().get_media(fileId=file_id)
-    # filename = '/home/makarov/File.csv'
-    # fh = io.FileIO(filename, 'wb')
-    # downloader = MediaIoBaseDownload(fh, request)
-    # done = False
-    # while done is False:
-    #     status, done = downloader.next_chunk()
-    #     print("Download %d%%." % int(status.progress() * 100))
-    pass
+def download_from_prod_google_drive(file_id, file_path=zip_file_dir, file_name=zip_file_name+"."+type_of_archive):
+    request = service.files().get_media(fileId=file_id)
+    fh = io.FileIO(file_path+file_name, 'wb')
+    downloader = MediaIoBaseDownload(fh, request)
+    done = False
+    while done is False:
+        status, done = downloader.next_chunk()
+        print("Download %d%%." % int(status.progress() * 100))
 
 
 def upload_to_prod_google_drive(title, main_folder_id="1PGHW4Crd2PYZdhIZT8a69pG4Di7Q6gn7"):
