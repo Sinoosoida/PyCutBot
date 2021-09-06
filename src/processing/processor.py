@@ -11,11 +11,7 @@ from src.db.mongo_parser.mongo_parser import MongoParser
 from src.processing.core import processing_video
 from src.processing.core.time_codes import get_time_codes
 from src.processing.watermark import gen_thumbnail_with_watermark
-from src.processing.yt_download import (
-    download_video_from_youtube,
-    get_yt_object,
-    good_link,
-)
+from src.processing.yt_download import download_video_from_youtube, get_yt_object, good_link
 from src.processing.yt_upload.upload import upload_video_to_youtube
 
 parser = MongoParser(atlas=True, username=mongo_username, password=mongo_password)
@@ -33,9 +29,7 @@ def prepare_for_processing(yt_object):
 
 
 def gen_description(yt_object, time_codes=None):
-    video_credits = (
-        f"Оригинал видео: {yt_object.watch_url} с канала {yt_object.author}."
-    )
+    video_credits = f"Оригинал видео: {yt_object.watch_url} с канала {yt_object.author}."
     result = f"\n{video_credits}\n"
     if time_codes:
         time_codes_fmtd = "\n".join(f"{k}{v}" for k, v in time_codes.items())
@@ -73,15 +67,11 @@ def process_link(link):
         audio_path,
         time_codes.keys() if time_codes else None,
     )
-    new_time_codes = (
-        dict(zip(new_time_codes_k, time_codes.values())) if new_time_codes_k else None
-    )
+    new_time_codes = dict(zip(new_time_codes_k, time_codes.values())) if new_time_codes_k else None
     print_info(f"New time codes: {new_time_codes}")
 
     print_info("Generating watermark...")
-    gen_thumbnail_with_watermark(
-        input_thumbnail_path, dirs.WATERMARK_PATH, output_thumbnail_path
-    )
+    gen_thumbnail_with_watermark(input_thumbnail_path, dirs.WATERMARK_PATH, output_thumbnail_path)
     print_success("Generating watermark done")
     try:
         new_video_id = upload_video_to_youtube(
@@ -94,9 +84,7 @@ def process_link(link):
     except Exception as exc:
         print_error(exc)
         return None, "upload error"
-    print_info(
-        f"Full processing done in {round(time.time() - start_time, 2)}s (video len={yt_object.length}s)"
-    )
+    print_info(f"Full processing done in {round(time.time() - start_time, 2)}s (video len={yt_object.length}s)")
     return new_video_id, None
 
 
@@ -132,14 +120,10 @@ def main():
                         )
                 else:
                     print_error(f"Bad link: {video_link}")
-                    parser.set(
-                        "video", url=video_link, status="error", status_info="bad link"
-                    )
+                    parser.set("video", url=video_link, status="error", status_info="bad link")
             except Exception as ex:
                 print_error(f"Supreme error on {video_link}: {ex}")
-                parser.set(
-                    "video", url=video_link, status="error", status_info="unknown"
-                )
+                parser.set("video", url=video_link, status="error", status_info="unknown")
             print_sep()
         time.sleep(sleep_time)
 
@@ -147,9 +131,7 @@ def main():
 def down_detector():
     while True:
         try:
-            req.get(
-                f"http://51.15.75.62:5000/upd?service=pycutbot_processor&time_delta={sleep_time}"
-            )
+            req.get(f"http://51.15.75.62:5000/upd?service=pycutbot_processor&time_delta={sleep_time}")
         except Exception as ex:
             print_error("DOWNDETECTOR EX", ex)
         time.sleep(sleep_time)

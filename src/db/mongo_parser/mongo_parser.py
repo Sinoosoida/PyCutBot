@@ -67,9 +67,7 @@ class MongoParser(metaclass=Singleton):
         for playlist in video.playlists_urls:
             playlists_urls.append(playlist["playlist_url"])
         if playlist_url not in playlists_urls:
-            video.playlists_urls.append(
-                schema.PlaylistDict(playlist_url=playlist_url, uploaded=False)
-            )
+            video.playlists_urls.append(schema.PlaylistDict(playlist_url=playlist_url, uploaded=False))
             video.save()
             return True
         return False

@@ -16,9 +16,7 @@ WATERMARK_PATH = "img/watermark.png"
 def create_dirs():
     if os.path.exists(MEDIA_DIR):
         shutil.rmtree(MEDIA_DIR)
-        warnings.warn(
-            message="MEDIA_DIR already exists", category=UserWarning, stacklevel=1
-        )
+        warnings.warn(message="MEDIA_DIR already exists", category=UserWarning, stacklevel=1)
     os.mkdir(MEDIA_DIR)
     os.mkdir(INPUT_VIDEO_DIR)
     os.makedirs(OUTPUT_VIDEO_DIR)

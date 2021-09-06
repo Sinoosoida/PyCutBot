@@ -19,9 +19,5 @@ def add_watermark(pil_img, watermark_img, position_type="default", position=None
     return transparent.convert("RGB")
 
 
-def gen_thumbnail_with_watermark(
-    input_thumbnail_path, watermark_path, output_thumbnail_path
-):
-    add_watermark(Image.open(input_thumbnail_path), Image.open(watermark_path)).save(
-        output_thumbnail_path
-    )
+def gen_thumbnail_with_watermark(input_thumbnail_path, watermark_path, output_thumbnail_path):
+    add_watermark(Image.open(input_thumbnail_path), Image.open(watermark_path)).save(output_thumbnail_path)

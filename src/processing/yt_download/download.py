@@ -68,9 +68,7 @@ def get_name(yt_object):
     return yt_object.title
 
 
-def download_video_from_youtube(
-    yt_object: YouTube, video_dir, audio_dir, thumbnail_dir
-):
+def download_video_from_youtube(yt_object: YouTube, video_dir, audio_dir, thumbnail_dir):
     video_name = "unknown"
     real_name = get_name(yt_object)
     if real_name:

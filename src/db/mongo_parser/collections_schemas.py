@@ -68,6 +68,4 @@ class Channel(mongo.Document):
     last_request_datetime = mongo.DateTimeField(default=datetime.min)
 
     def __str__(self):
-        return str(
-            {"url": self.url, "last_request_datetime": self.last_request_datetime}
-        )
+        return str({"url": self.url, "last_request_datetime": self.last_request_datetime})

@@ -12,19 +12,13 @@ def get_abs_path(relative_path):
     return os.path.join(dir_name, relative_path)
 
 
-def upload_video_to_youtube(
-    video_path, title, description, tags, thumbnail_path=None, app_version=5
-) -> str:
-    CLIENT_SECRET_FILE = get_abs_path(
-        f"..\..\google_api\client_secrets\client_secret_{app_version}.json"
-    )
+def upload_video_to_youtube(video_path, title, description, tags, thumbnail_path=None, app_version=5) -> str:
+    CLIENT_SECRET_FILE = get_abs_path(f"..\..\google_api\client_secrets\client_secret_{app_version}.json")
     API_NAME = "youtube"
     API_VERSION = "v3"
     SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
 
-    service = Create_Service(
-        CLIENT_SECRET_FILE, API_NAME, API_VERSION, app_version, SCOPES
-    )
+    service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, app_version, SCOPES)
     upload_date_time = datetime.datetime(2020, 12, 25, 12, 30, 0).isoformat() + ".000Z"
 
     request_body = {
@@ -44,20 +38,14 @@ def upload_video_to_youtube(
 
     mediaFile = MediaFileUpload(video_path)
 
-    response_upload = (
-        service.videos()
-        .insert(part="snippet,status", body=request_body, media_body=mediaFile)
-        .execute()
-    )
+    response_upload = service.videos().insert(part="snippet,status", body=request_body, media_body=mediaFile).execute()
 
     new_video_id = response_upload.get("id")
 
     if not thumbnail_path:
         return new_video_id
 
-    service.thumbnails().set(
-        videoId=new_video_id, media_body=MediaFileUpload(thumbnail_path)
-    ).execute()
+    service.thumbnails().set(videoId=new_video_id, media_body=MediaFileUpload(thumbnail_path)).execute()
 
     return new_video_id
 

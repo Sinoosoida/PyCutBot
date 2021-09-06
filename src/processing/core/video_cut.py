@@ -2,7 +2,6 @@ import time
 
 import numpy as np
 from moviepy.editor import *
-from moviepy.editor import VideoFileClip, concatenate_videoclips
 from tqdm import tqdm
 
 from log import *
@@ -25,9 +24,7 @@ def detect_loud_frames(audio_array, number_of_frames, limit):
     for i in tqdm(range(0, number_of_frames)):
         a = (
             audio_array[
-                int(len(audio_array) * i / number_of_frames) : int(
-                    len(audio_array) * (i + 1) / number_of_frames
-                )
+                int(len(audio_array) * i / number_of_frames) : int(len(audio_array) * (i + 1) / number_of_frames)
             ]
             ** 2
         ).mean()
@@ -106,9 +103,7 @@ def processing_audio(
     return cuts
 
 
-def processing_video(
-    input_video_path, output_video_path, audio_path, time_codes=None
-) -> list:
+def processing_video(input_video_path, output_video_path, audio_path, time_codes=None) -> list:
     print_header2_info("Core processing:")
     start_time = time.time()
     clip = VideoFileClip(input_video_path)
@@ -122,11 +117,7 @@ def processing_video(
     clips = []
     print_info("Concatenating cut frames...")
     for i in tqdm(cuts):
-        clips.append(
-            clip.subclip(
-                i[0] * duration / number_of_frames, i[1] * duration / number_of_frames
-            )
-        )
+        clips.append(clip.subclip(i[0] * duration / number_of_frames, i[1] * duration / number_of_frames))
     concatenate_videoclips(clips).write_videofile(output_video_path)
     print_success("Concatenating done")
     clip.reader.__del__()

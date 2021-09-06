@@ -11,9 +11,7 @@ def get_abs_path(relative_path):
 
 class VideoInfoGetter:
     def __init__(self, app_version):
-        CLIENT_SECRET_FILE = get_abs_path(
-            f"..\..\google_api\client_secrets\client_secret_{app_version}.json"
-        )
+        CLIENT_SECRET_FILE = get_abs_path(f"..\..\google_api\client_secrets\client_secret_{app_version}.json")
 
         API_NAME = "youtube"
         API_VERSION = "v3"
@@ -24,9 +22,7 @@ class VideoInfoGetter:
             "https://www.googleapis.com/auth/youtube.readonly",
         ]
 
-        self.service = Create_Service(
-            CLIENT_SECRET_FILE, API_NAME, API_VERSION, app_version, SCOPES
-        )
+        self.service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, app_version, SCOPES)
 
     def get_publish_time(self, video_id) -> datetime:
         res = (
