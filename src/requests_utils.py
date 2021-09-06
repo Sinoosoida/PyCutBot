@@ -1,6 +1,7 @@
-import requests
 import warnings
 from time import sleep
+
+import requests
 
 
 def get_request_with_retries(url, max_retries=3):
@@ -20,9 +21,9 @@ def with_retries(max_retries=5, sleep_time=2):
                     res = func(*args, **kwargs)
                     return res
                 except Exception as ex:
-                    print(f'Error executing {func.__name__}: {ex}', end='')
+                    print(f"Error executing {func.__name__}: {ex}", end="")
                     if retry < max_retries - 1:
-                        print(', retrying')
+                        print(", retrying")
                         sleep(sleep_time)
                     else:
                         print()

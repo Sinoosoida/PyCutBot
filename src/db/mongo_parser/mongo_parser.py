@@ -1,11 +1,12 @@
 import mongoengine as mongo
-from utils import Singleton, timeit
+
 import src.db.mongo_parser.collections_schemas as schema
 from log import print_success
+from utils import Singleton, timeit
 
 
 class MongoParser(metaclass=Singleton):
-    def __init__(self, db_name='data0', atlas=False, username=None, password=None):
+    def __init__(self, db_name="data0", atlas=False, username=None, password=None):
         if atlas:
             host = (
                 f"mongodb+srv://{username}:{password}"
@@ -64,12 +65,9 @@ class MongoParser(metaclass=Singleton):
         video = videos_list[0]
         playlists_urls = []
         for playlist in video.playlists_urls:
-            playlists_urls.append(playlist['playlist_url'])
+            playlists_urls.append(playlist["playlist_url"])
         if playlist_url not in playlists_urls:
-            video.playlists_urls.append(
-                schema.PlaylistDict(playlist_url=playlist_url,
-                                    uploaded=False)
-            )
+            video.playlists_urls.append(schema.PlaylistDict(playlist_url=playlist_url, uploaded=False))
             video.save()
             return True
         return False
@@ -131,9 +129,9 @@ class MongoParser(metaclass=Singleton):
 #                          password=mongo_password)
 #     r = parser.add_playlist_to_video('https://youtube.com/watch?v=FsGkWHogbiA', 'https://www.youtube.com/playlist?list=PL4_hYwCyhAvbdZVMa7QWNvi-7YqGKl3KL')
 #     print(r)
-    # # p.save('video', url='url2', status='in queue')
-    # # p.add_playlist_to_video(url='url2', playlist_url='playlist3')
-    # p.mark_playlist_as_upload(url='url1', playlist_url='playlist2')
-    # playlists = (p.get_attr('video', url='url1', attribute_name='playlists_urls'))
-    # for pl in playlists:
-    #     print(pl.playlist_url, pl.uploaded)
+# # p.save('video', url='url2', status='in queue')
+# # p.add_playlist_to_video(url='url2', playlist_url='playlist3')
+# p.mark_playlist_as_upload(url='url1', playlist_url='playlist2')
+# playlists = (p.get_attr('video', url='url1', attribute_name='playlists_urls'))
+# for pl in playlists:
+#     print(pl.playlist_url, pl.uploaded)

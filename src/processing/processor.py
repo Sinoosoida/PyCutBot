@@ -1,24 +1,20 @@
 import os
 import time
-from src.config import mongo_password, mongo_username
-import dirs
-from src.db.mongo_parser.mongo_parser import MongoParser
-from src.processing.core import processing_video
-from src.processing.yt_download import (
-    download_video_from_youtube,
-    good_link,
-    get_yt_object,
-)
-from src.processing.watermark import gen_thumbnail_with_watermark
-from src.processing.yt_upload.upload import upload_video_to_youtube
-from src.processing.core.time_codes import get_time_codes
-from log import *
-import requests as req
 from concurrent.futures import ThreadPoolExecutor
 
-parser = MongoParser(atlas=True,
-                     username=mongo_username,
-                     password=mongo_password)
+import dirs
+import requests as req
+
+from log import *
+from src.config import mongo_password, mongo_username
+from src.db.mongo_parser.mongo_parser import MongoParser
+from src.processing.core import processing_video
+from src.processing.core.time_codes import get_time_codes
+from src.processing.watermark import gen_thumbnail_with_watermark
+from src.processing.yt_download import download_video_from_youtube, get_yt_object, good_link
+from src.processing.yt_upload.upload import upload_video_to_youtube
+
+parser = MongoParser(atlas=True, username=mongo_username, password=mongo_password)
 
 
 def prepare_for_processing(yt_object):
@@ -36,7 +32,7 @@ def gen_description(yt_object, time_codes=None):
     video_credits = f"Оригинал видео: {yt_object.watch_url} с канала {yt_object.author}."
     result = f"\n{video_credits}\n"
     if time_codes:
-        time_codes_fmtd = '\n'.join(f'{k}{v}' for k, v in time_codes.items())
+        time_codes_fmtd = "\n".join(f"{k}{v}" for k, v in time_codes.items())
         time_codes_str = f"Таймкоды (экспериментальная версия, возможны погрешности):\n{time_codes_fmtd}"
         result += time_codes_str
 
@@ -65,8 +61,12 @@ def process_link(link):
 
     time_codes = get_time_codes(description)
     print_info(f"Time codes: {time_codes}")
-    new_time_codes_k = processing_video(input_video_path, output_video_path, audio_path,
-                                        time_codes.keys() if time_codes else None)
+    new_time_codes_k = processing_video(
+        input_video_path,
+        output_video_path,
+        audio_path,
+        time_codes.keys() if time_codes else None,
+    )
     new_time_codes = dict(zip(new_time_codes_k, time_codes.values())) if new_time_codes_k else None
     print_info(f"New time codes: {new_time_codes}")
 
@@ -95,7 +95,7 @@ def main():
     while True:
         for video_obj in parser.get_videos_with_status("in queue"):
             video_link = video_obj.url
-            parser.set('video', url=video_link, status="processing")
+            parser.set("video", url=video_link, status="processing")
             print_header1_info(f"Processing {video_link}")
             try:
                 if good_link(video_link):
@@ -103,20 +103,27 @@ def main():
                     if result_video_id:
                         print_success("Uploading done")
                         print_success(f"Processing {video_link} done")
-                        parser.set('video',
-                                   url=video_link,
-                                   new_video_id=result_video_id,
-                                   status="done",
-                                   status_info="success")
+                        parser.set(
+                            "video",
+                            url=video_link,
+                            new_video_id=result_video_id,
+                            status="done",
+                            status_info="success",
+                        )
                     else:
                         print_error(f"Uploading {video_link} error: {error_str}")
-                        parser.set('video', url=video_link, status="error", status_info=error_str)
+                        parser.set(
+                            "video",
+                            url=video_link,
+                            status="error",
+                            status_info=error_str,
+                        )
                 else:
                     print_error(f"Bad link: {video_link}")
-                    parser.set('video', url=video_link, status="error", status_info="bad link")
+                    parser.set("video", url=video_link, status="error", status_info="bad link")
             except Exception as ex:
                 print_error(f"Supreme error on {video_link}: {ex}")
-                parser.set('video', url=video_link, status="error", status_info="unknown")
+                parser.set("video", url=video_link, status="error", status_info="unknown")
             print_sep()
         time.sleep(sleep_time)
 
@@ -124,13 +131,13 @@ def main():
 def down_detector():
     while True:
         try:
-            req.get(f'http://51.15.75.62:5000/upd?service=pycutbot_processor&time_delta={sleep_time}')
+            req.get(f"http://51.15.75.62:5000/upd?service=pycutbot_processor&time_delta={sleep_time}")
         except Exception as ex:
             print_error("DOWNDETECTOR EX", ex)
         time.sleep(sleep_time)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with ThreadPoolExecutor() as executor:
         main_future = executor.submit(main)
         down_detector_future = executor.submit(down_detector)
