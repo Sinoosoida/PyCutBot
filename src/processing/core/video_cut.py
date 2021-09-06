@@ -1,12 +1,14 @@
+import time
+
 import numpy as np
 from moviepy.editor import *
 from moviepy.editor import VideoFileClip, concatenate_videoclips
-from src.processing.core.time_codes import get_new_time_codes
-from log import *
-import time
 from tqdm import tqdm
-from utils import timeit
+
+from log import *
 from src.processing.core.load_audio import load_audio
+from src.processing.core.time_codes import get_new_time_codes
+from utils import timeit
 
 
 def decouple_audio(video_name, audio_name):
@@ -21,8 +23,14 @@ def detect_loud_frames(audio_array, number_of_frames, limit):
     frames = []
     print_info("detecting loud frames...")
     for i in tqdm(range(0, number_of_frames)):
-        a = (audio_array[int(len(audio_array) * i / number_of_frames):int(
-            len(audio_array) * (i + 1) / number_of_frames)] ** 2).mean()
+        a = (
+            audio_array[
+                int(len(audio_array) * i / number_of_frames) : int(
+                    len(audio_array) * (i + 1) / number_of_frames
+                )
+            ]
+            ** 2
+        ).mean()
         if a > limit:
             frames.append(True)
         else:
@@ -74,13 +82,19 @@ def make_cuts(frames):
     if expect:
         cuts.append([place, len(frames) - 1])
     print_success("making cuts done")
-    print_info('cuts[:10]:', cuts[:10])
+    print_info("cuts[:10]:", cuts[:10])
     return cuts
 
 
 @timeit
-def processing_audio(number_of_frames, name="audio.wav", limit_coefficient=1, prev_frames=0, post_frames=0,
-                     number_of_frames_limit=0):
+def processing_audio(
+    number_of_frames,
+    name="audio.wav",
+    limit_coefficient=1,
+    prev_frames=0,
+    post_frames=0,
+    number_of_frames_limit=0,
+):
     print_info("Audio processing...")
     audio_array, _ = load_audio(name)
     print_success("load complete")
@@ -92,7 +106,9 @@ def processing_audio(number_of_frames, name="audio.wav", limit_coefficient=1, pr
     return cuts
 
 
-def processing_video(input_video_path, output_video_path, audio_path, time_codes=None) -> list:
+def processing_video(
+    input_video_path, output_video_path, audio_path, time_codes=None
+) -> list:
     print_header2_info("Core processing:")
     start_time = time.time()
     clip = VideoFileClip(input_video_path)
@@ -106,13 +122,19 @@ def processing_video(input_video_path, output_video_path, audio_path, time_codes
     clips = []
     print_info("Concatenating cut frames...")
     for i in tqdm(cuts):
-        clips.append(clip.subclip(i[0] * duration / number_of_frames, i[1] * duration / number_of_frames))
+        clips.append(
+            clip.subclip(
+                i[0] * duration / number_of_frames, i[1] * duration / number_of_frames
+            )
+        )
     concatenate_videoclips(clips).write_videofile(output_video_path)
     print_success("Concatenating done")
     clip.reader.__del__()
     clip.audio.reader.__del__()
     print_success("Core processing done")
-    print_info(f"Core processing done in {round(time.time() - start_time, 2)}s (video len={clip.duration}s, fps={fps})")
+    print_info(
+        f"Core processing done in {round(time.time() - start_time, 2)}s (video len={clip.duration}s, fps={fps})"
+    )
     if time_codes:
         new_time_codes = get_new_time_codes(cuts, time_codes, fps)
         return new_time_codes

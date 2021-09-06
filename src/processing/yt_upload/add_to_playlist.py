@@ -1,5 +1,6 @@
-from src.processing.yt_upload.google_api_utils import Create_Service
 import os
+
+from src.processing.yt_upload.google_api_utils import Create_Service
 
 
 def get_abs_path(relative_path):
@@ -8,11 +9,15 @@ def get_abs_path(relative_path):
 
 
 def add_video_to_playlist(video_id, playlist_id, app_version=5):
-    CLIENT_SECRET_FILE = get_abs_path(f'..\..\google_api\client_secrets\client_secret_{app_version}.json')
+    CLIENT_SECRET_FILE = get_abs_path(
+        f"..\..\google_api\client_secrets\client_secret_{app_version}.json"
+    )
     API_NAME = "youtube"
     API_VERSION = "v3"
-    SCOPES = ['https://www.googleapis.com/auth/youtube.upload',
-              'https://www.googleapis.com/auth/youtube']
+    SCOPES = [
+        "https://www.googleapis.com/auth/youtube.upload",
+        "https://www.googleapis.com/auth/youtube",
+    ]
 
     service = Create_Service(
         CLIENT_SECRET_FILE, API_NAME, API_VERSION, app_version, SCOPES
@@ -20,10 +25,7 @@ def add_video_to_playlist(video_id, playlist_id, app_version=5):
     request_body = {
         "snippet": {
             "playlistId": playlist_id,
-            "resourceId": {
-                "kind": "youtube#video",
-                "videoId": video_id
-            }
+            "resourceId": {"kind": "youtube#video", "videoId": video_id},
         }
     }
 
@@ -31,6 +33,7 @@ def add_video_to_playlist(video_id, playlist_id, app_version=5):
         part="snippet",
         body=request_body,
     ).execute()
+
 
 #
 # add_video_to_playlist(video_id='i_5xPDX-erE',

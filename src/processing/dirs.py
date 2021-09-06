@@ -2,7 +2,7 @@ import os
 import shutil
 import warnings
 
-MEDIA_DIR = 'media'
+MEDIA_DIR = "media"
 
 join = os.path.join
 INPUT_VIDEO_DIR = join(MEDIA_DIR, "input_video")

@@ -1,6 +1,8 @@
-from pytube import Playlist
-from src.processing.yt_upload.google_api_utils import Create_Service
 import os
+
+from pytube import Playlist
+
+from src.processing.yt_upload.google_api_utils import Create_Service
 
 
 def get_abs_path(relative_path):
@@ -11,10 +13,12 @@ def get_abs_path(relative_path):
 def create_playlist(old_playlist_url, app_version=5):
     playlist = Playlist(old_playlist_url)
 
-    CLIENT_SECRET_FILE = get_abs_path(f'..\..\google_api\client_secrets\client_secret_{app_version}.json')
+    CLIENT_SECRET_FILE = get_abs_path(
+        f"..\..\google_api\client_secrets\client_secret_{app_version}.json"
+    )
     API_NAME = "youtube"
     API_VERSION = "v3"
-    SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
+    SCOPES = ["https://www.googleapis.com/auth/youtube.force-ssl"]
     # 'https://www.googleapis.com/auth/youtube.upload',
     #       'https://www.googleapis.com/auth/youtube']
 
@@ -28,11 +32,15 @@ def create_playlist(old_playlist_url, app_version=5):
         }
     }
 
-    playlist_info = service.playlists().insert(
-        part="snippet",
-        body=request_body,
-    ).execute()
-    return playlist_info['id']
+    playlist_info = (
+        service.playlists()
+        .insert(
+            part="snippet",
+            body=request_body,
+        )
+        .execute()
+    )
+    return playlist_info["id"]
 
 
 # if __name__ == "__main__":

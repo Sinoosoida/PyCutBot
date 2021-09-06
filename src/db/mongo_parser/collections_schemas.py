@@ -1,21 +1,22 @@
-import mongoengine as mongo
 from datetime import datetime
 from enum import Enum
 
+import mongoengine as mongo
+
 
 class Collection(Enum):
-    VIDEO = 'video'
-    PLAYLIST = 'playlist'
-    CHANNEL = 'channel'
+    VIDEO = "video"
+    PLAYLIST = "playlist"
+    CHANNEL = "channel"
 
 
 class Status(Enum):
-    IN_QUEUE = 'in queue'
-    DONE = 'done'
-    ERROR = 'error'
+    IN_QUEUE = "in queue"
+    DONE = "done"
+    ERROR = "error"
 
     # extras:
-    PROCESSING = 'processing'
+    PROCESSING = "processing"
 
 
 class PlaylistDict(mongo.EmbeddedDocument):
@@ -23,8 +24,7 @@ class PlaylistDict(mongo.EmbeddedDocument):
     uploaded = mongo.BooleanField()
 
     def __str__(self):
-        return str({'playlist_url': self.playlist_url,
-                    'uploaded': self.uploaded})
+        return str({"playlist_url": self.playlist_url, "uploaded": self.uploaded})
 
 
 class Video(mongo.Document):
@@ -38,10 +38,14 @@ class Video(mongo.Document):
     prod_gd_file_id = mongo.StringField()
 
     def __str__(self):
-        return str({'url': self.url,
-                    'new_video_id': self.new_video_id,
-                    'status': self.status,
-                    'playlists_urls': self.playlists_urls})
+        return str(
+            {
+                "url": self.url,
+                "new_video_id": self.new_video_id,
+                "status": self.status,
+                "playlists_urls": self.playlists_urls,
+            }
+        )
 
 
 class Playlist(mongo.Document):
@@ -50,9 +54,13 @@ class Playlist(mongo.Document):
     load_all = mongo.BooleanField()
 
     def __str__(self):
-        return str({'url': self.url,
-                    'new_playlist_id': self.new_playlist_id,
-                    'load_all': self.load_all})
+        return str(
+            {
+                "url": self.url,
+                "new_playlist_id": self.new_playlist_id,
+                "load_all": self.load_all,
+            }
+        )
 
 
 class Channel(mongo.Document):
@@ -60,5 +68,6 @@ class Channel(mongo.Document):
     last_request_datetime = mongo.DateTimeField(default=datetime.min)
 
     def __str__(self):
-        return str({'url': self.url,
-                    'last_request_datetime': self.last_request_datetime})
+        return str(
+            {"url": self.url, "last_request_datetime": self.last_request_datetime}
+        )
