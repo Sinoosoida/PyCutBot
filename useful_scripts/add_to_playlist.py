@@ -1,5 +1,4 @@
-from src.processing.yt_upload.add_to_playlist import \
-    detached_add_video_to_playlist
+from src.processing.yt_upload.add_to_playlist import detached_add_video_to_playlist
 
 detached_add_video_to_playlist(
     video_id="xpWIdf-tCFc",
