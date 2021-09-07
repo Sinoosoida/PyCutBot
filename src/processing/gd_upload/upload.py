@@ -12,6 +12,8 @@ from googleapiclient.discovery import build
 import pprint
 import io
 import shutil
+from log import *
+import dirs
 
 zip_file_dir = "../"
 zip_file_name = "packed_fles"
@@ -80,7 +82,3 @@ def upload_to_prod_google_drive(title, main_folder_id="1PGHW4Crd2PYZdhIZT8a69pG4
     r = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
     print(r)
     return (r)
-
-
-# pack_files()
-upload_to_prod_google_drive("tets")
