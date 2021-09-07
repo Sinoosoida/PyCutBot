@@ -1,8 +1,10 @@
 import os
-from pytube import YouTube
+
 import requests
-from src.requests_utils import with_retries
+from pytube import YouTube
+
 from src.processing.core.load_audio import webm2wav
+from src.requests_utils import with_retries
 from utils import fix_filename
 
 
@@ -39,8 +41,8 @@ def download_audio(yt_obj, path="./"):
 @with_retries()
 def download_thumbnail(yt_object: YouTube, path="./"):
     url = yt_object.thumbnail_url
-    full_path = os.path.abspath(os.path.join(path, 'thumbnail.png'))
-    with open(full_path, 'wb') as handle:
+    full_path = os.path.abspath(os.path.join(path, "thumbnail.png"))
+    with open(full_path, "wb") as handle:
         response = requests.get(url, stream=True)
         if not response.ok:
             return None
@@ -67,7 +69,7 @@ def get_name(yt_object):
 
 
 def download_video_from_youtube(yt_object: YouTube, video_dir, audio_dir, thumbnail_dir):
-    video_name = 'unknown'
+    video_name = "unknown"
     real_name = get_name(yt_object)
     if real_name:
         video_name = real_name

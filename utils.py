@@ -1,5 +1,5 @@
-import time
 import os
+import time
 
 
 def change_ext(path, new_ext):
@@ -7,7 +7,7 @@ def change_ext(path, new_ext):
 
 
 def fix_filename(filename: str):
-    fixed_filename = filename.replace(' ', '_')
+    fixed_filename = filename.replace(" ", "_")
     print(f"FIXING FILENAME: {filename} to {fixed_filename}")
     os.rename(filename, fixed_filename)
     return fixed_filename
@@ -19,7 +19,7 @@ def timeit(func):
         func_return_val = func(*args, **kwargs)
         end = time.perf_counter()
         name = func.__name__.upper()
-        print(f'{name} TIME: {end - start}')
+        print(f"{name} TIME: {end - start}")
         return func_return_val
 
     return wrapper

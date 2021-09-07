@@ -11,11 +11,16 @@ def get_new_frame_codes(cuts, frame_codes):
             return _frame_code - _deleted_frames_num, _pos_in_cuts, _deleted_frames_num
         if _pos_in_cuts + 1 < len(cuts):
             if cuts[_pos_in_cuts][1] < _frame_code < cuts[_pos_in_cuts + 1][-1]:
-                return cuts[_pos_in_cuts][1] - _deleted_frames_num, _pos_in_cuts, _deleted_frames_num
-            return serve_frame_code(_frame_code,
-                                    _pos_in_cuts + 1,
-                                    _deleted_frames_num + (cuts[_pos_in_cuts + 1][0] -
-                                                           cuts[_pos_in_cuts][1] + 1))
+                return (
+                    cuts[_pos_in_cuts][1] - _deleted_frames_num,
+                    _pos_in_cuts,
+                    _deleted_frames_num,
+                )
+            return serve_frame_code(
+                _frame_code,
+                _pos_in_cuts + 1,
+                _deleted_frames_num + (cuts[_pos_in_cuts + 1][0] - cuts[_pos_in_cuts][1] + 1),
+            )
         # лежит за последним катом
         return frame_code - _deleted_frames_num, _pos_in_cuts, _deleted_frames_num
 
