@@ -2,49 +2,39 @@ import io
 import os
 import pprint
 import shutil
-
-import dirs
+from src.processing.dirs import *
 import google.oauth2
-from google.oauth2 import service_account
 from google.protobuf import service
+from google.oauth2 import service_account
+from googleapiclient.http import MediaIoBaseDownload,MediaFileUpload
 from googleapiclient.discovery import build
-
-# import service_account
-from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
-
-from log import *
-
-zip_file_dir = "../"
-zip_file_name = "packed_fles"
-dir_of_unpacked_files = "../"
-name_of_unziped_files = "media"
+import io
 type_of_archive = "zip"
-keys_path = "google_drive_api.json"
 
 
 def pack_files():
-    if os.path.exists(dir_of_unpacked_files + name_of_unziped_files):
-        if os.path.exists(zip_file_dir + zip_file_name + "." + type_of_archive):
-            os.remove(zip_file_dir + zip_file_name + "." + type_of_archive)
+    if os.path.exists(DIR_OF_UNPACKED_FILES + NAME_OF_UNZIPED_FILES):
+        if os.path.exists(ZIP_FILE_DIR + ZIP_FILE_NAME + "." + type_of_archive):
+            os.remove(ZIP_FILE_DIR + ZIP_FILE_NAME + "." + type_of_archive)
         shutil.make_archive(
-            zip_file_dir + zip_file_name, type_of_archive, dir_of_unpacked_files, name_of_unziped_files
+            ZIP_FILE_DIR + ZIP_FILE_NAME, type_of_archive, DIR_OF_UNPACKED_FILES, NAME_OF_UNZIPED_FILES
         )
-        # shutil.rmtree(dir_of_unpacked_files+name_of_unziped_files, ignore_errors=False, onerror=None)
+        # shutil.rmtree(DIR_OF_UNPACKED_FILES+name_of_unziped_files, ignore_errors=False, onerror=None)
 
 
 def unpack_files():
-    if os.path.exists(zip_file_dir + zip_file_name + "." + type_of_archive):
-        if os.path.exists(dir_of_unpacked_files + name_of_unziped_files):
-            shutil.rmtree(dir_of_unpacked_files + name_of_unziped_files, ignore_errors=False, onerror=None)
+    if os.path.exists(ZIP_FILE_DIR + ZIP_FILE_NAME + "." + type_of_archive):
+        if os.path.exists(DIR_OF_UNPACKED_FILES + NAME_OF_UNZIPED_FILES):
+            shutil.rmtree(DIR_OF_UNPACKED_FILES + NAME_OF_UNZIPED_FILES, ignore_errors=False, onerror=None)
         shutil.unpack_archive(
-            zip_file_dir + zip_file_name + "." + type_of_archive, dir_of_unpacked_files, type_of_archive
+            ZIP_FILE_DIR + ZIP_FILE_NAME + "." + type_of_archive, DIR_OF_UNPACKED_FILES, type_of_archive
         )
-        # os.remove(zip_file_dir + zip_file_name + "." + type_of_archive)
+        # os.remove(ZIP_FILE_DIR + ZIP_FILE_NAME + "." + type_of_archive)
 
 
 def upload_to_pub_google_drive(video_path, title, main_folder_id="1PGHW4Crd2PYZdhIZT8a69pG4Di7Q6gn7"):
     SCOPES = ["https://www.googleapis.com/auth/drive"]
-    credentials = service_account.Credentials.from_service_account_file(keys_path, scopes=SCOPES)
+    credentials = service_account.Credentials.from_service_account_file(GOOGLE_KEY_PATH, scopes=SCOPES)
     service = build("drive", "v3", credentials=credentials)
     file_metadata = {"name": title, "parents": [main_folder_id]}
     media = MediaFileUpload(video_path, resumable=True)
@@ -53,7 +43,7 @@ def upload_to_pub_google_drive(video_path, title, main_folder_id="1PGHW4Crd2PYZd
     return r
 
 
-def download_from_prod_google_drive(file_id, file_path=zip_file_dir, file_name=zip_file_name + "." + type_of_archive):
+def download_from_prod_google_drive(file_id, file_path=ZIP_FILE_DIR, file_name=ZIP_FILE_NAME + "." + type_of_archive):
     request = service.files().get_media(fileId=file_id)
     fh = io.FileIO(file_path + file_name, "wb")
     downloader = MediaIoBaseDownload(fh, request)
@@ -66,10 +56,10 @@ def download_from_prod_google_drive(file_id, file_path=zip_file_dir, file_name=z
 def upload_to_prod_google_drive(title, main_folder_id="1PGHW4Crd2PYZdhIZT8a69pG4Di7Q6gn7"):
     pack_files()
     SCOPES = ["https://www.googleapis.com/auth/drive"]
-    credentials = service_account.Credentials.from_service_account_file(keys_path, scopes=SCOPES)
+    credentials = service_account.Credentials.from_service_account_file(GOOGLE_KEY_PATH, scopes=SCOPES)
     service = build("drive", "v3", credentials=credentials)
     file_metadata = {"name": title, "parents": [main_folder_id]}
-    media = MediaFileUpload(zip_file_dir + zip_file_name + "." + type_of_archive, resumable=True)
+    media = MediaFileUpload(ZIP_FILE_DIR + ZIP_FILE_NAME + "." + type_of_archive, resumable=True)
     r = service.files().create(body=file_metadata, media_body=media, fields="id").execute()
     print(r)
     return r
