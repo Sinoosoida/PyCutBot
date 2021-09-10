@@ -15,6 +15,7 @@ from src.processing.core.time_codes import get_time_codes
 from log import *
 import requests as req
 from concurrent.futures import ThreadPoolExecutor
+import json
 
 parser = MongoParser(atlas=True,
                      username=mongo_username,
@@ -73,19 +74,33 @@ def process_link(link):
     print_info("Generating watermark...")
     gen_thumbnail_with_watermark(input_thumbnail_path, dirs.WATERMARK_PATH, output_thumbnail_path)
     print_success("Generating watermark done")
-    try:
-        new_video_id = upload_video_to_youtube(
-            video_path=output_video_path,
-            thumbnail_path=output_thumbnail_path,
-            title=yt_object.title,
-            description=gen_description(yt_object, new_time_codes),
-            tags=yt_object.keywords,
-        )
-    except Exception as exc:
-        print_error(exc)
-        return None, "upload error"
+
+    tech_gd_id, yt_id, prod_gd_id = None, None, None
+
+    with open("../upload_config.json") as c:
+        config = json.load(c)
+        yt_load = config.get("youtube")
+        gdrive_load = config.get("gdrive")
+    if gdrive_load:
+        try:
+            pass
+        except Exception as exc:
+            print_error(exc)
+            return None, "gdrive upload error"
+    if yt_load:
+        try:
+            yt_id = upload_video_to_youtube(
+                video_path=output_video_path,
+                thumbnail_path=output_thumbnail_path,
+                title=yt_object.title,
+                description=gen_description(yt_object, new_time_codes),
+                tags=yt_object.keywords,
+            )
+        except Exception as exc:
+            print_error(exc)
+            return None, "youtube upload error"
     print_info(f"Full processing done in {round(time.time() - start_time, 2)}s (video len={yt_object.length}s)")
-    return new_video_id, None
+    return tech_gd_id, yt_id, prod_gd_id, None
 
 
 sleep_time = 5
@@ -99,13 +114,15 @@ def main():
             print_header1_info(f"Processing {video_link}")
             try:
                 if good_link(video_link):
-                    result_video_id, error_str = process_link(video_link)
-                    if result_video_id:
+                    res_tech_gd_id, res_yt_id, res_prod_gd_id, error_str = process_link(video_link)
+                    if not error_str:
                         print_success("Uploading done")
                         print_success(f"Processing {video_link} done")
                         parser.set('video',
                                    url=video_link,
-                                   new_video_id=result_video_id,
+                                   new_video_id=res_yt_id,
+                                   tech_gd_folder_id=res_tech_gd_id,
+                                   prod_gd_file_id=res_prod_gd_id,
                                    status="done",
                                    status_info="success")
                     else:
