@@ -82,14 +82,14 @@ def process_link(link):
         gdrive_load = config.get("gdrive")
 
     try:
-        tech_gd_id=upload_to_tech_google_drive(title=yt_object.title)
+        tech_gd_id = upload_to_tech_google_drive(title=yt_object.title)
     except Exception as exc:
         print_error(exc)
         return None, "gdrive upload error"
 
     if gdrive_load:
         try:
-            upload_to_prod_google_drive(video_path=output_video_path, title=yt_object.title)
+            prod_gd_id = upload_to_prod_google_drive(video_path=output_video_path, title=yt_object.title)
         except Exception as exc:
             print_error(exc)
             return None, "gdrive upload error"
