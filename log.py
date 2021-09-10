@@ -26,4 +26,4 @@ def print_header2_info(*args):
 
 
 def print_sep(n=40):
-    print('=' * n)
+    print("=" * n)
