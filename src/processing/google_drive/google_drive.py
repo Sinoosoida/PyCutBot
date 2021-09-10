@@ -44,7 +44,7 @@ def upload_to_pub_google_drive(video_path, title, main_folder_id=pub_google_griv
     file_metadata = {"name": title, "parents": [main_folder_id]}
     media = MediaFileUpload(video_path, chunksize=CHUNKSIZE, resumable=True)
     r = service.files().create(body=file_metadata, media_body=media, fields="id").execute()
-    return r
+    return ["id"]
 
 
 def download_from_prod_google_drive(file_id, file_path=ZIP_FILE_DIR, file_name=ZIP_FILE_NAME + "." + type_of_archive):
