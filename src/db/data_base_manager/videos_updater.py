@@ -113,12 +113,12 @@ def load_videos_to_playlist(parser: MongoParser):
                         )
                         parser.mark_playlist_as_upload(video.url, playlist["playlist_url"])
                         print_success(f"Adding video {video.url} to playlist {playlist_url} done")
-                    except:
+                    except Exception:
                         print_error(f"Adding video {video.url} to playlist {playlist_url} error")
                         traceback.print_exc()
 
         print_success("Loading videos to playlists done")
-    except:
+    except Exception:
         print_error("Fatal error. Impossible to load videos to playlists.")
         traceback.print_exc()
 
