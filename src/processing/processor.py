@@ -116,13 +116,15 @@ def main():
                     if not error_str:
                         print_success("Uploading done")
                         print_success(f"Processing {video_link} done")
-                        parser.set('video',
-                                   url=video_link,
-                                   new_video_id=res_yt_id,
-                                   tech_gd_folder_id=res_tech_gd_id,
-                                   prod_gd_file_id=res_prod_gd_id,
-                                   status="done",
-                                   status_info="success")
+                        parser.set(
+                            "video",
+                            url=video_link,
+                            new_video_id=res_yt_id,
+                            tech_gd_folder_id=res_tech_gd_id,
+                            prod_gd_file_id=res_prod_gd_id,
+                            status="done",
+                            status_info="success",
+                        )
                     else:
                         print_error(f"Uploading {video_link} error: {error_str}")
                         parser.set(
