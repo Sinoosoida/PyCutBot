@@ -9,6 +9,10 @@ from google.oauth2 import service_account
 from googleapiclient.http import MediaIoBaseDownload,MediaFileUpload
 from googleapiclient.discovery import build
 import io
+import httplib2
+import os
+
+from apiclient import discovery
 type_of_archive = "zip"
 
 
@@ -44,6 +48,9 @@ def upload_to_pub_google_drive(video_path, title, main_folder_id="1PGHW4Crd2PYZd
 
 
 def download_from_prod_google_drive(file_id, file_path=ZIP_FILE_DIR, file_name=ZIP_FILE_NAME + "." + type_of_archive):
+    SCOPES = ["https://www.googleapis.com/auth/drive"]
+    credentials = service_account.Credentials.from_service_account_file(GOOGLE_KEY_PATH, scopes=SCOPES)
+    service = build('drive', 'v3', credentials=credentials)
     request = service.files().get_media(fileId=file_id)
     fh = io.FileIO(file_path + file_name, "wb")
     downloader = MediaIoBaseDownload(fh, request)
@@ -51,6 +58,7 @@ def download_from_prod_google_drive(file_id, file_path=ZIP_FILE_DIR, file_name=Z
     while done is False:
         status, done = downloader.next_chunk()
         print("Download %d%%." % int(status.progress() * 100))
+    unpack_files()
 
 
 def upload_to_prod_google_drive(title, main_folder_id="1PGHW4Crd2PYZdhIZT8a69pG4Di7Q6gn7"):
