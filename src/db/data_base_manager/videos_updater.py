@@ -13,6 +13,7 @@ from src.db.mongo_parser.collections_schemas import Collection, Status
 from src.db.mongo_parser.mongo_parser import MongoParser
 from src.processing.yt_upload.add_to_playlist import add_video_to_playlist
 from src.processing.yt_upload.create_playlist import create_playlist
+import traceback
 
 MAX_PLAYLISTS = None if len(sys.argv) == 1 else int(sys.argv[1])
 
@@ -38,11 +39,13 @@ def videos_from_channel(parser: MongoParser):  # adding all new videos from the 
                 )
                 print_info(f"Last request time was updated {start_processing_time.time()} t")
                 print_success(f"Processing {channel.url} channel done")
-            except Exception as ex:
-                print_error("Impossible to process this channel", ex)
+            except Exception:
+                print_error("Impossible to process this channel")
+                traceback.print_exc()
         print_success("Making videos from channels done")
-    except Exception as exc:
-        print_error("Fatal error. Impossible to make videos from channel.", exc)
+    except Exception:
+        print_error("Fatal error. Impossible to make videos from channel.")
+        traceback.print_exc()
 
 
 def videos_from_playlists(parser: MongoParser):  # all videos from the right playlists
@@ -54,8 +57,9 @@ def videos_from_playlists(parser: MongoParser):  # all videos from the right pla
                     print_info(f"Adding video {video_url} to database")
                 parser.add_playlist_to_video(video_url, playlist.url)
         print_success("Processing videos from playlists done")
-    except Exception as ex:
-        print_error("Fatal error. Impossible to make videos from playlists", ex)
+    except Exception:
+        print_error("Fatal error. Impossible to make videos from playlists")
+        traceback.print_exc()
 
 
 def playlists_from_channel(parser: MongoParser):
@@ -66,8 +70,9 @@ def playlists_from_channel(parser: MongoParser):
                 if parser.save("playlist", url=playlist_url, load_all=False):
                     print_info(f"Adding playlist {playlist_url} to database")
         print_success("Processing playlists from channel done")
-    except Exception as ex:
-        print_error("Fatal error. Impossible to get playlists from channel.", ex)
+    except Exception:
+        print_error("Fatal error. Impossible to get playlists from channel.")
+        traceback.print_exc()
 
 
 def playlist_to_video(parser: MongoParser):  # adding playlist links to video parameters
@@ -80,8 +85,9 @@ def playlist_to_video(parser: MongoParser):  # adding playlist links to video pa
                 if parser.add_playlist_to_video(video_url, playlist.url):
                     print_info(f"Adding playlist {playlist.url} to {video_url} list")
         print_success("Adding playlists to video list done")
-    except:
+    except Exception:
         print_error("Fatal error. Impossible to add playlists to video list.")
+        traceback.print_exc()
 
 
 def load_videos_to_playlist(parser: MongoParser):
@@ -107,12 +113,14 @@ def load_videos_to_playlist(parser: MongoParser):
                         )
                         parser.mark_playlist_as_upload(video.url, playlist["playlist_url"])
                         print_success(f"Adding video {video.url} to playlist {playlist_url} done")
-                    except:
+                    except Exception:
                         print_error(f"Adding video {video.url} to playlist {playlist_url} error")
+                        traceback.print_exc()
 
         print_success("Loading videos to playlists done")
-    except:
+    except Exception:
         print_error("Fatal error. Impossible to load videos to playlists.")
+        traceback.print_exc()
 
 
 def update_videos(parser):
