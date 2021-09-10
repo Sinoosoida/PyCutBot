@@ -2,10 +2,9 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
-
+import os
 import requests as req
 from pytube import Playlist
-
 import src.db.mongo_parser.collections_schemas as schema
 from log import *
 from src.config import mongo_password, mongo_username
@@ -118,10 +117,10 @@ def load_videos_to_playlist(parser: MongoParser):
 
 def update_videos(parser):
     videos_from_channel(parser)
-    # playlists_from_channel(parser)
+    playlists_from_channel(parser)
     videos_from_playlists(parser)
     playlist_to_video(parser)
-    # load_videos_to_playlist(parser)
+    load_videos_to_playlist(parser)
 
 
 parser = MongoParser(atlas=True, username=mongo_username, password=mongo_password)
@@ -131,6 +130,8 @@ sleep_time = 5 * 60
 
 def main():
     while True:
+        if os.path.isfile('../../../stop'):
+            sys.exit()
         update_videos(parser)
         print_sep()
         time.sleep(sleep_time)
