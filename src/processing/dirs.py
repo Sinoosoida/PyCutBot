@@ -2,15 +2,22 @@ import os
 import shutil
 import warnings
 
-MEDIA_DIR = "media"
+ROOT_DIR="./"
+MEDIA_FOLDER_NAME="media"
 
 join = os.path.join
+MEDIA_DIR = join(ROOT_DIR, MEDIA_FOLDER_NAME)
 INPUT_VIDEO_DIR = join(MEDIA_DIR, "input_video")
 INPUT_AUDIO_DIR = join(MEDIA_DIR, "input_audio")
 INPUT_THUMBNAIL_DIR = join(MEDIA_DIR, "input_thumbnail")
 OUTPUT_VIDEO_DIR = join(MEDIA_DIR, "output_video")
 OUTPUT_THUMBNAIL_DIR = join(MEDIA_DIR, "output_thumbnail")
 WATERMARK_PATH = "img/watermark.png"
+ZIP_FILE_DIR = ROOT_DIR
+ZIP_FILE_NAME = "packed_fles"
+DIR_OF_UNPACKED_FILES = ROOT_DIR
+NAME_OF_UNZIPED_FILES = MEDIA_FOLDER_NAME
+GOOGLE_KEY_PATH = "google_drive/google_drive_api.json"
 
 
 def create_dirs():
