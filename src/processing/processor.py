@@ -12,6 +12,7 @@ from src.processing.core.time_codes import get_time_codes
 from log import *
 import requests as req
 from concurrent.futures import ThreadPoolExecutor
+from src.processing.google_drive.google_drive import upload_to_tech_google_drive, upload_to_prod_google_drive
 
 parser = MongoParser(atlas=True, username=mongo_username, password=mongo_password)
 
@@ -79,12 +80,20 @@ def process_link(link):
         config = json.load(c)
         yt_load = config.get("youtube")
         gdrive_load = config.get("gdrive")
+
+    try:
+        tech_gd_id=upload_to_tech_google_drive(title=yt_object.title)
+    except Exception as exc:
+        print_error(exc)
+        return None, "gdrive upload error"
+
     if gdrive_load:
         try:
-            pass
+            upload_to_prod_google_drive(video_path=output_video_path, title=yt_object.title)
         except Exception as exc:
             print_error(exc)
             return None, "gdrive upload error"
+
     if yt_load:
         try:
             yt_id = upload_video_to_youtube(
@@ -97,6 +106,7 @@ def process_link(link):
         except Exception as exc:
             print_error(exc)
             return None, "youtube upload error"
+
     print_info(f"Full processing done in {round(time.time() - start_time, 2)}s (video len={yt_object.length}s)")
     return tech_gd_id, yt_id, prod_gd_id, None
 

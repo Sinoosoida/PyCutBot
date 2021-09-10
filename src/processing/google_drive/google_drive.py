@@ -16,8 +16,8 @@ from apiclient import discovery
 
 type_of_archive = "zip"
 CHUNKSIZE = 1024 * 512
-prod_google_drive_id = "1PGHW4Crd2PYZdhIZT8a69pG4Di7Q6gn7"
-pub_google_grive_id = "1AG4XCwaIRHNacZzk6Nke9NnyD7mxe9Fe"
+tech_google_drive_id = "1PGHW4Crd2PYZdhIZT8a69pG4Di7Q6gn7"
+prod_google_grive_id = "1AG4XCwaIRHNacZzk6Nke9NnyD7mxe9Fe"
 
 
 def pack_files():
@@ -42,9 +42,9 @@ def unpack_files():
         # os.remove(ZIP_FILE_DIR + ZIP_FILE_NAME + "." + type_of_archive)
 
 
-def upload_to_pub_google_drive(video_path, title, main_folder_id=pub_google_grive_id):
+def upload_to_prod_google_drive(video_path, title, main_folder_id=prod_google_grive_id):
     try:
-        print_info("Uploading to pub google drive")
+        print_info("Uploading to prod google drive")
         SCOPES = ["https://www.googleapis.com/auth/drive"]
         credentials = service_account.Credentials.from_service_account_file(GOOGLE_KEY_PATH, scopes=SCOPES)
         service = build("drive", "v3", credentials=credentials)
@@ -58,7 +58,7 @@ def upload_to_pub_google_drive(video_path, title, main_folder_id=pub_google_griv
         return None
 
 
-def download_from_prod_google_drive(file_id, file_path=ZIP_FILE_DIR, file_name=ZIP_FILE_NAME + "." + type_of_archive):
+def download_from_tech_google_drive(file_id, file_path=ZIP_FILE_DIR, file_name=ZIP_FILE_NAME + "." + type_of_archive):
     try:
         print_info("Downloading from prod google drive")
         SCOPES = ["https://www.googleapis.com/auth/drive"]
@@ -79,7 +79,7 @@ def download_from_prod_google_drive(file_id, file_path=ZIP_FILE_DIR, file_name=Z
         return None
 
 
-def upload_to_prod_google_drive(title, main_folder_id=prod_google_drive_id):
+def upload_to_tech_google_drive(title, main_folder_id=tech_google_drive_id):
     try:
         print_info("Uploading to prod google drive")
         pack_files()
