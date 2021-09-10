@@ -14,6 +14,8 @@ import os
 from apiclient import discovery
 type_of_archive = "zip"
 CHUNKSIZE = 1024*512
+prod_google_drive_id = "1PGHW4Crd2PYZdhIZT8a69pG4Di7Q6gn7"
+pub_google_grive_id = "1PGHW4Crd2PYZdhIZT8a69pG4Di7Q6gn7"
 
 def pack_files():
     if os.path.exists(DIR_OF_UNPACKED_FILES + NAME_OF_UNZIPED_FILES):
@@ -35,7 +37,7 @@ def unpack_files():
         # os.remove(ZIP_FILE_DIR + ZIP_FILE_NAME + "." + type_of_archive)
 
 
-def upload_to_pub_google_drive(video_path, title, main_folder_id="1PGHW4Crd2PYZdhIZT8a69pG4Di7Q6gn7"):
+def upload_to_pub_google_drive(video_path, title, main_folder_id=pub_google_grive_id):
     SCOPES = ["https://www.googleapis.com/auth/drive"]
     credentials = service_account.Credentials.from_service_account_file(GOOGLE_KEY_PATH, scopes=SCOPES)
     service = build("drive", "v3", credentials=credentials)
@@ -59,7 +61,7 @@ def download_from_prod_google_drive(file_id, file_path=ZIP_FILE_DIR, file_name=Z
     unpack_files()
 
 
-def upload_to_prod_google_drive(title, main_folder_id="1PGHW4Crd2PYZdhIZT8a69pG4Di7Q6gn7"):
+def upload_to_prod_google_drive(title, main_folder_id=prod_google_drive_id):
     pack_files()
     SCOPES = ["https://www.googleapis.com/auth/drive"]
     credentials = service_account.Credentials.from_service_account_file(GOOGLE_KEY_PATH, scopes=SCOPES)
@@ -67,4 +69,4 @@ def upload_to_prod_google_drive(title, main_folder_id="1PGHW4Crd2PYZdhIZT8a69pG4
     file_metadata = {"name": title, "parents": [main_folder_id]}
     media = MediaFileUpload(ZIP_FILE_DIR + ZIP_FILE_NAME + "." + type_of_archive, chunksize=CHUNKSIZE,resumable=True)
     r = service.files().create(body=file_metadata, media_body=media, fields="id").execute()
-    return r
+    return r["id"]
