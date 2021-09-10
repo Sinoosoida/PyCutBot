@@ -1,6 +1,5 @@
 import io
 import os
-import pprint
 import shutil
 from src.processing.dirs import *
 import google.oauth2
@@ -14,7 +13,7 @@ import os
 
 from apiclient import discovery
 type_of_archive = "zip"
-
+CHUNKSIZE = 1024*512
 
 def pack_files():
     if os.path.exists(DIR_OF_UNPACKED_FILES + NAME_OF_UNZIPED_FILES):
@@ -41,9 +40,8 @@ def upload_to_pub_google_drive(video_path, title, main_folder_id="1PGHW4Crd2PYZd
     credentials = service_account.Credentials.from_service_account_file(GOOGLE_KEY_PATH, scopes=SCOPES)
     service = build("drive", "v3", credentials=credentials)
     file_metadata = {"name": title, "parents": [main_folder_id]}
-    media = MediaFileUpload(video_path, resumable=True)
+    media = MediaFileUpload(video_path, chunksize=CHUNKSIZE, resumable=True)
     r = service.files().create(body=file_metadata, media_body=media, fields="id").execute()
-    print(r)
     return r
 
 
@@ -53,11 +51,11 @@ def download_from_prod_google_drive(file_id, file_path=ZIP_FILE_DIR, file_name=Z
     service = build('drive', 'v3', credentials=credentials)
     request = service.files().get_media(fileId=file_id)
     fh = io.FileIO(file_path + file_name, "wb")
-    downloader = MediaIoBaseDownload(fh, request)
+    MediaIoBaseDownload()
+    downloader = MediaIoBaseDownload(fh, request, chunksize=CHUNKSIZE)
     done = False
     while done is False:
         status, done = downloader.next_chunk()
-        print("Download %d%%." % int(status.progress() * 100))
     unpack_files()
 
 
@@ -67,7 +65,6 @@ def upload_to_prod_google_drive(title, main_folder_id="1PGHW4Crd2PYZdhIZT8a69pG4
     credentials = service_account.Credentials.from_service_account_file(GOOGLE_KEY_PATH, scopes=SCOPES)
     service = build("drive", "v3", credentials=credentials)
     file_metadata = {"name": title, "parents": [main_folder_id]}
-    media = MediaFileUpload(ZIP_FILE_DIR + ZIP_FILE_NAME + "." + type_of_archive, resumable=True)
+    media = MediaFileUpload(ZIP_FILE_DIR + ZIP_FILE_NAME + "." + type_of_archive, chunksize=CHUNKSIZE,resumable=True)
     r = service.files().create(body=file_metadata, media_body=media, fields="id").execute()
-    print(r)
     return r
