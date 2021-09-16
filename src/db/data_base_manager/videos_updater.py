@@ -1,10 +1,13 @@
+import os
 import sys
 import time
+import traceback
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
-import os
+
 import requests as req
 from pytube import Playlist
+
 import src.db.mongo_parser.collections_schemas as schema
 from log import *
 from src.config import mongo_password, mongo_username
@@ -13,7 +16,6 @@ from src.db.mongo_parser.collections_schemas import Collection, Status
 from src.db.mongo_parser.mongo_parser import MongoParser
 from src.processing.yt_upload.add_to_playlist import add_video_to_playlist
 from src.processing.yt_upload.create_playlist import create_playlist
-import traceback
 
 MAX_PLAYLISTS = None if len(sys.argv) == 1 else int(sys.argv[1])
 
@@ -138,7 +140,7 @@ sleep_time = 5 * 60
 
 def main():
     while True:
-        if os.path.isfile('../../../stop'):
+        if os.path.isfile("../../../stop"):
             sys.exit()
         update_videos(parser)
         print_sep()

@@ -1,18 +1,17 @@
 import io
 import os
 import shutil
-from src.processing.dirs import *
-import google.oauth2
-from google.protobuf import service
-from google.oauth2 import service_account
-from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
-from googleapiclient.discovery import build
-import io
-from log import *
-import httplib2
-import os
 
+import google.oauth2
+import httplib2
 from apiclient import discovery
+from google.oauth2 import service_account
+from google.protobuf import service
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
+
+from log import *
+from src.processing.dirs import *
 
 type_of_archive = "zip"
 CHUNKSIZE = 1024 * 512
@@ -63,7 +62,7 @@ def download_from_tech_google_drive(file_id, file_path=ZIP_FILE_DIR, file_name=Z
         print_info("Downloading from prod google drive")
         SCOPES = ["https://www.googleapis.com/auth/drive"]
         credentials = service_account.Credentials.from_service_account_file(GOOGLE_KEY_PATH, scopes=SCOPES)
-        service = build('drive', 'v3', credentials=credentials)
+        service = build("drive", "v3", credentials=credentials)
         request = service.files().get_media(fileId=file_id)
         fh = io.FileIO(file_path + file_name, "wb")
         MediaIoBaseDownload()
@@ -87,8 +86,9 @@ def upload_to_tech_google_drive(title, main_folder_id=tech_google_drive_id):
         credentials = service_account.Credentials.from_service_account_file(GOOGLE_KEY_PATH, scopes=SCOPES)
         service = build("drive", "v3", credentials=credentials)
         file_metadata = {"name": title, "parents": [main_folder_id]}
-        media = MediaFileUpload(ZIP_FILE_DIR + ZIP_FILE_NAME + "." + type_of_archive, chunksize=CHUNKSIZE,
-                                resumable=True)
+        media = MediaFileUpload(
+            ZIP_FILE_DIR + ZIP_FILE_NAME + "." + type_of_archive, chunksize=CHUNKSIZE, resumable=True
+        )
         r = service.files().create(body=file_metadata, media_body=media, fields="id").execute()
         print_success("Files was uploaded to prod google drive")
         return r["id"]
