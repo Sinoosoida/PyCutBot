@@ -120,6 +120,16 @@ def process_link(link):
 
 sleep_time = 5
 
+from telegram import Bot
+
+# костыль, да
+
+bot = Bot(token='739844988:AAHEHt8KiT9czNUFJuvqXUgfJOOzDVGnJ70')  # @Geneticist_bot
+
+
+def send_error(text):
+    bot.send_message(chat_id=496233529, text=text)
+
 
 def main():
     while True:
@@ -150,12 +160,15 @@ def main():
                             status="error",
                             status_info=error_str,
                         )
+                        send_error(error_str)
                 else:
                     print_error(f"Bad link: {video_link}")
                     parser.set("video", url=video_link, status="error", status_info="bad link")
+                    send_error("bad link")
             except Exception as ex:
                 print_error(f"Supreme error on {video_link}: {ex}")
                 parser.set("video", url=video_link, status="error", status_info="unknown")
+                send_error(str(ex))
             print_sep()
         time.sleep(sleep_time)
 
