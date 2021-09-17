@@ -11,7 +11,7 @@ def get_abs_path(relative_path):
 
 class VideoInfoGetter:
     def __init__(self, app_version):
-        CLIENT_SECRET_FILE = get_abs_path(f"../../google_api\client_secrets\client_secret_{app_version}.json")
+        CLIENT_SECRET_FILE = (f"src/google_api/client_secrets/client_secret_{app_version}.json")
 
         API_NAME = "youtube"
         API_VERSION = "v3"
