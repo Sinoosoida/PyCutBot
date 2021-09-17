@@ -17,6 +17,11 @@ from src.processing.google_drive.google_drive import upload_to_tech_google_drive
 parser = MongoParser(atlas=True, username=mongo_username, password=mongo_password)
 
 
+def get_abs_path(relative_path):
+    dir_name = os.path.dirname(__file__)
+    return os.path.join(dir_name, relative_path)
+
+
 def prepare_for_processing(yt_object):
     try:
         dirs.create_dirs()
@@ -76,7 +81,7 @@ def process_link(link):
 
     tech_gd_id, yt_id, prod_gd_id = None, None, None
 
-    with open("../upload_config.json") as c:
+    with open(get_abs_path("../upload_config.json")) as c:
         config = json.load(c)
         yt_load = config.get("youtube")
         gdrive_load = config.get("gdrive")
