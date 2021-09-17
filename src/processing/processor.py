@@ -1,18 +1,20 @@
+import json
 import os
 import time
+from concurrent.futures import ThreadPoolExecutor
+
 import dirs
+import requests as req
+
+from log import *
 from src.config import mongo_password, mongo_username
 from src.db.mongo_parser.mongo_parser import MongoParser
 from src.processing.core import processing_video
+from src.processing.core.time_codes import get_time_codes
+from src.processing.google_drive.google_drive import upload_to_prod_google_drive, upload_to_tech_google_drive
 from src.processing.watermark import gen_thumbnail_with_watermark
 from src.processing.yt_download import download_video_from_youtube, get_yt_object, good_link
 from src.processing.yt_upload.upload import upload_video_to_youtube
-import json
-from src.processing.core.time_codes import get_time_codes
-from log import *
-import requests as req
-from concurrent.futures import ThreadPoolExecutor
-from src.processing.google_drive.google_drive import upload_to_tech_google_drive, upload_to_prod_google_drive
 
 parser = MongoParser(atlas=True, username=mongo_username, password=mongo_password)
 

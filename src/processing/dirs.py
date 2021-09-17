@@ -2,8 +2,8 @@ import os
 import shutil
 import warnings
 
-ROOT_DIR="./"
-MEDIA_FOLDER_NAME="media"
+ROOT_DIR = "./"
+MEDIA_FOLDER_NAME = "media"
 
 join = os.path.join
 MEDIA_DIR = join(ROOT_DIR, MEDIA_FOLDER_NAME)
