@@ -17,7 +17,7 @@ ZIP_FILE_DIR = ROOT_DIR
 ZIP_FILE_NAME = "packed_fles"
 DIR_OF_UNPACKED_FILES = ROOT_DIR
 NAME_OF_UNZIPED_FILES = MEDIA_FOLDER_NAME
-GOOGLE_KEY_PATH = "google_drive/google_drive_api.json"
+GOOGLE_KEY_PATH = "src/processing/google_drive/google_drive_api.json"
 
 
 def create_dirs():
