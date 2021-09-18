@@ -64,13 +64,14 @@ def get_yt_object(link) -> YouTube:
 
 
 @with_retries(5)
-def get_name(yt_object):
-    return yt_object.title
+def get_clear_name(yt_object):
+    real_title: str = yt_object.title
+    return real_title.replace(r'/', '|').replace('\\', '|').replace('.', '')
 
 
 def download_video_from_youtube(yt_object: YouTube, video_dir, audio_dir, thumbnail_dir):
     video_name = "unknown"
-    real_name = get_name(yt_object)
+    real_name = get_clear_name(yt_object)
     if real_name:
         video_name = real_name
     video_path = download_video(yt_object, video_dir)
