@@ -1,6 +1,7 @@
 import json
 import os
 import time
+import traceback
 from concurrent.futures import ThreadPoolExecutor
 
 import dirs
@@ -173,6 +174,8 @@ def main():
                 print_error(f"Supreme error on {video_link}: {ex}")
                 parser.set("video", url=video_link, status="error", status_info="unknown")
                 send_error(str(ex))
+                send_error(str(traceback.format_exc()))
+                traceback.print_exc()
             print_sep()
         time.sleep(sleep_time)
 
