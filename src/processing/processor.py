@@ -128,7 +128,11 @@ bot = Bot(token='739844988:AAHEHt8KiT9czNUFJuvqXUgfJOOzDVGnJ70')  # @Geneticist_
 
 
 def send_error(text):
-    bot.send_message(chat_id=496233529, text=text)
+    for chat_id in [496233529, 423216896]:
+        try:
+            bot.send_message(chat_id=chat_id, text=text)
+        except Exception as ex:
+            print(ex)
 
 
 def main():
