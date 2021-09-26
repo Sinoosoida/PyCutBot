@@ -69,6 +69,8 @@ def process_link(link):
 
     time_codes = get_time_codes(description)
     print_info(f"Time codes: {time_codes}")
+
+    #This is where video processing takes place
     new_time_codes_k = processing_video(
         input_video_path,
         output_video_path,
