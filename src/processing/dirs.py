@@ -19,7 +19,6 @@ DIR_OF_UNPACKED_FILES = ROOT_DIR
 NAME_OF_UNZIPED_FILES = MEDIA_FOLDER_NAME
 GOOGLE_KEY_PATH = "src/processing/google_drive/google_drive_api.json"
 
-
 def create_dirs():
     if os.path.exists(MEDIA_DIR):
         shutil.rmtree(MEDIA_DIR)
