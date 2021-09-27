@@ -50,7 +50,7 @@ def upload_to_prod_google_drive(video_path, title, main_folder_id=prod_google_gr
         file_metadata = {"name": title, "parents": [main_folder_id]}
         media = MediaFileUpload(video_path, chunksize=CHUNKSIZE, resumable=True)
         r = service.files().create(body=file_metadata, media_body=media, fields="id").execute()
-        return ["id"]
+        return r["id"]
     except Exception as exc:
         print_error("Files was NOT uploaded to prod google drive")
         print_error(exc)
