@@ -65,5 +65,7 @@ def get_time_codes(text: str):
 def get_new_time_codes(cuts, time_codes, fps):
     frame_codes = [time2frame(tc, fps) for tc in time_codes]
     new_frame_codes = get_new_frame_codes(cuts, frame_codes)
+    if not new_frame_codes:
+        return None
     new_time_codes = [frame2time(fc, fps) for fc in new_frame_codes]
     return new_time_codes
