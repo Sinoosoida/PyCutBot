@@ -161,7 +161,7 @@ sleep_time = 5 * 60
 
 def main():
     while True:
-        if os.path.isfile("../../../stop"):
+        if os.path.isfile("stop"):
             sys.exit()
         update_videos(parser)
         print_sep()
