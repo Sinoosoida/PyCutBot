@@ -3,6 +3,7 @@ import os
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
+import sys
 
 import dirs
 import requests as req
@@ -140,6 +141,8 @@ def send_error(text):
 
 def main():
     while True:
+        if os.path.isfile("stop"):
+            sys.exit()
         for video_obj in parser.get_videos_with_status("in queue"):
             video_link = video_obj.url
             parser.set("video", url=video_link, status="processing")
