@@ -187,6 +187,8 @@ def main():
 
 def down_detector():
     while True:
+        if os.path.isfile("stop"):
+            sys.exit()
         try:
             req.get(f"http://51.15.75.62:5000/upd?service=pycutbot_processor&time_delta={sleep_time}")
         except Exception as ex:

@@ -169,6 +169,8 @@ def main():
 
 
 def down_detector():
+    if os.path.isfile("stop"):
+        sys.exit()
     while True:
         try:
             req.get(f"http://51.15.75.62:5000/upd?service=pycutbot_updater&time_delta={sleep_time}")
