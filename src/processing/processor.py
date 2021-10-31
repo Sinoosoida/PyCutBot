@@ -11,7 +11,6 @@ import requests as req
 from log import *
 from src.config import mongo_password, mongo_username
 from src.db.mongo_parser.mongo_parser import MongoParser
-from src.db.mongo_parser.collections_schemas import Video
 from src.processing.core import processing_video
 from src.processing.core.time_codes import get_time_codes
 from src.processing.google_drive.google_drive import upload_to_prod_google_drive, upload_to_tech_google_drive
@@ -145,8 +144,6 @@ def main():
         if os.path.isfile("stop"):
             sys.exit()
         for video_obj in parser.get_latest_videos_with_status("in queue"):
-            print(video_obj.url)
-            exit()
             video_link = video_obj.url
             parser.set("video", url=video_link, status="processing")
             print_header1_info(f"Processing {video_link}")
