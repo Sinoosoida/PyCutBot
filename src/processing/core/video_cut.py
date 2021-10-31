@@ -109,6 +109,7 @@ def processing_video(input_video_path, output_video_path, audio_path, time_codes
     clip = VideoFileClip(input_video_path)
     fps = clip.fps
     audioclip = AudioFileClip(audio_path)
+    exit()
     clip = clip.set_audio(audioclip)
     duration = clip.duration
     number_of_frames = clip.reader.nframes
