@@ -73,12 +73,12 @@ class MongoParser(metaclass=Singleton):
         return False
 
     @staticmethod
-    def get_videos_with_status(status) -> list:
-        return list(schema.Video.objects(status=schema.Status(status)))
+    def get_latest_videos_with_status(status) -> list:
+        return list(schema.Video.objects(status=schema.Status(status)).order_by('-id'))
 
     @staticmethod
     def get_video_with_status(status) -> schema.Video:
-        res = MongoParser.get_videos_with_status(status)
+        res = MongoParser.get_latest_videos_with_status(status)
         if res:
             return res[0]
 

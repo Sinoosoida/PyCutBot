@@ -114,7 +114,7 @@ def playlist_to_video(parser: MongoParser):  # adding playlist links to video pa
 def load_videos_to_playlist(parser: MongoParser):
     print_header1_info("Loading videos with 'done' status to playlist")
     try:
-        for video in parser.get_videos_with_status(Status.DONE):
+        for video in parser.get_latest_videos_with_status(Status.DONE):
             for playlist in parser.get_attr("video", video.url, attribute_name="playlists_urls"):
                 if not playlist.uploaded:
                     playlist_url = playlist.url
