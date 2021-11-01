@@ -181,7 +181,6 @@ def main():
                 send_error(str(ex))
                 send_error(str(traceback.format_exc()))
                 traceback.print_exc()
-                exit()
         print_sep()
         time.sleep(sleep_time)
 
