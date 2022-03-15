@@ -1,6 +1,6 @@
 import time
 import re
-from log import *
+from src.log import *
 from src.processing.core.frame_codes import get_new_frame_codes
 
 
