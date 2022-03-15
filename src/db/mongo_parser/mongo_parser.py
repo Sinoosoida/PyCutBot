@@ -1,8 +1,8 @@
 import mongoengine as mongo
 
 import src.db.mongo_parser.collections_schemas as schema
-from log import print_success
-from utils import Singleton, timeit
+from src.log import print_success
+from src.utils import Singleton
 
 
 class MongoParser(metaclass=Singleton):

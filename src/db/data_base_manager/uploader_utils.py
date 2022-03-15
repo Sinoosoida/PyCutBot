@@ -1,15 +1,12 @@
-import datetime
 import json
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from channel_video import get_last_video_urls
 from pytube import Channel, Playlist, YouTube
-from tqdm import tqdm
 from video_info import VideoInfoGetter
 
 import src.config as config
 from src.requests_utils import get_request_with_retries
-from utils import timeit
 
 
 def get_videos_url_from_channel(channel):

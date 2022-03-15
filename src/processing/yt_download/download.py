@@ -5,7 +5,7 @@ from pytube import YouTube
 
 from src.processing.core.load_audio import webm2wav
 from src.requests_utils import with_retries
-from utils import fix_filename
+from src.utils import fix_filename
 
 
 def find_best_resolution_stream(yt_obj: YouTube):

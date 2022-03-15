@@ -4,10 +4,10 @@ import numpy as np
 from moviepy.editor import *
 from tqdm import tqdm
 
-from log import *
+from src.log import *
 from src.processing.core.load_audio import load_audio
 from src.processing.core.time_codes import get_new_time_codes
-from utils import timeit
+from src.utils import timeit
 
 
 def decouple_audio(video_name, audio_name):

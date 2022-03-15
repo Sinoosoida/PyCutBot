@@ -1,16 +1,10 @@
 import io
-import os
-import shutil
 
-import google.oauth2
-import httplib2
-from apiclient import discovery
 from google.oauth2 import service_account
-from google.protobuf import service
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 
-from log import *
+from src.log import *
 from src.processing.dirs import *
 
 type_of_archive = "zip"

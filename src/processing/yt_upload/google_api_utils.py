@@ -3,10 +3,10 @@ import os
 import pickle
 
 from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import Flow, InstalledAppFlow
+from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
-from log import *
+from src.log import *
 
 
 def get_abs_path(relative_path):

@@ -2,7 +2,7 @@ import subprocess
 
 from scipy.io import wavfile
 
-from utils import change_ext
+from src.utils import change_ext
 import numpy as np
 
 def merge(silent_video: str, webm_audio: str) -> str:

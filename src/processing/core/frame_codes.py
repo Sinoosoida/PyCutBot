@@ -1,4 +1,4 @@
-from log import print_error
+from src.log import print_error
 
 
 def get_new_frame_codes(cuts, frame_codes):

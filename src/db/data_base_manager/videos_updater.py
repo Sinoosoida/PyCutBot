@@ -3,16 +3,14 @@ import sys
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 import requests as req
-from pytube import Playlist
 
-import src.db.mongo_parser.collections_schemas as schema
-from log import *
+from src.log import *
 from src.config import mongo_password, mongo_username
 from src.db.data_base_manager.uploader_utils import *
-from src.db.mongo_parser.collections_schemas import Collection, Status
+from src.db.mongo_parser.collections_schemas import Status
 from src.db.mongo_parser.mongo_parser import MongoParser
 from src.processing.yt_upload.add_to_playlist import add_video_to_playlist
 from src.processing.yt_upload.create_playlist import create_playlist

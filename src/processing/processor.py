@@ -8,7 +8,7 @@ import sys
 import dirs
 import requests as req
 
-from log import *
+from src.log import *
 from src.config import mongo_password, mongo_username
 from src.db.mongo_parser.mongo_parser import MongoParser
 from src.processing.core import processing_video
