@@ -21,7 +21,6 @@ def pack_files():
         shutil.make_archive(
             ZIP_FILE_DIR + ZIP_FILE_NAME, type_of_archive, DIR_OF_UNPACKED_FILES, NAME_OF_UNZIPED_FILES
         )
-        # shutil.rmtree(DIR_OF_UNPACKED_FILES+name_of_unziped_files, ignore_errors=False, onerror=None)
 
 
 def unpack_files():
@@ -32,7 +31,6 @@ def unpack_files():
         shutil.unpack_archive(
             ZIP_FILE_DIR + ZIP_FILE_NAME + "." + type_of_archive, DIR_OF_UNPACKED_FILES, type_of_archive
         )
-        # os.remove(ZIP_FILE_DIR + ZIP_FILE_NAME + "." + type_of_archive)
 
 
 def upload_to_prod_google_drive(video_path, title, main_folder_id=prod_google_grive_id):

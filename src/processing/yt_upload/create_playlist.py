@@ -17,8 +17,6 @@ def create_playlist(old_playlist_url, app_version=5):
     API_NAME = "youtube"
     API_VERSION = "v3"
     SCOPES = ["https://www.googleapis.com/auth/youtube.force-ssl"]
-    # 'https://www.googleapis.com/auth/youtube.upload',
-    #       'https://www.googleapis.com/auth/youtube']
 
     service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, app_version, SCOPES)
     request_body = {
@@ -37,8 +35,3 @@ def create_playlist(old_playlist_url, app_version=5):
         .execute()
     )
     return playlist_info["id"]
-
-
-# if __name__ == "__main__":
-#     r = create_playlist('https://www.youtube.com/playlist?list=PLdLtk23ZM3V7HPXdvZj4dEYntgMFOwIr2')
-#     print(r)

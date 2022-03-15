@@ -29,8 +29,3 @@ def add_video_to_playlist(video_id, playlist_id, app_version=5):
         part="snippet",
         body=request_body,
     ).execute()
-
-
-#
-# add_video_to_playlist(video_id='i_5xPDX-erE',
-#                       playlist_id='PL9g0wNoD6byyJefH-znkes3LGKaijG_Xd')

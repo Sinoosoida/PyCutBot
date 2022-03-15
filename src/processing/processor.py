@@ -9,7 +9,6 @@ import dirs
 import requests as req
 
 from src.log import *
-from src.config import mongo_password, mongo_username
 from src.db.mongo_parser.mongo_parser import MongoParser
 from src.processing.core import processing_video
 from src.processing.core.time_codes import get_time_codes
@@ -124,20 +123,6 @@ def process_link(link):
 
 sleep_time = 5
 
-from telegram import Bot
-
-# костыль, да
-
-bot = Bot(token='739844988:AAHEHt8KiT9czNUFJuvqXUgfJOOzDVGnJ70')  # @Geneticist_bot
-
-
-def send_error(text):
-    for chat_id in [496233529, 423216896]:
-        try:
-            bot.send_message(chat_id=chat_id, text=text)
-        except Exception as ex:
-            print(ex)
-
 
 def main():
     while True:
@@ -170,16 +155,12 @@ def main():
                             status="error",
                             status_info=error_str,
                         )
-                        send_error(error_str)
                 else:
                     print_error(f"Bad link: {video_link}")
                     parser.set("video", url=video_link, status="error", status_info="bad link")
-                    send_error("bad link")
             except Exception as ex:
                 print_error(f"Supreme error on {video_link}: {ex}")
                 parser.set("video", url=video_link, status="error", status_info="unknown")
-                send_error(str(ex))
-                send_error(str(traceback.format_exc()))
                 traceback.print_exc()
         print_sep()
         time.sleep(sleep_time)

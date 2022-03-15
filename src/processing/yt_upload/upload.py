@@ -48,13 +48,3 @@ def upload_video_to_youtube(video_path, title, description, tags, thumbnail_path
     service.thumbnails().set(videoId=new_video_id, media_body=MediaFileUpload(thumbnail_path)).execute()
 
     return new_video_id
-
-
-# if __name__ == "__main__":
-#     upload_video_to_youtube(
-#         video_path=r"C:\Users\79161\PycharmProjects\PyCutBot\media\output_video\test video.mp4",
-#         thumbnail_path=None,
-#         title="ttl",
-#         description="d",
-#         tags=[],
-#     )
