@@ -17,4 +17,4 @@ lxml==4.6.3 # for bs
 scipy==1.7.1
 bs4==0.0.1
 httplib2==0.20.4
-python-telegram-bot==13.7
+python-telegram-bot==13.11
