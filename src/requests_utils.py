@@ -1,4 +1,3 @@
-import warnings
 from time import sleep
 
 import requests

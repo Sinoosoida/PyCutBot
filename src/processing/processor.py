@@ -18,7 +18,7 @@ from src.processing.watermark import gen_thumbnail_with_watermark
 from src.processing.yt_download import download_video_from_youtube, get_yt_object, good_link, get_clear_name
 from src.processing.yt_upload.upload import upload_video_to_youtube
 
-parser = MongoParser(atlas=True, username=mongo_username, password=mongo_password)
+parser = MongoParser()
 
 
 def get_abs_path(relative_path):
