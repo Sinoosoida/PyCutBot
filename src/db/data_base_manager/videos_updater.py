@@ -2,11 +2,10 @@ import os
 import sys
 import time
 import traceback
+from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor
 from datetime import timedelta
-
 import requests as req
-
 from src.log import *
 from src.config import mongo_password, mongo_username
 from src.db.data_base_manager.uploader_utils import *
@@ -16,20 +15,6 @@ from src.processing.yt_upload.add_to_playlist import add_video_to_playlist
 from src.processing.yt_upload.create_playlist import create_playlist
 
 MAX_PLAYLISTS = None if len(sys.argv) == 1 else int(sys.argv[1])
-
-from telegram import Bot
-
-# костыль, да
-
-bot = Bot(token='739844988:AAHEHt8KiT9czNUFJuvqXUgfJOOzDVGnJ70')  # @Geneticist_bot
-
-
-def send_error(text):
-    for chat_id in [496233529, 423216896]:
-        try:
-            bot.send_message(chat_id=chat_id, text=text)
-        except Exception as ex:
-            print(ex)
 
 
 def videos_from_channel(parser: MongoParser):  # adding all new videos from the channel
@@ -56,12 +41,10 @@ def videos_from_channel(parser: MongoParser):  # adding all new videos from the 
             except Exception:
                 print_error("Impossible to process this channel")
                 traceback.print_exc()
-                send_error(str(traceback.format_exc()))
         print_success("Making videos from channels done")
     except Exception:
         print_error("Fatal error. Impossible to make videos from channel.")
         traceback.print_exc()
-        send_error(str(traceback.format_exc()))
 
 
 def videos_from_playlists(parser: MongoParser):  # all videos from the right playlists
@@ -76,7 +59,6 @@ def videos_from_playlists(parser: MongoParser):  # all videos from the right pla
     except Exception:
         print_error("Fatal error. Impossible to make videos from playlists")
         traceback.print_exc()
-        send_error(str(traceback.format_exc()))
 
 
 def playlists_from_channel(parser: MongoParser):
@@ -90,7 +72,6 @@ def playlists_from_channel(parser: MongoParser):
     except Exception:
         print_error("Fatal error. Impossible to get playlists from channel.")
         traceback.print_exc()
-        send_error(str(traceback.format_exc()))
 
 
 def playlist_to_video(parser: MongoParser):  # adding playlist links to video parameters
@@ -106,7 +87,6 @@ def playlist_to_video(parser: MongoParser):  # adding playlist links to video pa
     except Exception:
         print_error("Fatal error. Impossible to add playlists to video list.")
         traceback.print_exc()
-        send_error(str(traceback.format_exc()))
 
 
 def load_videos_to_playlist(parser: MongoParser):
@@ -135,13 +115,11 @@ def load_videos_to_playlist(parser: MongoParser):
                     except Exception:
                         print_error(f"Adding video {video.url} to playlist {playlist_url} error")
                         traceback.print_exc()
-                        send_error(str(traceback.format_exc()))
 
         print_success("Loading videos to playlists done")
     except Exception:
         print_error("Fatal error. Impossible to load videos to playlists.")
         traceback.print_exc()
-        send_error(str(traceback.format_exc()))
 
 
 def update_videos(parser):

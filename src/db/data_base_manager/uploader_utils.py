@@ -1,10 +1,8 @@
 import json
 from datetime import datetime
-
 from channel_video import get_last_video_urls
 from pytube import Channel, Playlist, YouTube
 from video_info import VideoInfoGetter
-
 import src.config as config
 from src.requests_utils import get_request_with_retries
 
@@ -25,13 +23,6 @@ video_info_getter = VideoInfoGetter(app_version=5)
 
 
 def get_videos_urls_since_date(channel_url, date=datetime.min):
-    """
-    По дефолту date - минимальная, т.е. если хочешь получить все видосы на канале, просто не указывай ее как аргумент
-    :param channel_url:
-    :param date:
-    :return:
-    """
-
     res = []
     channel = Channel(channel_url)
     urls = get_last_video_urls(channel.channel_id)
@@ -69,7 +60,6 @@ def get_all_playlists(channel_url: str, key=config.api_key, max_res=None):
         return True if not max_res or max_res < num_res else False
 
     while res_dict.get("nextPageToken") and under_limit(num_res):
-        # print(res_dict.get('nextPageToken'))
         res = get_request_with_retries(
             f"https://www.googleapis.com/youtube/v3/playlists?channelId={channel_id}"
             f"&key={key}&maxResults=50&pageToken={res_dict.get('nextPageToken')}"
@@ -78,25 +68,6 @@ def get_all_playlists(channel_url: str, key=config.api_key, max_res=None):
             return playlists_list
         res_dict = json.loads(res.content)
         for dct in res_dict["items"]:
-            # print('https://www.youtube.com/playlist?list=' + dct['id'])
             playlists_list.append("https://www.youtube.com/playlist?list=" + dct["id"])
     return playlists_list
 
-
-# def update_playlists(parser):
-#     for channel in parser.get_all("channel"):
-#         for playlist_url in get_all_playlists(channel.url):
-#             parser.save('playlist', url=playlist_url, load_all=False)
-
-#
-# from pprint import pprint
-#
-# r = get_videos_urls_since_date('https://www.youtube.com/c/telesport', datetime.now() - timedelta(hours=1))
-# pprint(r)
-
-# v = VideoInfoGetter(5)
-# print(v.get_publish_time('3p-IXhsFfnM'))
-
-# utc_dt = local_dt.astimezone(pytz.utc)
-#
-# print(utc.localize(dt, is_dst=None))
