@@ -8,7 +8,7 @@ google_api_python_client==2.41.0
 Pillow==9.0.1
 protobuf==3.19.4
 mongoengine==0.23.1
-dnspython==2.1.0 # for api
+dnspython==2.2.1 # for api
 tqdm==4.63.0
 pychalk==2.0.1
 beautifulsoup4==4.10.0
