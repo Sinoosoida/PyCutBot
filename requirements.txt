@@ -1,6 +1,6 @@
 numpy==1.22.3
 moviepy==1.0.3
-google_auth_oauthlib==0.4.6
+google_auth_oauthlib==0.8.0
 pytube==11.0.1
 librosa==0.9.1
 requests==2.26.0
